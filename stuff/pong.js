@@ -39,7 +39,9 @@ function draw() {
 function Spieler() {
   //Score
   fill(255);
-  text("SCORE: " + score, 20, height / 2);
+  textSize(13);
+  textAlign(LEFT);
+  text("SCORE: " + score, 20, 20);
 
   //Spieler
   fill(255, 255, 255);
