@@ -29,9 +29,6 @@ var hitBorderDown = false;
 var score = 0;
 
 function draw() {
-  text("SCORE: " + score, 20, 200);
-  text("Hi", 20, 220);
-
   background(0);
   Spieler();
   Ball();
@@ -40,6 +37,10 @@ function draw() {
 }
 
 function Spieler() {
+  //Score
+  text("SCORE: " + score, 20, height / 2);
+
+  //Spieler
   fill(255, 255, 255);
   rectMode(CENTER);
   rect(xPos1, yPos1, 10, 40);
