@@ -1,7 +1,7 @@
-var fire;
+// var fire;
 
 function preload() {
-  fire = loadImage("../Bilder/Feuer/Feuer.gif");
+  // fire = loadImage("../Bilder/Feuer/Feuer.gif");
 }
 
 function setup() {

@@ -3,27 +3,29 @@ This is DoodleJump!
 
 programmed by: Max Weber
 
-Version: 1.5
-
+Version: 1.3
 
  
+
 folgende Bugs müssen noch gefixt werden:
 
 - Tiles können nicht auf gleicher Position spawnen
 - Spieler fällt durch gar keine Tiles mehr durch
 - Spieler verliert manchmal nicht, obwohl er ganz unten ist
+- Prüfung ob sich Spieler auf Tiles befindet soll präziser sein
 - hängt sich manchmal auf (im Godmode)
 - player.jumpEnd ist manchmal unpräzise
-- ab und zu bewegen sich feste tiles um ein paar Pixel
 
 
+- Stats
 - Item Shield
 - Background
 - Images (lava)
 - Sound
-- shoottiles.while...
-       
-  
+- Pong
+https://p5js.org/reference/#/p5/max
+last2rounds
+
 
 If you jump into an enemy, you will loose a life. If you
 jump from the top, he will despawn and you will get Coins.
@@ -44,7 +46,7 @@ thanks!
 //Changable values:
 //Start value: anmount of platforms
 //normal tiles
-var ntilesanmount = random(55, 75);
+var ntilesanmount = random(25, 45);
 //moving tiles
 var mtilesanmount = random(0, 2);
 //the value for the height when tiles will despawn
@@ -57,21 +59,18 @@ var speed = 3;
 var prescreen = {
   show: true,
   showshop: false,
-  showcontrols: false,
-  buttoncolor: color(200, 30, 30),
-  buttonsemicolor: color(170, 30, 30),
-  buttoncolorshop: color(200, 30, 30),
-  buttonsemicolorshop: color(170, 30, 30),
-  buttoncolorcontrols: color(200, 30, 30),
-  buttonsemicolorcontrols: color(170, 30, 30),
-  buttoncolorMODI: color(200, 30, 30),
+  buttoncolor: color(20, 150, 60),
+  buttonsemicolor: color(20, 120, 60),
+  buttoncolorshop: color(20, 150, 60),
+  buttonsemicolorshop: color(20, 120, 60),
+  buttoncolorMODI: color(20, 150, 60),
   buttonactivated: false,
   buttontimer: 0,
   delay: 0
 };
 
 //Player
-var player = {
+player = {
   x: width / 2,
   y: height / 3 + 300,
   sizeX: 40,
@@ -88,18 +87,11 @@ var player = {
   affectTile: false
 };
 
-//keys
-var keys = {
-  moveright: 39,
-  moveleft: 37,
-  switchitem: 16,
-  useitem: 32
+//Background
+environment = {
+  color: color(220, 200, 200)
 };
 
-//Background
-var environment = {
-  color: color(70, 0, 0)
-};
 //Array for normal platforms
 var ntiles = [];
 //random positions of normal platforms
@@ -109,8 +101,7 @@ for (i = 0; i < ntilesanmount; i++) {
     y: int(random(-600, height - 10)),
     sizeX: 80,
     sizeY: 10,
-    change: false,
-    color: color(70, 70, 70)
+    change: false
   };
 }
 var ntilesNEW = {
@@ -118,8 +109,7 @@ var ntilesNEW = {
   y: int(random(-600, height - 10)),
   sizeX: random(20, 90),
   sizeY: random(20, 90),
-  change: false,
-  color: color(70, 70, 70)
+  change: false
 };
 
 //this is the first tile the player will interact with..
@@ -128,8 +118,7 @@ var ntilesFIRST = {
   y: height / 2 + height * 0.1,
   sizeX: 80,
   sizeY: 10,
-  show: true,
-  color: color(70, 70, 70)
+  show: true
 };
 
 //Array for moving platforms
@@ -142,8 +131,7 @@ for (m = 0; m < mtilesanmount; m = m + 1) {
     sizeX: 80,
     sizeY: 10,
     change: false,
-    movingR: true,
-    color: color(120, 120, 120)
+    movingR: true
   };
 }
 
@@ -154,8 +142,7 @@ var mtilesNEW = {
   sizeX: 80,
   sizeY: 10,
   change: false,
-  movingR: true,
-  color: color(120, 120, 120)
+  movingR: true
 };
 
 //highscore stuff
@@ -204,13 +191,13 @@ var doubblejump = {
 };
 
 //Pong
+var PongArray = [];
 var Pong = {
   x: int(random(40, width - 80)),
-  y: int(random(-2000, -10000)),
+  y: int(random(-20000, -10000)),
   sizeX: 50,
   sizeY: 50,
   color: color(0, 100, 100),
-  while: false,
   show: true
 };
 
@@ -243,9 +230,9 @@ var Heart = {
 };
 
 //Enemies
-var ESizeX = random(100, 20);
-var ESizeXTotal = random(ESizeX, width - ESizeX);
-var ESizeY = random(120, 50);
+ESizeX = random(100, 20);
+ESizeXTotal = random(ESizeX, width - ESizeX);
+ESizeY = random(120, 50);
 var Enemy = {
   x: ESizeXTotal,
   y: 0 - random(3000, 500),
@@ -263,7 +250,7 @@ var shoottiles = {
   x: ESizeXTotal,
   y: ESizeY,
   size: 10,
-  color: color(140),
+  color: color(40, 40, 40),
   show: false,
   moving: false,
   speed: 10
@@ -277,6 +264,12 @@ var dying = ["you are a bad monsterhunter"];
 var falling = ["you fell to death"];
 var noCoinsLeft = ["you were too slow"];
 
+//basic settings
+rectMode(CENTER);
+textFont("Calibri");
+textAlign(LEFT);
+textSize(20);
+stroke(0, 0, 0, 50);
 //factors for deltion/adding of platforms
 var factordel = [];
 var delntile = 0;
@@ -287,14 +280,6 @@ var addtile = false;
 
 //for prescreen
 var firstscreen = true;
-
-//for shop
-var shop = {
-  cwprice: 150,
-  caprice: 100,
-  haprice: 500,
-  hwprice: 1500
-};
 
 //for developer stats
 var showStats = false;
@@ -307,11 +292,7 @@ function PrescreenFunction() {
   for (m = 0; m < mtiles.length; m = m + 1) {
     for (i = 0; i < ntiles.length; i = i + 1) {
       //after the round
-      if (
-        prescreen.show === true &&
-        prescreen.showshop === false &&
-        prescreen.showcontrols === false
-      ) {
+      if (prescreen.show === true && prescreen.showshop === false) {
         //tiles are new sorted
         ntiles[i].x = int(random(40, width - 80));
         ntiles[i].y = int(random(-600, height - 10));
@@ -336,8 +317,7 @@ function PrescreenFunction() {
           y: int(random(-600, height - 10)),
           sizeX: 80,
           sizeY: 10,
-          change: false,
-          color: color(70, 70, 70)
+          change: false
         };
         if (ntiles.length < ntilesanmount) {
           ntiles.push(ntilesNEW);
@@ -353,39 +333,28 @@ function PrescreenFunction() {
         //Background
         fill(environment.color);
         rect(0, 0, width * 2, height * 2);
-        textAlign(CENTER);
 
         //Start
         fill(prescreen.buttonsemicolor);
-        rect(width / 2, height - 100, 300, 100);
+        rect(width / 2, height - 100, 300, 100, 20);
         fill(prescreen.buttoncolor);
-        rect(width / 2 - 2, height - 102, 296, 96);
-        fill(200);
+        rect(width / 2, height - 103, 297, 95, 20);
+        fill(255, 255, 255);
         textSize(50);
-        text("play", width / 2, height - 90);
+        text("play", width / 2 - 35, height - 90);
         textSize(20);
 
         //Shop
         fill(prescreen.buttonsemicolorshop);
-        rect(width / 2, height - 220, 300, 100);
+        rect(width / 2, height - 220, 300, 100, 20);
         fill(prescreen.buttoncolorshop);
-        rect(width / 2 - 2, height - 222, 296, 96);
-        fill(200);
+        rect(width / 2, height - 223, 297, 95, 20);
+        fill(255, 255, 255);
         textSize(50);
-        text("shop", width / 2, height - 210);
+        text("shop", width / 2 - 42, height - 210);
         textSize(20);
 
-        //Controls
-        fill(prescreen.buttonsemicolorcontrols);
-        rect(width / 2, height - 340, 300, 100);
-        fill(prescreen.buttoncolorcontrols);
-        rect(width / 2 - 2, height - 342, 296, 96);
-        fill(200);
-        textSize(50);
-        text("controls", width / 2, height - 330);
-        textSize(20);
-
-        fill(200);
+        fill(0);
         textAlign(LEFT);
         textSize(40);
         text("Total: " + int(highscore.total) + "m", width / 2 - 100, 50);
@@ -400,21 +369,36 @@ function PrescreenFunction() {
 
           //Stats
 
+          // if (rounds.length - 100 === 1) {
+          //   text(
+          //     "you played: " + (rounds.length) + " round",
+          //     width / 2,
+          //     330
+          //   );
+          // }
+          // if (rounds.length - 100 > 1) {
+          //   text(
+          //     "you played: " + (rounds.length) + " rounds",
+          //     width / 2,
+          //     330
+          //   );
+          // }
           textAlign(LEFT);
           textSize(20);
         } else {
           //modi godmode
-          fill(200);
+          fill(environment.color);
+          fill(0);
           textSize(20);
-          text("godmode", width / 2 - 70, height - 423);
+          text("godmode", width / 2 - 70, height - 323);
 
           if (
             mouseIsPressed === true &&
             mouseX >= width / 2 - 115 &&
             mouseX <= width / 2 - 85 &&
-            mouseY >= height - 444 &&
-            mouseY <= height - 414 &&
-            prescreen.buttontimer >= 10
+            mouseY >= height - 344 &&
+            mouseY <= height - 314 &&
+            prescreen.buttontimer >= 50
           ) {
             prescreen.buttontimer = 0;
             if (prescreen.buttonactivated === false) {
@@ -426,11 +410,10 @@ function PrescreenFunction() {
 
           if (prescreen.buttonactivated === true) {
             fill(prescreen.buttoncolorMODI);
-            rect(width / 2 - 100, height - 429, 30, 30);
+            rect(width / 2 - 100, height - 329, 30, 30);
           } else {
-            highscore.total = 0;
-            fill(100, 100, 100);
-            rect(width / 2 - 100, height - 429, 30, 30);
+            fill(environment.color);
+            rect(width / 2 - 100, height - 329, 30, 30);
           }
         }
         //Start button pressed
@@ -440,8 +423,8 @@ function PrescreenFunction() {
           mouseY >= height - 150 &&
           mouseY <= height - 50
         ) {
-          prescreen.buttoncolor = color(230, 30, 30);
-          prescreen.buttonsemicolor = color(170, 30, 30);
+          prescreen.buttoncolor = color(20, 180, 60);
+          prescreen.buttonsemicolor = color(20, 150, 60);
           //stuff to reset
           if (mouseIsPressed === true) {
             prescreen.delay = 0;
@@ -470,8 +453,6 @@ function PrescreenFunction() {
             shoottiles.x = Enemy.y;
             highscore.score = 0;
             highscore.adding = true;
-            Pong.y = int(random(-2000, -10000));
-            Pong.while = false;
             Heart.x = int(random(40, width - 80));
             Heart.y = 0 - int(random(5000, 1000));
             Coins = 100;
@@ -479,14 +460,13 @@ function PrescreenFunction() {
             firstscreen = false;
             prescreen.show = false;
             prescreen.showshop = false;
-            prescreen.showcontrols = false;
             if (prescreen.buttonactivated === true) {
               godmodetimer = 0;
             }
           }
         } else {
-          prescreen.buttoncolor = color(200, 30, 30);
-          prescreen.buttonsemicolor = color(170, 30, 30);
+          prescreen.buttoncolor = color(20, 150, 60);
+          prescreen.buttonsemicolor = color(20, 120, 60);
         }
 
         //Shop button pressed
@@ -496,34 +476,15 @@ function PrescreenFunction() {
           mouseY >= height - 270 &&
           mouseY <= height - 170
         ) {
-          prescreen.buttoncolorshop = color(230, 30, 30);
-          prescreen.buttonsemicolorshop = color(170, 30, 30);
+          prescreen.buttoncolorshop = color(20, 180, 60);
+          prescreen.buttonsemicolorshop = color(20, 150, 60);
           if (mouseIsPressed === true) {
             prescreen.show = false;
-            prescreen.showcontrols = false;
             prescreen.showshop = true;
           }
         } else {
-          prescreen.buttoncolorshop = color(200, 30, 30);
-          prescreen.buttonsemicolorshop = color(170, 30, 30);
-        }
-        //Controls button pressed
-        if (
-          mouseX >= width / 2 - 150 &&
-          mouseX <= width / 2 + 150 &&
-          mouseY >= height - 390 &&
-          mouseY <= height - 290
-        ) {
-          prescreen.buttoncolorcontrols = color(230, 30, 30);
-          prescreen.buttonsemicolorcontrols = color(170, 30, 30);
-          if (mouseIsPressed === true) {
-            prescreen.show = false;
-            prescreen.showshop = false;
-            prescreen.showcontrols = true;
-          }
-        } else {
-          prescreen.buttoncolorcontrols = color(200, 30, 30);
-          prescreen.buttonsemicolorcontrols = color(170, 30, 30);
+          prescreen.buttoncolorshop = color(20, 150, 60);
+          prescreen.buttonsemicolorshop = color(20, 120, 60);
         }
       }
     }
@@ -535,24 +496,20 @@ function PrescreenShop() {
   // prescreen.showshop = true;
   // highscore.total = 200;
 
-  if (
-    prescreen.show === false &&
-    prescreen.showshop === true &&
-    prescreen.showcontrols === false
-  ) {
+  if (prescreen.show === false && prescreen.showshop === true) {
     //Background
     fill(environment.color);
     rect(0, 0, width * 2, height * 2);
-    fill(200);
+    fill(0);
     textAlign(LEFT);
     textSize(40);
     text("Total: " + int(highscore.total) + "m", 20, 80);
     //Back
     fill(prescreen.buttonsemicolorshop);
-    rect(width - 120, 80, 160, 90);
+    rect(width - 120, 80, 160, 90, 20);
     fill(prescreen.buttoncolorshop);
-    rect(width - 122, 78, 156, 86);
-    fill(200);
+    rect(width - 120, 77, 157, 85, 20);
+    fill(255, 255, 255);
     textSize(50);
     text("back", width - 165, 91);
     textSize(20);
@@ -573,8 +530,8 @@ function PrescreenShop() {
     if (Coins <= 99999) {
       text("+ 10", width / 2 + 50, 208);
       rect(width - 70, 200, 80, 40, 5);
-      fill(200);
-      text(shop.caprice + "m", width - 95, 208);
+      fill(255);
+      text("100m", width - 95, 208);
       fill(0);
     } else {
       text("max", width / 2 + 50, 208);
@@ -582,8 +539,8 @@ function PrescreenShop() {
     if (Coin.weight < 100) {
       text("+ 5", width / 2 + 50, 280);
       rect(width - 70, 270, 80, 40, 5);
-      fill(200);
-      text(shop.cwprice + "m", width - 95, 280);
+      fill(255);
+      text("150m", width - 95, 280);
       fill(0);
     } else {
       text("max", width / 2 + 50, 280);
@@ -595,14 +552,14 @@ function PrescreenShop() {
       mouseX <= width - 30 &&
       mouseY >= 180 &&
       mouseY <= 220 &&
-      highscore.total >= shop.caprice &&
+      highscore.total >= 100 &&
       prescreen.buttontimer >= 20 &&
       Coins <= 99999
     ) {
-      highscore.total = highscore.total - shop.caprice;
-      shop.caprice = shop.caprice + 15;
       prescreen.buttontimer = 0;
       newCoins = newCoins + 10;
+
+      highscore.total = highscore.total - 100;
     }
 
     if (
@@ -611,14 +568,13 @@ function PrescreenShop() {
       mouseX <= width - 30 &&
       mouseY >= 250 &&
       mouseY <= 290 &&
-      highscore.total >= shop.cwprice &&
+      highscore.total >= 150 &&
       prescreen.buttontimer >= 20 &&
       Coin.weight < 100
     ) {
-      highscore.total = highscore.total - shop.cwprice;
-      shop.cwprice = shop.cwprice + 25;
       prescreen.buttontimer = 0;
       Coin.weight = Coin.weight + 5;
+      highscore.total = highscore.total - 150;
     }
 
     //Heart
@@ -638,7 +594,7 @@ function PrescreenShop() {
       text("+ 1", width / 2 + 50, 370);
       rect(width - 70, 360, 80, 40, 5);
       fill(255);
-      text(shop.haprice + "m", width - 95, 370);
+      text("500m", width - 95, 370);
       fill(0);
     } else {
       text("max", width / 2 + 50, 370);
@@ -659,7 +615,7 @@ function PrescreenShop() {
       mouseX <= width - 30 &&
       mouseY >= 340 &&
       mouseY <= 380 &&
-      highscore.total >= shop.haprice &&
+      highscore.total >= 500 &&
       prescreen.buttontimer >= 20 &&
       HeartArray.length < 5 &&
       HeartArrayWhile.length < 5
@@ -667,8 +623,8 @@ function PrescreenShop() {
       prescreen.buttontimer = 0;
       HeartArray.push(1);
       HeartArrayWhile.push(1);
+
       highscore.total = highscore.total - 500;
-      shop.haprice = shop.haprice + 250;
     }
 
     if (
@@ -677,7 +633,7 @@ function PrescreenShop() {
       mouseX <= width - 30 &&
       mouseY >= 410 &&
       mouseY <= 450 &&
-      highscore.total >= shop.hwprice &&
+      highscore.total >= 500 &&
       prescreen.buttontimer >= 20 &&
       Heart.weight < 3
     ) {
@@ -686,7 +642,6 @@ function PrescreenShop() {
       /*
       Heart.weight = Heart.weight + 1;
       highscore.total = highscore.total - 500;
-      shop.hwprice = shop.hwprice + 500;
       */
     }
 
@@ -697,81 +652,19 @@ function PrescreenShop() {
       mouseY >= 35 &&
       mouseY <= 125
     ) {
-      prescreen.buttoncolorshop = color(230, 30, 30);
-      prescreen.buttonsemicolorshop = color(200, 30, 30);
+      prescreen.buttoncolorshop = color(20, 180, 60);
+      prescreen.buttonsemicolorshop = color(20, 150, 60);
       if (mouseIsPressed === true) {
         prescreen.show = true;
         prescreen.showshop = false;
       }
     } else {
-      prescreen.buttoncolorshop = color(200, 30, 30);
-      prescreen.buttonsemicolorshop = color(170, 30, 30);
+      prescreen.buttoncolorshop = color(20, 150, 60);
+      prescreen.buttonsemicolorshop = color(20, 120, 60);
     }
   }
 }
 
-function PrescreenControls() {
-  // prescreen.show = false;
-  // prescreen.showshop = false;
-  // prescreen.showcontrols = true;
-
-  if (
-    prescreen.show === false &&
-    prescreen.showshop === false &&
-    prescreen.showcontrols === true
-  ) {
-    //Background
-    fill(environment.color);
-    rect(0, 0, width * 2, height * 2);
-    fill(200);
-    textAlign(LEFT);
-    textSize(30);
-    text("move right: ", width * 0.1, 200);
-    text("move left: ", width * 0.1, 260);
-    text("switch item: ", width * 0.1, 320);
-    text("use item: ", width * 0.1, 380);
-
-    /*
-    String.fromCharCode(keyCode);
-    keys.moveright
-    keys.moveleft 
-    keys.switchitem
-    keys.useitem
-    */
-    text(" right arrow", width * 0.1 + 200, 200);
-    text(" left arrow", width * 0.1 + 200, 260);
-    text(" shift", width * 0.1 + 200, 320);
-    text(" space", width * 0.1 + 200, 380);
-
-    //Back
-    fill(prescreen.buttonsemicolorshop);
-    rect(width - 120, 80, 160, 90);
-    fill(prescreen.buttoncolorshop);
-    rect(width - 122, 78, 156, 86);
-    fill(255, 255, 255);
-    textSize(50);
-    text("back", width - 165, 91);
-    textSize(20);
-
-    if (
-      mouseX >= width - 200 &&
-      mouseX <= width - 40 &&
-      mouseY >= 35 &&
-      mouseY <= 125
-    ) {
-      prescreen.buttoncolorshop = color(230, 30, 30);
-      prescreen.buttonsemicolorshop = color(200, 30, 30);
-      if (mouseIsPressed === true) {
-        prescreen.show = true;
-        prescreen.showshop = false;
-        prescreen.showcontrols = false;
-      }
-    } else {
-      prescreen.buttoncolorshop = color(200, 30, 30);
-      prescreen.buttonsemicolorshop = color(170, 30, 30);
-    }
-  }
-}
 //The Player and first tile
 function PlayerFunction() {
   fill(player.color);
@@ -779,7 +672,7 @@ function PlayerFunction() {
 
   //first tile
   if (ntilesFIRST.show === true) {
-    fill(70, 70, 70);
+    fill(20, 150, 60);
     rect(
       ntilesFIRST.x,
       ntilesFIRST.y,
@@ -819,16 +712,16 @@ function PlayerFunction() {
 
   //Movement of player
   if (keyIsPressed === true && player.moving === true) {
-    if (keyIsDown(keys.moveleft)) {
+    if (keyIsDown(37)) {
       if (player.affectTile === false) {
-        player.x = player.x - 10;
+        player.x = player.x - 7;
       } else {
         player.x = player.x - 1;
       }
     }
-    if (keyIsDown(keys.moveright)) {
+    if (keyIsDown(39)) {
       if (player.affectTile === false) {
-        player.x = player.x + 10;
+        player.x = player.x + 7;
       } else {
         player.x = player.x + 1;
       }
@@ -838,14 +731,14 @@ function PlayerFunction() {
   //Border left / right
   if (
     player.x - player.sizeX / 2 <= 0 &&
-    keyIsDown(keys.moveleft) &&
+    keyIsDown(37) &&
     player.moving === true
   ) {
     player.x = width - player.sizeX / 2;
   }
   if (
     player.x + player.sizeX / 2 >= width &&
-    keyIsDown(keys.moveright) &&
+    keyIsDown(39) &&
     player.moving === true
   ) {
     player.x = player.sizeX / 2;
@@ -858,176 +751,67 @@ function PlayerAffectPlatform() {
   for (m = 0; m < mtiles.length; m = m + 1) {
     for (i = 0; i < ntiles.length; i = i + 1) {
       //First normal tile
-
-      //wenn der Spieler höher als die halbe height ist:
-      if (player.y < height - height / 3) {
-        if (
-          //unten rechts
-          (player.x + player.sizeX / 2 >=
-            ntilesFIRST.x - ntilesFIRST.sizeX / 2 &&
-            player.x + player.sizeX / 2 <=
-              ntilesFIRST.x + ntilesFIRST.sizeX / 2 &&
-            player.y + player.sizeY / 2 <=
-              ntilesFIRST.y + ntilesFIRST.sizeY / 2 &&
-            player.y + player.sizeY / 2 >= ntilesFIRST.y - ntilesFIRST.sizeY) ||
-          //unten links
-          (player.x - player.sizeX / 2 >=
-            ntilesFIRST.x - ntilesFIRST.sizeX / 2 &&
-            player.x - player.sizeX / 2 <=
-              ntilesFIRST.x + ntilesFIRST.sizeX / 2 &&
-            player.y + player.sizeY / 2 <= ntilesFIRST.y + ntilesFIRST.sizeY &&
-            player.y + player.sizeY / 2 >=
-              ntilesFIRST.y - ntilesFIRST.sizeY / 2)
-        ) {
-          if (player.jump === false && player.moving === true) {
-            if (player.y > player.jumpStart) {
-              player.y =
-                ntilesFIRST.y - ntilesFIRST.sizeY / 2 - player.sizeY / 2;
-            } else {
-              player.affectTile = true;
-              player.y =
-                ntilesFIRST.y - ntilesFIRST.sizeY / 2 - player.sizeY / 2;
-            }
-          }
-        }
-      } else {
-        //wenn er darunter ist
-        if (
-          //unten rechts
-          (player.x + player.sizeX / 2 >=
-            ntilesFIRST.x - ntilesFIRST.sizeX / 2 &&
-            player.x + player.sizeX / 2 <=
-              ntilesFIRST.x + ntilesFIRST.sizeX / 2 &&
-            player.y + player.sizeY / 2 <=
-              ntilesFIRST.y + ntilesFIRST.sizeY / 2 &&
-            player.y + player.sizeY / 2 >=
-              ntilesFIRST.y - ntilesFIRST.sizeY * 2) ||
-          //unten links
-          (player.x - player.sizeX / 2 >=
-            ntilesFIRST.x - ntilesFIRST.sizeX / 2 &&
-            player.x - player.sizeX / 2 <=
-              ntilesFIRST.x + ntilesFIRST.sizeX / 2 &&
-            player.y + player.sizeY / 2 <=
-              ntilesFIRST.y + ntilesFIRST.sizeY * 2 &&
-            player.y + player.sizeY / 2 >=
-              ntilesFIRST.y - ntilesFIRST.sizeY / 2)
-        ) {
-          if (player.jump === false && player.moving === true) {
-            if (player.y > player.jumpStart) {
-              player.y =
-                ntilesFIRST.y - ntilesFIRST.sizeY / 2 - player.sizeY / 2;
-            } else {
-              player.affectTile = true;
-              player.y =
-                ntilesFIRST.y - ntilesFIRST.sizeY / 2 - player.sizeY / 2;
-            }
+      if (
+        int(player.x) + player.sizeX / 2 >
+          ntilesFIRST.x - ntilesFIRST.sizeX / 2 &&
+        int(player.x) - player.sizeX / 2 <
+          ntilesFIRST.x + ntilesFIRST.sizeX / 2 &&
+        int(player.y) + player.sizeY / 2 >
+          ntilesFIRST.y - ntilesFIRST.sizeY * 2 &&
+        int(player.y) + player.sizeY / 2 < ntilesFIRST.y - ntilesFIRST.sizeY / 2
+      ) {
+        if (player.jump === false && player.moving === true) {
+          if (player.y + player.sizeY / 2 > player.jumpStart) {
+            player.y = ntilesFIRST.y - ntilesFIRST.sizeY / 2 - player.sizeY / 2;
+          } else {
+            player.affectTile = true;
+            player.y = ntilesFIRST.y - ntilesFIRST.sizeY / 2 - player.sizeY / 2;
           }
         }
       }
 
       //normal tile
-      if (player.y < height - height / 3) {
-        if (
-          //unten rechts
-          (player.x + player.sizeX / 2 >= ntiles[i].x - ntiles[i].sizeX / 2 &&
-            player.x + player.sizeX / 2 <= ntiles[i].x + ntiles[i].sizeX / 2 &&
-            player.y + player.sizeY / 2 <= ntiles[i].y + ntiles[i].sizeY &&
-            player.y + player.sizeY / 2 >= ntiles[i].y - ntiles[i].sizeY / 2) ||
-          //unten links
-          (player.x - player.sizeX / 2 >= ntiles[i].x - ntiles[i].sizeX / 2 &&
-            player.x - player.sizeX / 2 <= ntiles[i].x + ntiles[i].sizeX / 2 &&
-            player.y + player.sizeY / 2 <= ntiles[i].y + ntiles[i].sizeY &&
-            player.y + player.sizeY / 2 >= ntiles[i].y - ntiles[i].sizeY / 2)
-        ) {
-          if (player.jump === false && player.moving === true) {
-            if (player.y > player.jumpStart) {
-              player.y = ntiles[i].y - ntiles[i].sizeY / 2 - player.sizeY / 2;
-            } else {
-              player.affectTile = true;
-              player.y = ntiles[i].y - ntiles[i].sizeY / 2 - player.sizeY / 2;
-            }
-          }
-        }
-      } else {
-        if (
-          //unten rechts
-          (player.x + player.sizeX / 2 >= ntiles[i].x - ntiles[i].sizeX / 2 &&
-            player.x + player.sizeX / 2 <= ntiles[i].x + ntiles[i].sizeX / 2 &&
-            player.y + player.sizeY / 2 <= ntiles[i].y + ntiles[i].sizeY * 2 &&
-            player.y + player.sizeY / 2 >= ntiles[i].y - ntiles[i].sizeY / 2) ||
-          //unten links
-          (player.x - player.sizeX / 2 >= ntiles[i].x - ntiles[i].sizeX / 2 &&
-            player.x - player.sizeX / 2 <= ntiles[i].x + ntiles[i].sizeX / 2 &&
-            player.y + player.sizeY / 2 <= ntiles[i].y + ntiles[i].sizeY * 2 &&
-            player.y + player.sizeY / 2 >= ntiles[i].y - ntiles[i].sizeY / 2)
-        ) {
-          if (player.jump === false && player.moving === true) {
-            if (player.y > player.jumpStart) {
-              player.y = ntiles[i].y - ntiles[i].sizeY / 2 - player.sizeY / 2;
-            } else {
-              player.affectTile = true;
-              player.y = ntiles[i].y - ntiles[i].sizeY / 2 - player.sizeY / 2;
-            }
+      if (
+        int(player.x) + player.sizeX / 2 > ntiles[i].x - ntiles[i].sizeX / 2 &&
+        int(player.x) - player.sizeX / 2 < ntiles[i].x + ntiles[i].sizeX / 2 &&
+        int(player.y) + player.sizeY / 2 > ntiles[i].y - ntiles[i].sizeY * 2 &&
+        int(player.y) + player.sizeY / 2 < ntiles[i].y - ntiles[i].sizeY / 2
+      ) {
+        if (player.jump === false && player.moving === true) {
+          if (player.y + player.sizeY / 2 > player.jumpStart) {
+            player.y = ntiles[i].y - ntiles[i].sizeY / 2 - player.sizeY / 2;
+          } else {
+            player.affectTile = true;
+            player.y = ntiles[i].y - ntiles[i].sizeY / 2 - player.sizeY / 2;
           }
         }
       }
 
       //moving Tile
-      if (player.y < height - height / 3) {
+      if (
+        int(player.x) + player.sizeX / 2 > mtiles[m].x - mtiles[m].sizeX / 2 &&
+        int(player.x) - player.sizeX / 2 < mtiles[m].x + mtiles[m].sizeX / 2 &&
+        int(player.y) + player.sizeY / 2 > mtiles[m].y - mtiles[m].sizeY * 2 &&
+        int(player.y) + player.sizeY / 2 < mtiles[m].y - mtiles[m].sizeY / 2
+      ) {
         if (
-          //unten rechts
-          (player.x + player.sizeX / 2 >= mtiles[m].x - mtiles[m].sizeX / 2 &&
-            player.x + player.sizeX / 2 <= mtiles[m].x + mtiles[m].sizeX / 2 &&
-            player.y + player.sizeY / 2 <= mtiles[m].y + mtiles[m].sizeY &&
-            player.y + player.sizeY / 2 >= mtiles[m].y - mtiles[m].sizeY / 2) ||
-          //unten links
-          (player.x - player.sizeX / 2 >= mtiles[m].x - mtiles[m].sizeX / 2 &&
-            player.x - player.sizeX / 2 <= mtiles[m].x + mtiles[m].sizeX / 2 &&
-            player.y + player.sizeY / 2 <= mtiles[m].y + mtiles[m].sizeY &&
-            player.y + player.sizeY / 2 >= mtiles[m].y - mtiles[m].sizeY / 2)
+          player.jump === false &&
+          player.y + player.sizeY / 2 <= player.jumpStart &&
+          player.moving === true
         ) {
-          if (
-            player.jump === false &&
-            player.y <= player.jumpStart &&
-            player.moving === true
-          ) {
-            player.affectTile = true;
-            player.y = mtiles[m].y - mtiles[m].sizeY / 2 - player.sizeY / 2;
-          }
-        }
-      } else {
-        if (
-          //unten rechts
-          (player.x + player.sizeX / 2 >= mtiles[m].x - mtiles[m].sizeX / 2 &&
-            player.x + player.sizeX / 2 <= mtiles[m].x + mtiles[m].sizeX / 2 &&
-            player.y + player.sizeY / 2 <= mtiles[m].y + mtiles[m].sizeY * 2 &&
-            player.y + player.sizeY / 2 >= mtiles[m].y - mtiles[m].sizeY / 2) ||
-          //unten links
-          (player.x - player.sizeX / 2 >= mtiles[m].x - mtiles[m].sizeX / 2 &&
-            player.x - player.sizeX / 2 <= mtiles[m].x + mtiles[m].sizeX / 2 &&
-            player.y + player.sizeY / 2 <= mtiles[m].y + mtiles[m].sizeY * 2 &&
-            player.y + player.sizeY / 2 >= mtiles[m].y - mtiles[m].sizeY / 2)
-        ) {
-          if (
-            player.jump === false &&
-            player.y <= player.jumpStart &&
-            player.moving === true
-          ) {
-            player.affectTile = true;
-            player.y = mtiles[m].y - mtiles[m].sizeY / 2 - player.sizeY / 2;
-          }
+          player.affectTile = true;
+          player.y = mtiles[m].y - mtiles[m].sizeY / 2 - player.sizeY / 2;
         }
       }
     }
 
-    if (player.y > player.jumpStart) {
+    if (player.y >= player.jumpStart) {
       player.affectTile = false;
-      // player.y = player.jumpStart - player.sizeY / 2 - ntilesFIRST.sizeY / 2;
     }
   }
 
   if (player.affectTile === true) {
-    player.jumpStart = height - (height / 3 - player.sizeY / 2);
+    player.jumpStart = height - height / 3;
   } else {
     player.jumpStart = height + 100;
   }
@@ -1045,10 +829,7 @@ function EnemyFunction() {
       Enemy.x = Enemy.x + random(-4, 4);
       Enemy.y = Enemy.y + random(-4, 4);
     }
-    if (
-      player.affectTile === true &&
-      player.y <= height - height / 3 + ntilesFIRST.sizeY
-    ) {
+    if (player.affectTile === true) {
       Enemy.y = Enemy.y + player.gravity;
     }
     if (Enemy.x - Enemy.sizeX / 2 > width) {
@@ -1110,10 +891,10 @@ function EnemyFunction() {
 
       //Shoot direction
       if (shoottiles.move === true) {
-        if (player.x < Enemy.x) {
+        if (Enemy.x > width / 2) {
           shoottiles.x = shoottiles.x - shoottiles.speed;
         }
-        if (player.x > Enemy.x) {
+        if (Enemy.x < width / 2) {
           shoottiles.x = shoottiles.x + shoottiles.speed;
         }
         if (shoottiles.x < 0 || shoottiles.x > width) {
@@ -1140,30 +921,11 @@ function EnemyFunction() {
 
     Enemy.cooldown = Enemy.cooldown + 1;
     if (
-      //unten rechts
-      (player.x + player.sizeX / 2 >= Enemy.x - Enemy.sizeX / 2 &&
-        player.x + player.sizeX / 2 <= Enemy.x + Enemy.sizeX / 2 &&
-        player.y + player.sizeY / 2 <= Enemy.y + Enemy.sizeY / 2 &&
-        player.y + player.sizeY / 2 >= Enemy.y - Enemy.sizeY / 2 &&
-        Enemy.cooldown > 30) ||
-      //oben rechts
-      (player.x + player.sizeX / 2 >= Enemy.x - Enemy.sizeX / 2 &&
-        player.x + player.sizeX / 2 <= Enemy.x + Enemy.sizeX / 2 &&
-        player.y - player.sizeY / 2 <= Enemy.y + Enemy.sizeY / 2 &&
-        player.y - player.sizeY / 2 >= Enemy.y - Enemy.sizeY / 2 &&
-        Enemy.cooldown > 30) ||
-      //unten links
-      (player.x - player.sizeX / 2 >= Enemy.x - Enemy.sizeX / 2 &&
-        player.x - player.sizeX / 2 <= Enemy.x + Enemy.sizeX / 2 &&
-        player.y + player.sizeY / 2 <= Enemy.y + Enemy.sizeY / 2 &&
-        player.y + player.sizeY / 2 >= Enemy.y - Enemy.sizeY / 2 &&
-        Enemy.cooldown > 30) ||
-      //oben links
-      (player.x - player.sizeX / 2 >= Enemy.x - Enemy.sizeX / 2 &&
-        player.x - player.sizeX / 2 <= Enemy.x + Enemy.sizeX / 2 &&
-        player.y - player.sizeY / 2 <= Enemy.y + Enemy.sizeY / 2 &&
-        player.y - player.sizeY / 2 >= Enemy.y - Enemy.sizeY / 2 &&
-        Enemy.cooldown > 30)
+      Enemy.cooldown > 30 &&
+      player.x >= Enemy.x - Enemy.sizeX / 2 - player.sizeX / 2 &&
+      player.x <= Enemy.x + Enemy.sizeX / 2 + player.sizeX / 2 &&
+      player.y > Enemy.y - Enemy.sizeY / 2 - player.sizeY / 2 &&
+      player.y < Enemy.y + Enemy.sizeY / 2 + player.sizeY / 2
     ) {
       if (player.jump === false) {
         Enemy.cooldown = 0;
@@ -1183,7 +945,7 @@ function EnemyFunction() {
 function itembar() {
   if (player.moving === true) {
     //Choose items
-    if (keyIsDown(keys.switchitem)) {
+    if (keyIsDown(16)) {
       if (doubblejump.choose === true && prescreen.buttontimer >= 15) {
         // console.log("jumpshoe");
         doubblejump.choose = false;
@@ -1198,7 +960,7 @@ function itembar() {
       }
     }
 
-    fill(160, 115, 0);
+    fill(255);
     rectMode(CORNER);
     rect(0, height - 40, width, 70, 50);
     rectMode(CENTER);
@@ -1260,10 +1022,7 @@ function items() {
     if (jumpshoe.show === true) {
       rect(jumpshoe.x, jumpshoe.y, jumpshoe.sizeX, jumpshoe.sizeY, 20);
 
-      if (
-        player.affectTile === true &&
-        player.y <= height - height / 3 + ntilesFIRST.sizeY
-      ) {
+      if (player.affectTile === true) {
         jumpshoe.y = jumpshoe.y + player.gravity;
       }
       if (jumpshoe.y >= height + jumpshoe.sizeY) {
@@ -1272,26 +1031,10 @@ function items() {
       }
 
       if (
-        //unten rechts
-        (player.x + player.sizeX / 2 >= jumpshoe.x - jumpshoe.sizeX / 2 &&
-          player.x + player.sizeX / 2 <= jumpshoe.x + jumpshoe.sizeX / 2 &&
-          player.y + player.sizeY / 2 <= jumpshoe.y + jumpshoe.sizeY / 2 &&
-          player.y + player.sizeY / 2 >= jumpshoe.y - jumpshoe.sizeY / 2) ||
-        //oben rechts
-        (player.x + player.sizeX / 2 >= jumpshoe.x - jumpshoe.sizeX / 2 &&
-          player.x + player.sizeX / 2 <= jumpshoe.x + jumpshoe.sizeX / 2 &&
-          player.y - player.sizeY / 2 <= jumpshoe.y + jumpshoe.sizeY / 2 &&
-          player.y - player.sizeY / 2 >= jumpshoe.y - jumpshoe.sizeY / 2) ||
-        //unten links
-        (player.x - player.sizeX / 2 >= jumpshoe.x - jumpshoe.sizeX / 2 &&
-          player.x - player.sizeX / 2 <= jumpshoe.x + jumpshoe.sizeX / 2 &&
-          player.y + player.sizeY / 2 <= jumpshoe.y + jumpshoe.sizeY / 2 &&
-          player.y + player.sizeY / 2 >= jumpshoe.y - jumpshoe.sizeY / 2) ||
-        //oben links
-        (player.x - player.sizeX / 2 >= jumpshoe.x - jumpshoe.sizeX / 2 &&
-          player.x - player.sizeX / 2 <= jumpshoe.x + jumpshoe.sizeX / 2 &&
-          player.y - player.sizeY / 2 <= jumpshoe.y + jumpshoe.sizeY / 2 &&
-          player.y - player.sizeY / 2 >= jumpshoe.y - jumpshoe.sizeY / 2)
+        player.y <= jumpshoe.y + jumpshoe.sizeY &&
+        player.y >= jumpshoe.y - jumpshoe.sizeY &&
+        player.x <= jumpshoe.x + jumpshoe.sizeX &&
+        player.x >= jumpshoe.x - jumpshoe.sizeX
       ) {
         jumpshoe.show = false;
         JumpshoeArray.push(1);
@@ -1312,10 +1055,7 @@ function items() {
         20
       );
 
-      if (
-        player.affectTile === true &&
-        player.y <= height - height / 3 + ntilesFIRST.sizeY
-      ) {
+      if (player.affectTile === true) {
         doubblejump.y = doubblejump.y + player.gravity;
       }
       if (doubblejump.y >= height + doubblejump.sizeY) {
@@ -1324,37 +1064,10 @@ function items() {
       }
 
       if (
-        //unten rechts
-        (player.x + player.sizeX / 2 >= doubblejump.x - doubblejump.sizeX / 2 &&
-          player.x + player.sizeX / 2 <=
-            doubblejump.x + doubblejump.sizeX / 2 &&
-          player.y + player.sizeY / 2 <=
-            doubblejump.y + doubblejump.sizeY / 2 &&
-          player.y + player.sizeY / 2 >=
-            doubblejump.y - doubblejump.sizeY / 2) ||
-        //oben rechts
-        (player.x + player.sizeX / 2 >= doubblejump.x - doubblejump.sizeX / 2 &&
-          player.x + player.sizeX / 2 <=
-            doubblejump.x + doubblejump.sizeX / 2 &&
-          player.y - player.sizeY / 2 <=
-            doubblejump.y + doubblejump.sizeY / 2 &&
-          player.y - player.sizeY / 2 >=
-            doubblejump.y - doubblejump.sizeY / 2) ||
-        //unten links
-        (player.x - player.sizeX / 2 >= doubblejump.x - doubblejump.sizeX / 2 &&
-          player.x - player.sizeX / 2 <=
-            doubblejump.x + doubblejump.sizeX / 2 &&
-          player.y + player.sizeY / 2 <=
-            doubblejump.y + doubblejump.sizeY / 2 &&
-          player.y + player.sizeY / 2 >=
-            doubblejump.y - doubblejump.sizeY / 2) ||
-        //oben links
-        (player.x - player.sizeX / 2 >= doubblejump.x - doubblejump.sizeX / 2 &&
-          player.x - player.sizeX / 2 <=
-            doubblejump.x + doubblejump.sizeX / 2 &&
-          player.y - player.sizeY / 2 <=
-            doubblejump.y + doubblejump.sizeY / 2 &&
-          player.y - player.sizeY / 2 >= doubblejump.y - doubblejump.sizeY / 2)
+        player.y <= doubblejump.y + doubblejump.sizeY &&
+        player.y >= doubblejump.y - doubblejump.sizeY &&
+        player.x <= doubblejump.x + doubblejump.sizeX &&
+        player.x >= doubblejump.x - doubblejump.sizeX
       ) {
         doubblejump.show = false;
         DoubblejumpArray.push(1);
@@ -1363,58 +1076,48 @@ function items() {
         doubblejump.show = true;
       }
     }
-  }
-  //Heart
-  fill(Heart.color);
-  if (Heart.show === true) {
+
     Heart.cooldown = Heart.cooldown + 1;
-    rect(Heart.x, Heart.y, Heart.sizeX, Heart.sizeY, 20);
-
-    if (
-      player.affectTile === true &&
-      player.y <= height - height / 3 + ntilesFIRST.sizeY
-    ) {
-      Heart.y = Heart.y + player.gravity;
+    if (Heart.cooldown > 100) {
+      Heart.cooldown = 0;
     }
-    if (Heart.y >= height + Heart.sizeY) {
-      Heart.x = int(random(40, width - 80));
-      Heart.y = int(random(-10000, -2000));
-    }
+    //Heart
+    fill(Heart.color);
+    if (Heart.show === true) {
+      rect(Heart.x, Heart.y, Heart.sizeX, Heart.sizeY, 20);
 
-    if (
-      //unten rechts
-      (player.x + player.sizeX / 2 >= Heart.x - Heart.sizeX / 2 &&
-        player.x + player.sizeX / 2 <= Heart.x + Heart.sizeX / 2 &&
-        player.y + player.sizeY / 2 <= Heart.y + Heart.sizeY / 2 &&
-        player.y + player.sizeY / 2 >= Heart.y - Heart.sizeY / 2 &&
-        Heart.cooldown > 60) ||
-      //oben rechts
-      (player.x + player.sizeX / 2 >= Heart.x - Heart.sizeX / 2 &&
-        player.x + player.sizeX / 2 <= Heart.x + Heart.sizeX / 2 &&
-        player.y - player.sizeY / 2 <= Heart.y + Heart.sizeY / 2 &&
-        player.y - player.sizeY / 2 >= Heart.y - Heart.sizeY / 2 &&
-        Heart.cooldown > 60) ||
-      //unten links
-      (player.x - player.sizeX / 2 >= Heart.x - Heart.sizeX / 2 &&
-        player.x - player.sizeX / 2 <= Heart.x + Heart.sizeX / 2 &&
-        player.y + player.sizeY / 2 <= Heart.y + Heart.sizeY / 2 &&
-        player.y + player.sizeY / 2 >= Heart.y - Heart.sizeY / 2 &&
-        Heart.cooldown > 60) ||
-      //oben links
-      (player.x - player.sizeX / 2 >= Heart.x - Heart.sizeX / 2 &&
-        player.x - player.sizeX / 2 <= Heart.x + Heart.sizeX / 2 &&
-        player.y - player.sizeY / 2 <= Heart.y + Heart.sizeY / 2 &&
-        player.y - player.sizeY / 2 >= Heart.y - Heart.sizeY / 2 &&
-        Heart.cooldown > 60)
-    ) {
-      if (HeartArray.length < HeartArrayWhile.length) {
+      if (player.affectTile === true) {
+        Heart.y = Heart.y + player.gravity;
+      }
+      if (Heart.y >= height + Heart.sizeY) {
+        Heart.x = int(random(40, width - 80));
+        Heart.y = int(random(-10000, -2000));
+      }
+
+      if (
+        player.y - player.sizeY / 2 <= Heart.y + Heart.sizeY &&
+        player.y + player.sizeY / 2 >= Heart.y - Heart.sizeY &&
+        player.x - player.sizeX / 2 <= Heart.x + Heart.sizeX &&
+        player.x + player.sizeX / 2 >= Heart.x - Heart.sizeX &&
+        HeartArray.length < HeartArrayWhile.length &&
+        Heart.cooldown > 60
+      ) {
         Heart.show = false;
         HeartArray.push(1);
         Heart.cooldown = 0;
         Heart.x = int(random(40, width - 80));
         Heart.y = int(random(-10000, -2000));
         Heart.show = true;
-      } else {
+      }
+
+      if (
+        player.y <= Heart.y + Heart.sizeY &&
+        player.y >= Heart.y - Heart.sizeY &&
+        player.x <= Heart.x + Heart.sizeX &&
+        player.x >= Heart.x - Heart.sizeX &&
+        HeartArray.length >= HeartArrayWhile.length &&
+        Heart.cooldown > 60
+      ) {
         Heart.show = false;
         Heart.cooldown = 0;
         Heart.x = int(random(40, width - 80));
@@ -1422,118 +1125,78 @@ function items() {
         Heart.show = true;
       }
     }
-  }
 
-  //Pong
-  fill(Pong.color);
-  if (Pong.show === true) {
-    rect(Pong.x, Pong.y, Pong.sizeX, Pong.sizeY, 20);
+    //Pong
+    fill(Pong.color);
+    if (Pong.show === true) {
+      rect(Pong.x, Pong.y, Pong.sizeX, Pong.sizeY, 20);
 
-    if (
-      player.affectTile === true &&
-      player.y <= height - height / 3 + ntilesFIRST.sizeY
-    ) {
-      Pong.y = Pong.y + player.gravity;
-    }
-    if (Pong.y >= height + Pong.sizeY) {
-      Pong.x = int(random(40, width - 80));
-      Pong.y = int(random(-20000, -1000));
-    }
+      if (player.affectTile === true) {
+        Pong.y = Pong.y + player.gravity;
+      }
+      if (Pong.y >= height + Pong.sizeY) {
+        Pong.x = int(random(40, width - 80));
+        Pong.y = int(random(-20000, -1000));
+      }
 
-    if (
-      //unten rechts
-      (player.x + player.sizeX / 2 >= Pong.x - Pong.sizeX / 2 &&
-        player.x + player.sizeX / 2 <= Pong.x + Pong.sizeX / 2 &&
-        player.y + player.sizeY / 2 <= Pong.y + Pong.sizeY / 2 &&
-        player.y + player.sizeY / 2 >= Pong.y - Pong.sizeY / 2) ||
-      //oben rechts
-      (player.x + player.sizeX / 2 >= Pong.x - Pong.sizeX / 2 &&
-        player.x + player.sizeX / 2 <= Pong.x + Pong.sizeX / 2 &&
-        player.y - player.sizeY / 2 <= Pong.y + Pong.sizeY / 2 &&
-        player.y - player.sizeY / 2 >= Pong.y - Pong.sizeY / 2) ||
-      //unten links
-      (player.x - player.sizeX / 2 >= Pong.x - Pong.sizeX / 2 &&
-        player.x - player.sizeX / 2 <= Pong.x + Pong.sizeX / 2 &&
-        player.y + player.sizeY / 2 <= Pong.y + Pong.sizeY / 2 &&
-        player.y + player.sizeY / 2 >= Pong.y - Pong.sizeY / 2) ||
-      //oben links
-      (player.x - player.sizeX / 2 >= Pong.x - Pong.sizeX / 2 &&
-        player.x - player.sizeX / 2 <= Pong.x + Pong.sizeX / 2 &&
-        player.y - player.sizeY / 2 <= Pong.y + Pong.sizeY / 2 &&
-        player.y - player.sizeY / 2 >= Pong.y - Pong.sizeY / 2)
-    ) {
-      Pong.show = false;
-      Pong.while = true;
-    }
-  }
-
-  //Coin
-  fill(Coin.color);
-  if (Coin.show === true) {
-    rect(Coin.x, Coin.y, Coin.sizeX, Coin.sizeY, 20);
-
-    if (
-      player.affectTile === true &&
-      player.y <= height - height / 3 + ntilesFIRST.sizeY
-    ) {
-      Coin.y = Coin.y + player.gravity;
-    }
-    if (Coin.y >= height + Coin.sizeY) {
-      Coin.x = int(random(40, width - 80));
-      Coin.y = int(random(-600, -100));
+      if (
+        player.y <= Pong.y + Pong.sizeY &&
+        player.y >= Pong.y - Pong.sizeY &&
+        player.x <= Pong.x + Pong.sizeX &&
+        player.x >= Pong.x - Pong.sizeX
+      ) {
+        Pong.show = false;
+      }
     }
 
-    if (
-      //unten rechts
-      (player.x + player.sizeX / 2 >= Coin.x - Coin.sizeX / 2 &&
-        player.x + player.sizeX / 2 <= Coin.x + Coin.sizeX / 2 &&
-        player.y + player.sizeY / 2 <= Coin.y + Coin.sizeY / 2 &&
-        player.y + player.sizeY / 2 >= Coin.y - Coin.sizeY / 2) ||
-      //oben rechts
-      (player.x + player.sizeX / 2 >= Coin.x - Coin.sizeX / 2 &&
-        player.x + player.sizeX / 2 <= Coin.x + Coin.sizeX / 2 &&
-        player.y - player.sizeY / 2 <= Coin.y + Coin.sizeY / 2 &&
-        player.y - player.sizeY / 2 >= Coin.y - Coin.sizeY / 2) ||
-      //unten links
-      (player.x - player.sizeX / 2 >= Coin.x - Coin.sizeX / 2 &&
-        player.x - player.sizeX / 2 <= Coin.x + Coin.sizeX / 2 &&
-        player.y + player.sizeY / 2 <= Coin.y + Coin.sizeY / 2 &&
-        player.y + player.sizeY / 2 >= Coin.y - Coin.sizeY / 2) ||
-      //oben links
-      (player.x - player.sizeX / 2 >= Coin.x - Coin.sizeX / 2 &&
-        player.x - player.sizeX / 2 <= Coin.x + Coin.sizeX / 2 &&
-        player.y - player.sizeY / 2 <= Coin.y + Coin.sizeY / 2 &&
-        player.y - player.sizeY / 2 >= Coin.y - Coin.sizeY / 2)
-    ) {
-      Coin.show = false;
-      Coins = Coins + Coin.weight;
-      Coin.x = int(random(40, width - 80));
-      Coin.y = int(random(-6000, -1000));
-      Coin.show = true;
+    //Coin
+    fill(Coin.color);
+    if (Coin.show === true) {
+      rect(Coin.x, Coin.y, Coin.sizeX, Coin.sizeY, 20);
+
+      if (player.affectTile === true) {
+        Coin.y = Coin.y + player.gravity;
+      }
+      if (Coin.y >= height + Coin.sizeY) {
+        Coin.x = int(random(40, width - 80));
+        Coin.y = int(random(-600, -100));
+      }
+
+      if (
+        player.y <= Coin.y + Coin.sizeY &&
+        player.y >= Coin.y - Coin.sizeY &&
+        player.x <= Coin.x + Coin.sizeX &&
+        player.x >= Coin.x - Coin.sizeX
+      ) {
+        Coin.show = false;
+        Coins = Coins + Coin.weight;
+        Coin.x = int(random(40, width - 80));
+        Coin.y = int(random(-6000, -1000));
+        Coin.show = true;
+      }
     }
-  }
-  //every half second coins = coins - 1
-  if (Pong.while === false) {
+    //every half second coins = coins - 1
     CoinTimer = CoinTimer + 1;
     if (CoinTimer >= 15 && player.y - player.sizeY / 2 < height - 40) {
       Coins = Coins - 1;
       CoinTimer = 0;
     }
-  }
-  //GODMODE ACTIVATED
-  if (prescreen.buttonactivated === true) {
-    Coins = 9999999;
-    highscore.total = 9999999;
-    godmodetimer++;
-    if (HeartArray.length < 5) {
-      HeartArray.push(1);
-      HeartArrayWhile.push(1);
-    }
-    if (godmodetimer < 99) {
-      DoubblejumpArray.push(1);
-      JumpshoeArray.push(1);
-      if (DoubblejumpArray.length > 99 && JumpshoeArray.length > 99) {
-        godmodetimer = 99;
+
+    //GODMODE ACTIVATED
+    if (prescreen.buttonactivated === true) {
+      Coins = 9999999;
+      highscore.total = 9999999;
+      godmodetimer++;
+      if (HeartArray.length < 5) {
+        HeartArray.push(1);
+        HeartArrayWhile.push(1);
+      }
+      if (godmodetimer < 99) {
+        DoubblejumpArray.push(1);
+        JumpshoeArray.push(1);
+        if (DoubblejumpArray.length > 99 && JumpshoeArray.length > 99) {
+          godmodetimer = 99;
+        }
       }
     }
   }
@@ -1541,14 +1204,15 @@ function items() {
 
 //Different functions of the items
 function itemfunction() {
-  if (Pong.while === true) {
+  if (Pong.show === false) {
     player.moving = false;
     Enemy.moving = false;
-    Pong.x = int(random(Pong.sizeX / 2, width - Pong.sizeX / 2));
-    Pong.y = int(random(-2000, -10000));
+    Pong.x = int(random(40, width - 80));
+    Pong.y = int(random(-10000, -2000));
+    // Pong.show = true;
   }
 
-  if (keyIsDown(keys.useitem)) {
+  if (keyIsDown(32)) {
     //Doubblejump use
     if (
       doubblejump.choose === true &&
@@ -1598,7 +1262,7 @@ function itemfunction() {
 //basic Platform
 function normaltile() {
   for (i = 0; i < ntiles.length; i++) {
-    fill(ntiles[i].color);
+    fill(20, 150, 60);
     rect(ntiles[i].x, ntiles[i].y, ntiles[i].sizeX, ntiles[i].sizeY, 20);
   }
 }
@@ -1606,7 +1270,7 @@ function normaltile() {
 //moving platform
 function movingtile() {
   for (m = 0; m < mtiles.length; m++) {
-    fill(mtiles[m].color);
+    fill(20, 150, 150);
     rect(mtiles[m].x, mtiles[m].y, mtiles[m].sizeX, mtiles[m].sizeY, 20);
 
     if (player.moving === true) {
@@ -1629,11 +1293,7 @@ function movingtile() {
 function movetiles() {
   //normal platforms
   for (i = 0; i < ntiles.length; i++) {
-    if (
-      player.affectTile === true &&
-      player.moving === true &&
-      player.y <= height - height / 3 + ntiles[i].sizeY
-    ) {
+    if (player.affectTile === true && player.moving === true) {
       ntiles[i].y = ntiles[i].y + player.gravity;
     }
     if (ntiles[i].y > height + 40 + ntiles[i].sizeY) {
@@ -1650,11 +1310,7 @@ function movetiles() {
     }
   }
 
-  if (
-    player.affectTile === true &&
-    player.moving === true &&
-    player.y <= height - height / 3 + ntilesFIRST.sizeY
-  ) {
+  if (player.affectTile === true && player.moving === true) {
     ntilesFIRST.y = ntilesFIRST.y + player.gravity;
     if (ntilesFIRST.y >= height) {
       ntilesFIRST.show = false;
@@ -1663,11 +1319,7 @@ function movetiles() {
 
   //moving platforms
   for (m = 0; m < mtiles.length; m++) {
-    if (
-      player.affectTile === true &&
-      player.moving === true &&
-      player.y <= height - height / 3 + mtiles[m].sizeY
-    ) {
+    if (player.affectTile === true && player.moving === true) {
       mtiles[m].y = mtiles[m].y + player.gravity;
 
       if (
@@ -1695,8 +1347,7 @@ function movetiles() {
           sizeX: 80,
           sizeY: 10,
           change: false,
-          movingR: true,
-          color: color(120, 120, 120)
+          movingR: true
         };
         mtiles.push(mtilesNEW);
         //console.log("Added");
@@ -1734,20 +1385,9 @@ function environmentfunction() {
   background(environment.color);
 }
 
-function inGameImages() {
-  if (
-    prescreen.show === false &&
-    prescreen.showshop === false &&
-    prescreen.showcontrols === false &&
-    player.moving === true
-  ) {
-    image(fire, width / 2, height - 90, 100, 100);
-  }
-}
-
 //Highscore
 function highscorefunction() {
-  fill(200);
+  fill(30);
   text("Height: " + int(highscore.score) + "m", highscore.x, highscore.y);
 
   if (
@@ -1759,16 +1399,11 @@ function highscorefunction() {
   }
 }
 
-//Game over
+//Gameover
 function gameOver() {
-  if (
-    prescreen.showshop === false &&
-    prescreen.show === false &&
-    prescreen.showcontrols === false
-  ) {
-    fill(200);
+  if (prescreen.showshop === false && prescreen.show === false) {
     if (
-      player.y >= height - 40 - player.sizeY / 2 ||
+      player.y > height - 30 - player.sizeY / 2 ||
       Coins <= 0 ||
       HeartArray.length < 1
     ) {
@@ -1826,7 +1461,6 @@ function gameOver() {
       if (prescreen.delay > 100) {
         prescreen.show = true;
         prescreen.showshop = false;
-        prescreen.showcontrols = false;
       }
     }
   }
@@ -1885,23 +1519,10 @@ function draw() {
   itembar();
   itemfunction();
   highscorefunction();
-  // inGameImages();
 
   //Prescreen & GAME OVER
   PrescreenFunction();
   PrescreenShop();
-  PrescreenControls();
-
-  //Pong start
-  if (Pong.while === true) {
-    background(0);
-    Spieler();
-    Ball();
-    BallMoving();
-    Restart();
-  }
-  //Pong end
-
   gameOver();
 
   //developing
