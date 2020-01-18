@@ -79,7 +79,8 @@ var prescreen = {
   buttonactivated: false,
   buttontimer: 0,
   delay: 0,
-  soundtimer: 1
+  soundtimer: 1,
+  startGame: false
 };
 
 //Player
@@ -542,7 +543,7 @@ function PrescreenFunction() {
         textAlign(LEFT);
         textSize(40);
         text(
-          "Total: " + int(highscore.total) + " Lines of Code",
+          "Lines of Code: " + int(highscore.total),
           width / 2 - 100,
           50
         );
@@ -603,6 +604,7 @@ function PrescreenFunction() {
           //stuff to reset
           if (mouseIsPressed === true) {
             soundButton.play();
+            prescreen.startGame = true;
             prescreen.delay = 0;
             prescreen.reset = true;
           }
@@ -1582,11 +1584,17 @@ function ShootEnemyFunction() {
           shoottiles.y <= player.y + player.sizeY / 2 &&
           ShootEnemy.cooldown > 30
         ) {
+          if (shield.while === false){
           soundgetHitted.play();
           ShootEnemy.shootdelay = 0;
           ShootEnemy.cooldown = 0;
           shoottiles.y = ShootEnemy.y;
           HeartArray.pop();
+          }
+          else {
+            ShootEnemy.shooting = false;
+            ShootEnemy.shootdelay = 20;
+          }
         }
       }
     }
@@ -3000,6 +3008,7 @@ function gameOver() {
       }
       rounds.push(int(highscore.score));
       if (prescreen.delay > 100) {
+        prescreen.startGame = false;
         widthWhile = width;
         heightWhile = height;
         prescreen.show = true;
@@ -3047,8 +3056,15 @@ function draw() {
 
   if (showIntro === false) {
     environmentfunction();
-    //Different platforms
+        
+    //Prescreen & GAME OVER   
+   PrescreenFunction();
+   reset();
+   PrescreenShop();
+   PrescreenControls();
 
+    if (prescreen.startGame === true){
+    //Different platforms
     normaltile();
     movingtile();
 
@@ -3071,13 +3087,9 @@ function draw() {
     PortalRotation();
 
     highscorefunction();
+  
     // inGameImages();
 
-    //Prescreen & GAME OVER
-    PrescreenFunction();
-    reset();
-    PrescreenShop();
-    PrescreenControls();
 
     //Pong start
     if (Pong.starting === true) {
@@ -3089,7 +3101,7 @@ function draw() {
     //Pong end
 
     gameOver();
-
+  }
     //developing
     developing();
   }
