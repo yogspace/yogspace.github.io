@@ -1627,8 +1627,7 @@ function ShootEnemyFunction() {
           ShootEnemy.y - ShootEnemy.sizeY / 2 <= heightWhile) ||
         (shield.while === true &&
           ShootEnemy.y + ShootEnemy.sizeY / 2 > 0 &&
-          ShootEnemy.y - ShootEnemy.sizeY / 2 <= heightWhile &&
-          player.y <= ShootEnemy.y - ShootEnemy.sizeY / 2)
+          ShootEnemy.y - ShootEnemy.sizeY / 2 <= heightWhile)
       ) {
         soundkillEnemy.play();
         ShootEnemy.cooldown = 0;
@@ -1744,8 +1743,7 @@ function RushEnemyFunction() {
           player.y <= RushEnemy.y - RushEnemy.sizeY / 2) ||
         (shield.while === true &&
           RushEnemy.y + RushEnemy.sizeY / 2 >= 0 &&
-          RushEnemy.y - RushEnemy.sizeY / 2 < heightWhile &&
-          player.y <= RushEnemy.y - RushEnemy.sizeY / 2)
+          RushEnemy.y - RushEnemy.sizeY / 2 < heightWhile)
       ) {
         soundkillEnemy.play();
         RushEnemy.cooldown = 0;
@@ -1927,8 +1925,7 @@ function RushEnemyUpAndDownFunction() {
           player.y <= RushUpAndDownEnemy.y - RushUpAndDownEnemy.sizeY / 2) ||
         (shield.while === true &&
           RushUpAndDownEnemy.y + ShootEnemy.sizeY / 2 > 0 &&
-          RushUpAndDownEnemy.y - RushUpAndDownEnemy.sizeY / 2 <= heightWhile &&
-          player.y <= RushUpAndDownEnemy.y - RushUpAndDownEnemy.sizeY / 2)
+          RushUpAndDownEnemy.y - RushUpAndDownEnemy.sizeY / 2 <= heightWhile)
       ) {
         soundkillEnemy.play();
         RushUpAndDownEnemy.cooldown = 0;
