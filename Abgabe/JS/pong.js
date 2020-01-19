@@ -27,6 +27,7 @@ var yspeed = 0;
 var score = 0;
 
 function Spieler() {
+  strokeWeight(3);
   fill(255, 255, 255);
   rectMode(CENTER);
   rect(xPos1, yPos1, 10, 40);
@@ -48,12 +49,12 @@ function Spieler() {
     yPos2 = yPos2 - 10;
   }
 
-  if (yPos1 < 70) {
-    yPos1 = 70;
+  if (yPos1 < 100) {
+    yPos1 = 100;
   }
 
-  if (yPos2 < 70) {
-    yPos2 = 70;
+  if (yPos2 < 100) {
+    yPos2 = 100;
   }
 
   if (yPos1 > heightWhile - 70) {
@@ -70,7 +71,7 @@ function Ball() {
   rect(xPosBall, yPosBall, 10, 10);
 
   stroke(255);
-  line(xPos1, 50, xPos2, 50);
+  line(xPos1, 80, xPos2, 80);
   line(xPos1, heightWhile - 50, xPos2, heightWhile - 50);
   noStroke();
   // fill(Coin.color);
@@ -151,7 +152,7 @@ function BallMoving() {
 
   //Border oben
 
-  if (yPosBall <= 55) {
+  if (yPosBall <= 85) {
     hitBorderUp = true;
   }
 
@@ -177,14 +178,14 @@ function BallMoving() {
 function Restart() {
   if (movingBall === false) {
     xPosBall = widthWhile / 2;
-    yPosBall = heightWhile / 2;
+    yPosBall = heightWhile / 2 + 15;
     BallRandom = 0;
     ballspeed = 10;
     score = 0;
     xPos1 = 100;
-    yPos1 = height / 2;
+    yPos1 = height / 2 + 15;
     xPos2 = widthWhile - 100;
-    yPos2 = height / 2;
+    yPos2 = height / 2 + 15;
 
     fill(255);
     rect(widthWhile / 2, heightWhile / 2, 100, 50);

@@ -8,6 +8,7 @@ var soundWelcome; // good
 var soundBackground; //good
 var soundPongOverflow; //good
 var soundPongCollusion; //good
+var soundDenied; //good
 
 var soundjumping; //good
 var soundjumpingLanding; // good
@@ -41,6 +42,7 @@ function preload() {
   myFont = loadFont("Font/BebasNeue-Regular.otf");
 
   //Sounds
+  soundDenied = loadSound("Sound/denied.mp3");
   soundRushUpAndDownEnemy2 = loadSound("Sound/EnemyRushUpAndDown.mp3");
   soundRushUpAndDownEnemy = loadSound("Sound/EnemyUpDown.mp3");
   soundRushEnemy = loadSound("Sound/EnemyRush.mp3");
