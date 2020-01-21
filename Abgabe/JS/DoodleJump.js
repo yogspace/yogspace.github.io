@@ -6,13 +6,17 @@ function PlayerFunction() {
     prescreen.showcontrols === false &&
     showIntro === false
   ) {
-    fill(player.color);
-    rect(player.x, player.y, player.sizeX, player.sizeY);
-
     //first tile
     if (ntilesFIRST.show === true) {
-      fill(70, 70, 70);
-      rect(ntilesFIRST.x, ntilesFIRST.y, ntilesFIRST.sizeX, ntilesFIRST.sizeY);
+      // fill(70, 70, 70);
+      // rect(ntilesFIRST.x, ntilesFIRST.y, ntilesFIRST.sizeX, ntilesFIRST.sizeY);
+      fill(0, 255, 0);
+      textSize(15);
+      text(
+        "01101010101011",
+        ntilesFIRST.x - ntilesFIRST.sizeX / 2,
+        ntilesFIRST.y + ntilesFIRST.sizeY
+      );
     }
     //Gravitation and boost of player
     if (player.jump === true && player.moving === true) {
@@ -46,6 +50,7 @@ function PlayerFunction() {
     //Movement of player
     if (keyIsPressed === true && player.moving === true) {
       if (keyIsDown(keys.moveleft)) {
+        player.moveR = false;
         if (player.affectTile === false) {
           player.x = player.x - 10;
         } else {
@@ -53,11 +58,52 @@ function PlayerFunction() {
         }
       }
       if (keyIsDown(keys.moveright)) {
+        player.moveR = true;
         if (player.affectTile === false) {
           player.x = player.x + 10;
         } else {
           player.x = player.x + 1 / 10;
         }
+      }
+    }
+
+    //Appearance of the player
+    if (player.moveR === true) {
+      image(imagePlayerRight, player.x, player.y, player.sizeX, player.sizeY);
+      if (jumpshoe.while === true) {
+        player.jetpackR = true;
+        player.jetpackL = false;
+      } else {
+        player.jetpackR = false;
+      }
+
+      if (player.jetpackR === true) {
+        fill(0);
+        image(
+          imageJetpackR,
+          player.x - player.sizeX / 2,
+          player.y,
+          player.sizeX / 2,
+          player.sizeY
+        );
+      }
+    } else {
+      image(imagePlayerLeft, player.x, player.y, player.sizeX, player.sizeY);
+      if (jumpshoe.while === true) {
+        player.jetpackL = true;
+        player.jetpackR = false;
+      } else {
+        player.jetpackL = false;
+      }
+      if (player.jetpackL === true) {
+        fill(0);
+        image(
+          imageJetpackL,
+          player.x + player.sizeX / 2,
+          player.y,
+          player.sizeX / 2,
+          player.sizeY
+        );
       }
     }
 
@@ -204,7 +250,16 @@ function PlayerAffectPlatform() {
               player.y =
                 ntilesFIRST.y - ntilesFIRST.sizeY / 2 - player.sizeY / 2;
             } else {
-              player.affectTile = true;
+              if (
+                ShootEnemy.cooldown >= 5 &&
+                RushEnemy.cooldown >= 5 &&
+                RushUpAndDownEnemy.cooldown >= 5
+              ) {
+                player.affectTile = true;
+              } else {
+                player.affectTile = false;
+              }
+
               player.y =
                 ntilesFIRST.y - ntilesFIRST.sizeY / 2 - player.sizeY / 2;
             }
@@ -298,7 +353,15 @@ function PlayerAffectPlatform() {
             if (player.y + player.sizeY / 2 >= player.jumpStart) {
               player.y = ntiles[i].y - ntiles[i].sizeY / 2 - player.sizeY / 2;
             } else {
-              player.affectTile = true;
+              if (
+                ShootEnemy.cooldown >= 5 &&
+                RushEnemy.cooldown >= 5 &&
+                RushUpAndDownEnemy.cooldown >= 5
+              ) {
+                player.affectTile = true;
+              } else {
+                player.affectTile = false;
+              }
               player.y = ntiles[i].y - ntiles[i].sizeY / 2 - player.sizeY / 2;
             }
           }
@@ -393,7 +456,15 @@ function PlayerAffectPlatform() {
             player.y + player.sizeY / 2 < player.jumpStart &&
             player.moving === true
           ) {
-            player.affectTile = true;
+            if (
+              ShootEnemy.cooldown >= 5 &&
+              RushEnemy.cooldown >= 5 &&
+              RushUpAndDownEnemy.cooldown >= 5
+            ) {
+              player.affectTile = true;
+            } else {
+              player.affectTile = false;
+            }
             player.y = mtiles[m].y - mtiles[m].sizeY / 2 - player.sizeY / 2;
           }
         }
@@ -435,7 +506,13 @@ function ShootEnemyFunction() {
     if (player.moving === true) {
       fill(ShootEnemy.color);
       //Movement and appearance of the Enemy
-      rect(ShootEnemy.x, ShootEnemy.y, ShootEnemy.sizeX, ShootEnemy.sizeY, 20);
+      image(
+        imageShootEnemy,
+        ShootEnemy.x,
+        ShootEnemy.y,
+        ShootEnemy.sizeX,
+        ShootEnemy.sizeY
+      );
       if (ShootEnemy.moving === true && ShootEnemy.show === true) {
         ShootEnemy.x = ShootEnemy.x + random(-4, 4);
         ShootEnemy.y = ShootEnemy.y + random(-4, 4);
@@ -459,7 +536,7 @@ function ShootEnemyFunction() {
 
       //If the Enemy is not in the players area
       if (
-        ShootEnemy.y + ShootEnemy.sizeY / 2 < 0 ||
+        ShootEnemy.y + ShootEnemy.sizeY / 2 < 0 - 400 ||
         ShootEnemy.y - ShootEnemy.sizeY / 2 > height
       ) {
         ShootEnemy.show = false;
@@ -596,16 +673,20 @@ function ShootEnemyFunction() {
         ) {
           soundkillEnemy.play();
           ShootEnemy.cooldown = 0;
-          player.jump = true;
-          player.jumpEnd = 0;
-          player.gravity = 3;
-          player.boost = 25;
+          if (doubblejump.while === false && jumpshoe.while === false) {
+            player.jump = true;
+            player.jumpEnd = 0;
+            player.gravity = 3;
+            player.boost = 25;
+          }
           ShootEnemy.y = 0 - random(6000, 500);
           Coins = Coins + Coin.weight;
           // player.affectTile = true;
         } else {
           soundgetHitted.play();
           ShootEnemy.cooldown = 0;
+          RushUpAndDownEnemy.cooldown = 0;
+          RushEnemy.cooldown = 0;
           HeartArray.pop();
         }
       }
@@ -625,7 +706,13 @@ function RushEnemyFunction() {
     if (player.moving === true) {
       fill(RushEnemy.color);
       //Movement and appearance of the Enemy
-      rect(RushEnemy.x, RushEnemy.y, RushEnemy.sizeX, RushEnemy.sizeY, 20);
+      image(
+        imageRushEnemy,
+        RushEnemy.x,
+        RushEnemy.y,
+        RushEnemy.sizeX,
+        RushEnemy.sizeY
+      );
       if (
         player.affectTile === true &&
         player.y <= height - height / 3 &&
@@ -639,7 +726,7 @@ function RushEnemyFunction() {
 
       //If the Enemy is not in the players area
       if (
-        RushEnemy.y + RushEnemy.sizeY / 2 < 0 ||
+        RushEnemy.y + RushEnemy.sizeY / 2 < 0 - 400 ||
         RushEnemy.y - RushEnemy.sizeY / 2 > height
       ) {
         RushEnemy.show = false;
@@ -726,15 +813,19 @@ function RushEnemyFunction() {
         ) {
           soundkillEnemy.play();
           RushEnemy.cooldown = 0;
-          player.jump = true;
-          player.jumpEnd = 0;
-          player.gravity = 3;
-          player.boost = 25;
+          if (doubblejump.while === false && jumpshoe.while === false) {
+            player.jump = true;
+            player.jumpEnd = 0;
+            player.gravity = 3;
+            player.boost = 25;
+          }
           RushEnemy.y = 0 - random(6000, 500);
           Coins = Coins + Coin.weight;
           // player.affectTile = true;
         } else {
           soundgetHitted.play();
+          ShootEnemy.cooldown = 0;
+          RushUpAndDownEnemy.cooldown = 0;
           RushEnemy.cooldown = 0;
           HeartArray.pop();
         }
@@ -753,15 +844,25 @@ function RushEnemyUpAndDownFunction() {
     // prescreen.show = false;
     // player.moving = false;
     if (player.moving === true) {
-      fill(RushUpAndDownEnemy.color);
+      if (RushUpAndDownEnemy.movingR === true) {
+        image(
+          imageRushUPDEnemyGoRight,
+          RushUpAndDownEnemy.x,
+          RushUpAndDownEnemy.y,
+          RushUpAndDownEnemy.sizeX,
+          RushUpAndDownEnemy.sizeY
+        );
+      } else {
+        image(
+          imageRushUPDEnemyGoLeft,
+          RushUpAndDownEnemy.x,
+          RushUpAndDownEnemy.y,
+          RushUpAndDownEnemy.sizeX,
+          RushUpAndDownEnemy.sizeY
+        );
+      }
+      // fill(RushUpAndDownEnemy.color);
       //Movement and appearance of the Enemy
-      rect(
-        RushUpAndDownEnemy.x,
-        RushUpAndDownEnemy.y,
-        RushUpAndDownEnemy.sizeX,
-        RushUpAndDownEnemy.sizeY,
-        20
-      );
       if (
         player.affectTile === true &&
         player.y <= height - height / 3 &&
@@ -776,7 +877,7 @@ function RushEnemyUpAndDownFunction() {
 
       //If the Enemy is not in the players area
       if (
-        RushUpAndDownEnemy.y + RushUpAndDownEnemy.sizeY / 2 < 0 ||
+        RushUpAndDownEnemy.y + RushUpAndDownEnemy.sizeY / 2 < 0 - 400 ||
         RushUpAndDownEnemy.y - RushUpAndDownEnemy.sizeY / 2 > height
       ) {
         RushUpAndDownEnemy.show = false;
@@ -929,16 +1030,20 @@ function RushEnemyUpAndDownFunction() {
         ) {
           soundkillEnemy.play();
           RushUpAndDownEnemy.cooldown = 0;
-          player.jump = true;
-          player.jumpEnd = 0;
-          player.gravity = 3;
-          player.boost = 25;
+          if (doubblejump.while === false && jumpshoe.while === false) {
+            player.jump = true;
+            player.jumpEnd = 0;
+            player.gravity = 3;
+            player.boost = 25;
+          }
           RushUpAndDownEnemy.y = 0 - random(6000, 500);
           Coins = Coins + Coin.weight;
           // player.affectTile = true;
         } else {
           soundgetHitted.play();
+          ShootEnemy.cooldown = 0;
           RushUpAndDownEnemy.cooldown = 0;
+          RushEnemy.cooldown = 0;
           HeartArray.pop();
         }
       }
@@ -989,9 +1094,44 @@ function itembar() {
     showIntro === false
   ) {
     if (player.moving === true) {
+      //Show Enemys
+      if (EnemyDetection === true) {
+        if (ShootEnemy.y > 0 - 400 && ShootEnemy.y < 0 - ShootEnemy.sizeY / 2) {
+          image(
+            imageShootEnemy,
+            ShootEnemy.x,
+            50,
+            ShootEnemy.sizeX / 2,
+            ShootEnemy.sizeY / 2
+          );
+        }
+        if (RushEnemy.y > 0 - 400 && RushEnemy.y < 0 - RushEnemy.sizeY / 2) {
+          image(
+            imageRushEnemy,
+            RushEnemy.x,
+            50,
+            RushEnemy.sizeX / 2,
+            RushEnemy.sizeY / 2
+          );
+        }
+
+        if (
+          RushUpAndDownEnemy.y > 0 - 400 &&
+          RushUpAndDownEnemy.y < 0 - RushUpAndDownEnemy.sizeY / 2
+        ) {
+          image(
+            imageRushUPDEnemyGoRight,
+            RushUpAndDownEnemy.x,
+            50,
+            RushUpAndDownEnemy.sizeX / 2,
+            RushUpAndDownEnemy.sizeY / 2
+          );
+        }
+      }
+
       //Choose items
       if (keyIsDown(keys.switchitem)) {
-        if (doubblejump.choose === true && prescreen.buttontimer >= 15) {
+        if (doubblejump.choose === true && prescreen.buttontimer >= 5) {
           soundchangeItem.play();
           // console.log("jumpshoe");
           doubblejump.choose = false;
@@ -999,7 +1139,7 @@ function itembar() {
           jumpshoe.choose = true;
           prescreen.buttontimer = 0;
         }
-        if (jumpshoe.choose === true && prescreen.buttontimer >= 15) {
+        if (jumpshoe.choose === true && prescreen.buttontimer >= 5) {
           soundchangeItem.play();
           // console.log("doubblejump");
           jumpshoe.choose = false;
@@ -1007,7 +1147,7 @@ function itembar() {
           shield.choose = true;
           prescreen.buttontimer = 0;
         }
-        if (shield.choose === true && prescreen.buttontimer >= 15) {
+        if (shield.choose === true && prescreen.buttontimer >= 5) {
           soundchangeItem.play();
           // console.log("doubblejump");
           jumpshoe.choose = false;
@@ -1027,8 +1167,9 @@ function itembar() {
         rect(50, height / 2, jumpshoe.sizeX * 1.2, jumpshoe.sizeY * 1.2, 5);
       }
       fill(jumpshoe.color);
-      rect(50, height / 2, jumpshoe.sizeX, jumpshoe.sizeY, 5);
+      image(imageJetpack, 50, height / 2, jumpshoe.sizeX, jumpshoe.sizeY);
       fill(200);
+      textSize(25);
       text(JumpshoeArray.length, 100, height - height / 2);
 
       //Doubblejump
@@ -1047,7 +1188,13 @@ function itembar() {
         );
       }
       fill(doubblejump.color);
-      rect(50, height / 2 + 70, jumpshoe.sizeX, jumpshoe.sizeY, 5);
+      image(
+        imageDoubblejump,
+        50,
+        height / 2 + 70,
+        jumpshoe.sizeX,
+        jumpshoe.sizeY
+      );
       fill(200);
       text(DoubblejumpArray.length, 100, height / 2 + 70);
 
@@ -1061,7 +1208,7 @@ function itembar() {
         rect(50, height / 2 + 140, shield.sizeX * 1.2, shield.sizeY * 1.2, 5);
       }
       fill(shield.color);
-      rect(50, height / 2 + 140, shield.sizeX, shield.sizeY, 5);
+      image(imageShield, 50, height / 2 + 140, shield.sizeX, shield.sizeY);
       fill(30);
       if (shield.while === true) {
         shieldshowtime = (shield.maxtime - shield.timer) / 30;
@@ -1076,15 +1223,33 @@ function itembar() {
       //Heart
       fill(Heart.color);
       if (HeartArray.length > 0) {
-        rect(width - 75, height - 40, Heart.sizeX, Heart.sizeY, 5);
+        image(imageHeart, width - 75, height - 40, Heart.sizeX, Heart.sizeY);
         if (HeartArray.length > 1) {
-          rect(width - 150, height - 40, Heart.sizeX, Heart.sizeY, 5);
+          image(imageHeart, width - 150, height - 40, Heart.sizeX, Heart.sizeY);
           if (HeartArray.length > 2) {
-            rect(width - 225, height - 40, Heart.sizeX, Heart.sizeY, 5);
+            image(
+              imageHeart,
+              width - 225,
+              height - 40,
+              Heart.sizeX,
+              Heart.sizeY
+            );
             if (HeartArray.length > 3) {
-              rect(width - 300, height - 40, Heart.sizeX, Heart.sizeY, 5);
+              image(
+                imageHeart,
+                width - 300,
+                height - 40,
+                Heart.sizeX,
+                Heart.sizeY
+              );
               if (HeartArray.length > 4) {
-                rect(width - 375, height - 40, Heart.sizeX, Heart.sizeY, 5);
+                image(
+                  imageHeart,
+                  width - 375,
+                  height - 40,
+                  Heart.sizeX,
+                  Heart.sizeY
+                );
               }
             }
           }
@@ -1104,8 +1269,13 @@ function items() {
   ) {
     //Jumpshoe
     if (jumpshoe.show === true) {
-      fill(jumpshoe.color);
-      rect(jumpshoe.x, jumpshoe.y, jumpshoe.sizeX, jumpshoe.sizeY, 20);
+      image(
+        imageJetpack,
+        jumpshoe.x,
+        jumpshoe.y,
+        jumpshoe.sizeX,
+        jumpshoe.sizeY
+      );
 
       if (
         player.affectTile === true &&
@@ -1155,13 +1325,12 @@ function items() {
 
     //Doubblejump
     if (doubblejump.show === true) {
-      fill(doubblejump.color);
-      rect(
+      image(
+        imageDoubblejump,
         doubblejump.x,
         doubblejump.y,
         doubblejump.sizeX,
-        doubblejump.sizeY,
-        20
+        doubblejump.sizeY
       );
 
       if (
@@ -1229,8 +1398,7 @@ function items() {
 
     //Shield
     if (shield.show === true) {
-      fill(shield.color);
-      rect(shield.x, shield.y, shield.sizeX, shield.sizeY, 20);
+      image(imageShield, shield.x, shield.y, shield.sizeX, shield.sizeY);
 
       if (
         player.affectTile === true &&
@@ -1282,7 +1450,7 @@ function items() {
     if (Heart.show === true) {
       fill(Heart.color);
       Heart.cooldown = Heart.cooldown + 1;
-      rect(Heart.x, Heart.y, Heart.sizeX, Heart.sizeY, 20);
+      image(imageHeart, Heart.x, Heart.y, Heart.sizeX, Heart.sizeY);
 
       if (
         player.affectTile === true &&
@@ -1346,8 +1514,7 @@ function items() {
 
     //Pong
     if (Pong.show === true) {
-      fill(Pong.color);
-      rect(Pong.x, Pong.y, Pong.sizeX, Pong.sizeY, 20);
+      image(imagePong, Pong.x, Pong.y, Pong.sizeX, Pong.sizeY);
 
       if (
         player.affectTile === true &&
@@ -1568,7 +1735,7 @@ function items() {
 function itemfunction() {
   if (Pong.while === true) {
     fill(0);
-    rect(Pong.slideX, heightWhile / 2, widthWhile, heightWhile);
+    rect(Pong.slideX, heightWhile / 2, width, height * 2);
 
     player.moving = false;
     player.affectTileTooClose = false;
@@ -1647,7 +1814,10 @@ function itemfunction() {
     if (
       doubblejump.choose === true &&
       DoubblejumpArray.length > 0 &&
-      prescreen.buttontimer >= 15
+      prescreen.buttontimer >= 15 &&
+      jumpshoe.while === false &&
+      doubblejump.while === false &&
+      Pong.while === false
     ) {
       // console.log("doubblejump yeah");
       sounditem_doubblejump.play();
@@ -1670,7 +1840,10 @@ function itemfunction() {
     if (
       jumpshoe.choose === true &&
       JumpshoeArray.length > 0 &&
-      prescreen.buttontimer >= 15
+      prescreen.buttontimer >= 15 &&
+      jumpshoe.while === false &&
+      doubblejump.while === false &&
+      Pong.while === false
     ) {
       // console.log("jumpshoe yeah");
       prescreen.buttontimer = 0;
@@ -1683,7 +1856,7 @@ function itemfunction() {
     jumpshoe.timer = jumpshoe.timer + 1;
     if (
       player.jump === true &&
-      player.boost >= 45 &&
+      player.boost >= 46 &&
       player.boost <= jumpshoe.usingafter
     ) {
       sounditem_jumpshoe.play();
@@ -1713,7 +1886,9 @@ function itemfunction() {
     if (
       shield.choose === true &&
       shieldArray.length > 0 &&
-      prescreen.buttontimer >= 15
+      prescreen.buttontimer >= 15 &&
+      shield.while === false &&
+      Pong.while === false
     ) {
       prescreen.buttontimer = 0;
       shield.while = true;
@@ -1740,7 +1915,7 @@ function itemfunction() {
       shield.timer != shield.maxtime - 20 &&
       shield.timer != shield.maxtime - 21
     ) {
-      fill(50, 205, 50, 200);
+      fill(32, 178, 170, 200);
     }
     ellipse(player.x, player.y, player.sizeX * 2, player.sizeY * 2);
     if (shield.timer >= shield.maxtime || Pong.while === true) {
@@ -1774,8 +1949,15 @@ function normaltile() {
       prescreen.showcontrols === false &&
       showIntro === false
     ) {
-      fill(ntiles[i].color);
-      rect(ntiles[i].x, ntiles[i].y, ntiles[i].sizeX, ntiles[i].sizeY);
+      // fill(ntiles[i].color);
+      // rect(ntiles[i].x, ntiles[i].y, ntiles[i].sizeX, ntiles[i].sizeY);
+      fill(0, 255, 0);
+      textSize(15);
+      text(
+        "01101010101011",
+        ntiles[i].x - ntiles[i].sizeX / 2,
+        ntiles[i].y + ntilesFIRST.sizeY
+      );
     }
   }
 }
@@ -1789,8 +1971,15 @@ function movingtile() {
     showIntro === false
   ) {
     for (m = 0; m < mtiles.length; m++) {
-      fill(mtiles[m].color);
-      rect(mtiles[m].x, mtiles[m].y, mtiles[m].sizeX, mtiles[m].sizeY);
+      // fill(mtiles[m].color);
+      // rect(mtiles[m].x, mtiles[m].y, mtiles[m].sizeX, mtiles[m].sizeY);
+      fill(255, 0, 0);
+      textSize(15);
+      text(
+        "01101010101011",
+        mtiles[m].x - mtiles[m].sizeX / 2,
+        mtiles[m].y + ntilesFIRST.sizeY
+      );
 
       if (player.moving === true) {
         if (mtiles[m].movingR === true) {
@@ -1944,53 +2133,39 @@ function environmentfunction() {
     prescreen.showcontrols === false &&
     showIntro === false
   ) {
-    for (m = 0; m < mtiles.length; m++) {
-      for (i = 0; i < ntiles.length; i++) {
-        for (k = 0; k < 5; k++) {
-          background(environment.color);
-          // environment.soundtimer = environment.soundtimer + 1;
-          // if (environment.soundtimer === 1) {
-          //   soundBackground.play();
-          //   if (environment.soundtimer >= 131 * 30) {
-          //     environment.soundtimer = 0;
-          //   }
-          // }
-
-          // if (player.y < heightWhile / 5) {
-          //   player.affectTileTooClose = true;
-          // } else {
-          //   player.affectTileTooClose = false;
-          // }
-
-          // if (player.affectTileTooClose === true) {
-          //   // player.affectTiles = true;
-          //   ntiles[i].y = ntiles[i].y + 5;
-          //   mtiles[m].y = mtiles[m].y + 5;
-          //   ShootEnemy.y = ShootEnemy.y + 5;
-          //   RushEnemy.y = RushEnemy.y + 5;
-          //   RushUpAndDownEnemy.y = RushUpAndDownEnemy.y;
-          //   Pong.y = Pong.y + 5;
-          //   jumpshoe.y = jumpshoe.y + 5;
-          //   doubblejump.y = doubblejump.y + 5;
-          //   Coin.y = Coin.y + 5;
-          //   shield.y = shield.y + 5;
-          //   changeKeys.y = changeKeys.y + 5;
-          // }
-        }
+    // for (m = 0; m < mtiles.length; m++) {
+    //   for (i = 0; i < ntiles.length; i++) {
+    background(environment.color);
+    environment.soundtimer = environment.soundtimer + 1;
+    if (environment.soundtimer === 1) {
+      soundBackground.play();
+      if (environment.soundtimer >= 131 * 30) {
+        environment.soundtimer = 0;
       }
     }
-  }
-}
 
-function inGameImages() {
-  if (
-    prescreen.show === false &&
-    prescreen.showshop === false &&
-    prescreen.showcontrols === false &&
-    player.moving === true &&
-    showIntro === false
-  ) {
-    image(fire, width / 2, height - 90, 100, 100);
+    // if (player.y < heightWhile / 5) {
+    //   player.affectTileTooClose = true;
+    // } else {
+    //   player.affectTileTooClose = false;
+    // }
+
+    // if (player.affectTileTooClose === true) {
+    //   // player.affectTiles = true;
+    //   ntiles[i].y = ntiles[i].y + 5;
+    //   mtiles[m].y = mtiles[m].y + 5;
+    //   ShootEnemy.y = ShootEnemy.y + 5;
+    //   RushEnemy.y = RushEnemy.y + 5;
+    //   RushUpAndDownEnemy.y = RushUpAndDownEnemy.y;
+    //   Pong.y = Pong.y + 5;
+    //   jumpshoe.y = jumpshoe.y + 5;
+    //   doubblejump.y = doubblejump.y + 5;
+    //   Coin.y = Coin.y + 5;
+    //   shield.y = shield.y + 5;
+    //   changeKeys.y = changeKeys.y + 5;
+    // }
+    //   }
+    // }
   }
 }
 
@@ -2004,7 +2179,7 @@ function highscorefunction() {
   ) {
     if (Pong.starting === false) {
       fill(200);
-      textSize(30);
+      textSize(35);
       text("Lines Of Code: " + int(highscore.score), highscore.x, highscore.y);
 
       if (
@@ -2031,10 +2206,10 @@ function highscorefunction() {
       10
     );
     if (
-      Coins === 10 &&
-      Coins === 5 &&
-      Coins === 3 &&
-      Coins === 2 &&
+      Coins === 10 ||
+      Coins === 5 ||
+      Coins === 3 ||
+      Coins === 2 ||
       Coins === 1
     ) {
       fill(Coin.colortimer2);
@@ -2065,7 +2240,7 @@ function gameOver() {
       height != heightWhile
     ) {
       textAlign(CENTER);
-      textSize(50);
+      textSize(60);
       player.moving = false;
 
       if (
@@ -2133,7 +2308,6 @@ function gameOver() {
       }
       rounds.push(int(highscore.score));
       if (prescreen.delay > 100) {
-        prescreen.startGame = false;
         widthWhile = width;
         heightWhile = height;
         prescreen.show = true;
@@ -2171,6 +2345,7 @@ function developing() {
     text("N.T: " + ntiles.length, 500, 60);
     text("M.T: " + mtiles.length, 500, 80);
     text("P. Mov: " + player.moving, 500, 100);
+    text("P. Aff.T: " + player.affectTile, 500, 120);
   }
 }
 
@@ -2211,10 +2386,10 @@ function draw() {
 
   highscorefunction();
 
-  // inGameImages();
-
   //Pong start
   if (Pong.starting === true) {
+    fill(0);
+    rect(width / 2, height / 2, width, height);
     Spieler();
     Ball();
     BallMoving();

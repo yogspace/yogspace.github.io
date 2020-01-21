@@ -5,7 +5,7 @@
  *
  *
  *
- *             programmed by: Max Weber
+ *             programmed by: yogspace
  *
  *                   Version: 1.5
  *
@@ -35,10 +35,6 @@
  * - ab und zu bewegen sich feste tiles um ein paar Pixel
  *
  *
- * - images
- * - tasten verändern
- * - rotation
- *
  *
  *
  *
@@ -54,9 +50,15 @@
 //Changable values:
 //Start value: anmount of platforms
 //normal tiles
-var ntilesanmount = random(55, 75);
+var ntilesanmount;
+if (windowWidth >= displayWidth - displayWidth / 5) {
+  ntilesanmount = 60;
+} else {
+  ntilesanmount = 35;
+}
+var ntilesanmounthalfwidth = 35;
 //moving tiles
-var mtilesanmount = random(0, 2);
+var mtilesanmount = 2;
 //the value for the height when tiles will despawn
 var heightdeleted = 20;
 var heightadded = 75;
@@ -79,23 +81,22 @@ var prescreen = {
   buttonactivated: false,
   buttontimer: 0,
   delay: 0,
-  soundtimer: 1,
-  startGame: false
+  soundtimer: 1
 };
 
 //for prescreen
 var showIntro = true;
-var introTimer = 0;
 var firstscreen = true;
 
 //Player
 var player = {
   x: width / 2,
   y: height - height * (1 / 6),
-  sizeX: 50,
+  sizeX: 70,
   sizeY: 90,
   color: color(255, 255, 255),
   moving: true,
+  moveR: false,
   jump: true,
   jumpEnd: 0,
   jumpStart: height,
@@ -105,6 +106,9 @@ var player = {
   //if affect platform
   affectTile: false,
   affectTileTooClose: false,
+  //items
+  jetpackR: false,
+  jetpackL: false,
   //detection
   yPos1: 0,
   yPos2: 0,
@@ -190,18 +194,18 @@ var keys = {
 
 //Background
 var environment = {
-  color: color(70, 0, 0),
+  color: color(8, 0, 30),
   soundtimer: 0
 };
 
-//RandomText
-RTxt = ["10100101110100101011"];
-var randomText = {
-  color: color(50, 205, 50, 100),
-  timer: 0,
-  x: 10,
-  y: width / 2
-};
+// //RandomText
+// RTxt = ["10100101110100101011"];
+// var randomText = {
+//   color: color(50, 205, 50, 100),
+//   timer: 0,
+//   x: 10,
+//   y: width / 2
+// };
 
 /*
 item stuff
@@ -245,7 +249,7 @@ var shield = {
   y: random(-600, -10),
   sizeX: 50,
   sizeY: 50,
-  color: color(50, 205, 50),
+  color: color(32, 178, 170),
   show: true,
   choose: false,
   while: false,
@@ -320,14 +324,21 @@ var Heart = {
   cooldown: 0
 };
 
-//Enemies
+var EnemyDetection = false;
 
+/*
+ *
+ *
+ * Enemies
+ *
+ *
+ */
 var RushEnemy = {
   x: random(25, width - 25),
   y: 0 - random(3000, 500),
   // y: random(100, 500),
-  sizeX: 50,
-  sizeY: 50,
+  sizeX: 90,
+  sizeY: 75,
   color: color(170, 120, 20),
   show: true,
   moving: true,
@@ -342,8 +353,8 @@ var RushUpAndDownEnemy = {
   x: random(25, width - 25),
   y: 0 - random(3000, 500),
   // y: random(100, 500),
-  sizeX: 50,
-  sizeY: 50,
+  sizeX: 90,
+  sizeY: 100,
   color: color(170, 120, 20),
   show: true,
   moving: true,
@@ -357,10 +368,10 @@ var RushUpAndDownEnemy = {
   soundTimer: 0
 };
 
-//Shoottiles
-var ShootESizeX = random(100, 20);
+//Shoot Enemy
+var ShootESizeX = 80;
 var ShootESizeXTotal = random(ShootESizeX, width - ShootESizeX);
-var ShootESizeY = random(120, 50);
+var ShootESizeY = 160;
 var ShootEnemy = {
   x: ShootESizeXTotal,
   y: 0 - random(3000, 500),
@@ -420,8 +431,8 @@ var shop = {
   cwprice: 150,
   caprice: 100,
   haprice: 500,
-  hwprice: 1500,
-  slprice: 300
+  slprice: 300,
+  EDprice: 3000
 };
 
 //for developer stats
@@ -444,360 +455,373 @@ itemcolors = [
 
 //The Prescreen
 function Intro() {
+  prescreen.buttontimer = prescreen.buttontimer + 1;
+
+  // console.log(prescreen.show);
+  // console.log(prescreen.showshop);
+  // console.log(prescreen.showcontrols);
   if (showIntro === true) {
-    introTimer = introTimer + 1;
     //Background
     fill(environment.color);
     rect(0, 0, width * 2, height * 2);
     textAlign(CENTER);
     fill(255);
     textSize(80);
-    text("ROBO JUMP", width / 2, height / 2);
-    if (introTimer >= 30) {
+    text("ANTIVIRUS", width / 2, height / 2);
+    if (prescreen.buttontimer >= 30) {
       textSize(40);
-      fill(170, 170, 170, introTimer * 5);
-      text("FIND THE ERROR", width / 2, height / 2 + height / 3);
+      fill(170, 170, 170, prescreen.buttontimer * 5);
+      text("KILL THE ERROR", width / 2, height / 2 + height / 3);
       textSize(20);
       text("by yogspace", width / 2 + width / 3, height - 30);
-    }
-    if (introTimer >= 50) {
-      prescreen.show = true;
-      introTimer = 0;
-      soundWelcome.play();
-      showIntro = false;
+      image(
+        imageShootEnemy,
+        width / 2 + 150,
+        height / 2 + height / 3 - ShootEnemy.sizeX / 4,
+        (ShootEnemy.sizeX * 1) / 2,
+        (ShootEnemy.sizeY * 1) / 2
+      );
     }
   }
+  if (prescreen.buttontimer >= 50 && showIntro === true) {
+    prescreen.show = true;
+    prescreen.buttontimer = 0;
+    showIntro = false;
+  }
 }
+
 function PrescreenFunction() {
-  prescreen.buttontimer = prescreen.buttontimer + 1;
-  for (m = 0; m < mtiles.length; m = m + 1) {
-    for (i = 0; i < ntiles.length; i = i + 1) {
-      //after the round
+  //after the round
+  if (prescreen.show === true) {
+    //if there are less tiles than at the beginning
+
+    while (ntiles.length < ntilesanmount) {
+      ntilesNEW = {
+        x: random(40, width - 80),
+        y: random(-600, height - 10),
+        sizeX: 80,
+        sizeY: 10,
+        change: false,
+        color: color(70, 70, 70)
+      };
+      ntiles.push(ntilesNEW);
+    }
+
+    while (mtiles.length > mtilesanmount) {
+      mtiles.pop();
+    }
+
+    while (JumpshoeArray.length > 0) {
+      JumpshoeArray.pop();
+    }
+    while (DoubblejumpArray.length > 0) {
+      DoubblejumpArray.pop();
+    }
+    while (shieldArray.length > 0) {
+      shieldArray.pop();
+    }
+
+    //Heart regeneration
+    if (HeartArray.length < HeartArrayWhile.length) {
+      HeartArray.push(1);
+    }
+
+    if (HeartArray.length > HeartArrayWhile.length) {
+      HeartArray.pop();
+    }
+
+    player.moving = false;
+    prescreen.delay = 0;
+
+    //Background
+    fill(environment.color);
+    rect(0, 0, width * 2, height * 2);
+    textAlign(CENTER);
+
+    //Start
+    fill(prescreen.buttonsemicolor);
+    rect(width / 2, height - 100, 300, 100);
+    fill(prescreen.buttoncolor);
+    rect(width / 2 - 2, height - 102, 296, 96);
+    fill(200);
+    textSize(50);
+    text("play", width / 2, height - 85);
+    textSize(20);
+
+    //Shop
+    fill(prescreen.buttonsemicolorshop);
+    rect(width / 2, height - 220, 300, 100);
+    fill(prescreen.buttoncolorshop);
+    rect(width / 2 - 2, height - 222, 296, 96);
+    fill(200);
+    textSize(50);
+    text("shop", width / 2, height - 205);
+    textSize(20);
+
+    //Controls
+    fill(prescreen.buttonsemicolorcontrols);
+    rect(width / 2, height - 340, 300, 100);
+    fill(prescreen.buttoncolorcontrols);
+    rect(width / 2 - 2, height - 342, 296, 96);
+    fill(200);
+    textSize(50);
+    text("controls", width / 2, height - 325);
+    textSize(20);
+
+    fill(200);
+    textAlign(LEFT);
+    textSize(40);
+    text("Lines of Code: " + int(highscore.total), width / 2 - 100, 50);
+
+    //what you can see after the first round
+    if (firstscreen === false) {
+      textAlign(CENTER);
+      text("latest score: ", width / 2 - width / 4, 130);
+      text(int(highscore.score) + " Lines of code", width / 2 - width / 4, 185);
+      text("best score: ", width / 2 + width / 4, 130);
+      text(max(rounds) + " lines of code", width / 2 + width / 4, 185);
+
+      //Stats
+
+      textAlign(LEFT);
+      textSize(20);
+    } else {
+      if (prescreen.buttontimer === 30) {
+        soundWelcome.play();
+      }
+
+      //modi godmode
+      fill(200);
+      textSize(20);
+      text("godmode", width / 2 - 70, height - 418);
+      image(imageQR, width - 50, 50, 60, 60);
+
       if (
-        prescreen.show === true &&
-        prescreen.showshop === false &&
-        prescreen.showcontrols === false
+        mouseIsPressed === true &&
+        mouseX >= width / 2 - 115 &&
+        mouseX <= width / 2 - 85 &&
+        mouseY >= height - 444 &&
+        mouseY <= height - 414 &&
+        prescreen.buttontimer >= 10
       ) {
-        if (JumpshoeArray.length > 0) {
-          JumpshoeArray.pop();
-        }
-        if (DoubblejumpArray.length > 0) {
-          DoubblejumpArray.pop();
-        }
-        if (shieldArray.length > 0) {
-          shieldArray.pop();
-        }
-
-        //Heart regeneration
-        if (HeartArray.length < HeartArrayWhile.length) {
-          HeartArray.push(1);
-        }
-
-        if (HeartArray.length > HeartArrayWhile.length) {
-          HeartArray.pop();
-        }
-
-        //if there are less tiles than at the beginning
-        ntilesNEW = {
-          x: random(40, width - 80),
-          y: random(-600, height - 10),
-          sizeX: 80,
-          sizeY: 10,
-          change: false,
-          color: color(70, 70, 70)
-        };
-        if (ntiles.length < ntilesanmount) {
-          ntiles.push(ntilesNEW);
-        }
-
-        if (mtiles.length > mtilesanmount) {
-          mtiles.pop();
-        }
-
-        player.moving = false;
-        prescreen.delay = 0;
-
-        //Background
-        fill(environment.color);
-        rect(0, 0, width * 2, height * 2);
-        textAlign(CENTER);
-
-        //Start
-        fill(prescreen.buttonsemicolor);
-        rect(width / 2, height - 100, 300, 100);
-        fill(prescreen.buttoncolor);
-        rect(width / 2 - 2, height - 102, 296, 96);
-        fill(200);
-        textSize(50);
-        text("play", width / 2, height - 85);
-        textSize(20);
-
-        //Shop
-        fill(prescreen.buttonsemicolorshop);
-        rect(width / 2, height - 220, 300, 100);
-        fill(prescreen.buttoncolorshop);
-        rect(width / 2 - 2, height - 222, 296, 96);
-        fill(200);
-        textSize(50);
-        text("shop", width / 2, height - 205);
-        textSize(20);
-
-        //Controls
-        fill(prescreen.buttonsemicolorcontrols);
-        rect(width / 2, height - 340, 300, 100);
-        fill(prescreen.buttoncolorcontrols);
-        rect(width / 2 - 2, height - 342, 296, 96);
-        fill(200);
-        textSize(50);
-        text("controls", width / 2, height - 325);
-        textSize(20);
-
-        fill(200);
-        textAlign(LEFT);
-        textSize(40);
-        text("Lines of Code: " + int(highscore.total), width / 2 - 100, 50);
-
-        //what you can see after the first round
-        if (firstscreen === false) {
-          textAlign(CENTER);
-          text("latest score: ", width / 2 - width / 4, 130);
-          text(
-            int(highscore.score) + " Lines of code",
-            width / 2 - width / 4,
-            185
-          );
-          text("best score: ", width / 2 + width / 4, 130);
-          text(max(rounds) + " lines of code", width / 2 + width / 4, 185);
-
-          //Stats
-
-          textAlign(LEFT);
-          textSize(20);
+        soundButton.play();
+        prescreen.buttontimer = 0;
+        if (prescreen.buttonactivated === false) {
+          prescreen.buttonactivated = true;
         } else {
-          //modi godmode
-          fill(200);
-          textSize(20);
-          text("godmode", width / 2 - 70, height - 418);
-
-          if (
-            mouseIsPressed === true &&
-            mouseX >= width / 2 - 115 &&
-            mouseX <= width / 2 - 85 &&
-            mouseY >= height - 444 &&
-            mouseY <= height - 414 &&
-            prescreen.buttontimer >= 10
-          ) {
-            soundButton.play();
-            prescreen.buttontimer = 0;
-            if (prescreen.buttonactivated === false) {
-              prescreen.buttonactivated = true;
-            } else {
-              prescreen.buttonactivated = false;
-            }
-          }
-
-          if (prescreen.buttonactivated === true) {
-            fill(prescreen.buttoncolorMODI);
-            rect(width / 2 - 100, height - 429, 30, 30);
-          } else {
-            highscore.total = 0;
-            fill(100, 100, 100);
-            rect(width / 2 - 100, height - 429, 30, 30);
-          }
-        }
-        //Start button pressed
-        if (
-          mouseX >= width / 2 - 150 &&
-          mouseX <= width / 2 + 150 &&
-          mouseY >= height - 150 &&
-          mouseY <= height - 50
-        ) {
-          prescreen.buttoncolor = color(230, 30, 30);
-          prescreen.buttonsemicolor = color(170, 30, 30);
-          //stuff to reset
-          if (mouseIsPressed === true) {
-            soundButton.play();
-            prescreen.startGame = true;
-            prescreen.delay = 0;
-            prescreen.reset = true;
-          }
-        } else {
-          prescreen.buttoncolor = color(200, 30, 30);
-          prescreen.buttonsemicolor = color(170, 30, 30);
-        }
-
-        //Shop button pressed
-        if (
-          mouseX >= width / 2 - 150 &&
-          mouseX <= width / 2 + 150 &&
-          mouseY >= height - 270 &&
-          mouseY <= height - 170
-        ) {
-          prescreen.buttoncolorshop = color(230, 30, 30);
-          prescreen.buttonsemicolorshop = color(170, 30, 30);
-          if (mouseIsPressed === true) {
-            soundButton.play();
-            prescreen.show = false;
-            prescreen.showcontrols = false;
-            prescreen.showshop = true;
-          }
-        } else {
-          prescreen.buttoncolorshop = color(200, 30, 30);
-          prescreen.buttonsemicolorshop = color(170, 30, 30);
-        }
-        //Controls button pressed
-        if (
-          mouseX >= width / 2 - 150 &&
-          mouseX <= width / 2 + 150 &&
-          mouseY >= height - 390 &&
-          mouseY <= height - 290
-        ) {
-          prescreen.buttoncolorcontrols = color(230, 30, 30);
-          prescreen.buttonsemicolorcontrols = color(170, 30, 30);
-          if (mouseIsPressed === true) {
-            soundButton.play();
-            prescreen.show = false;
-            prescreen.showshop = false;
-            prescreen.showcontrols = true;
-          }
-        } else {
-          prescreen.buttoncolorcontrols = color(200, 30, 30);
-          prescreen.buttonsemicolorcontrols = color(170, 30, 30);
+          prescreen.buttonactivated = false;
         }
       }
+
+      if (prescreen.buttonactivated === true) {
+        fill(prescreen.buttoncolorMODI);
+        rect(width / 2 - 100, height - 429, 30, 30);
+      } else {
+        highscore.total = 0;
+        fill(100, 100, 100);
+        rect(width / 2 - 100, height - 429, 30, 30);
+      }
+    }
+    //Start button pressed
+    if (
+      mouseX >= width / 2 - 150 &&
+      mouseX <= width / 2 + 150 &&
+      mouseY >= height - 150 &&
+      mouseY <= height - 50
+    ) {
+      prescreen.buttoncolor = color(230, 30, 30);
+      prescreen.buttonsemicolor = color(170, 30, 30);
+      //stuff to reset
+      if (
+        (mouseIsPressed === true && prescreen.buttontimer >= 20) ||
+        (keyIsPressed === true && keyCode === 32 && prescreen.buttontimer >= 20)
+      ) {
+        soundButton.play();
+        prescreen.delay = 0;
+        prescreen.reset = true;
+        prescreen.buttontimer = 0;
+      }
+    } else {
+      prescreen.buttoncolor = color(200, 30, 30);
+      prescreen.buttonsemicolor = color(170, 30, 30);
+    }
+
+    //Shop button pressed
+    if (
+      mouseX >= width / 2 - 150 &&
+      mouseX <= width / 2 + 150 &&
+      mouseY >= height - 270 &&
+      mouseY <= height - 170
+    ) {
+      prescreen.buttoncolorshop = color(230, 30, 30);
+      prescreen.buttonsemicolorshop = color(170, 30, 30);
+      if (
+        (mouseIsPressed === true && prescreen.buttontimer >= 20) ||
+        (keyIsPressed === true && keyCode === 32 && prescreen.buttontimer >= 20)
+      ) {
+        soundButton.play();
+        prescreen.show = false;
+        prescreen.showshop = true;
+        prescreen.buttontimer = 0;
+      }
+    } else {
+      prescreen.buttoncolorshop = color(200, 30, 30);
+      prescreen.buttonsemicolorshop = color(170, 30, 30);
+    }
+    //Controls button pressed
+    if (
+      mouseX >= width / 2 - 150 &&
+      mouseX <= width / 2 + 150 &&
+      mouseY >= height - 390 &&
+      mouseY <= height - 290
+    ) {
+      prescreen.buttoncolorcontrols = color(230, 30, 30);
+      prescreen.buttonsemicolorcontrols = color(170, 30, 30);
+      if (
+        (mouseIsPressed === true && prescreen.buttontimer >= 20) ||
+        (keyIsPressed === true && keyCode === 32 && prescreen.buttontimer >= 20)
+      ) {
+        soundButton.play();
+        prescreen.show = false;
+        prescreen.showcontrols = true;
+        prescreen.buttontimer = 0;
+      }
+    } else {
+      prescreen.buttoncolorcontrols = color(200, 30, 30);
+      prescreen.buttonsemicolorcontrols = color(170, 30, 30);
     }
   }
 }
 
 function reset() {
-  for (m = 0; m < mtiles.length; m = m + 1) {
+  console.log(ntiles.length);
+  if (prescreen.reset === true) {
+    //tiles are new sorted
     for (i = 0; i < ntiles.length; i = i + 1) {
-      if (prescreen.reset === true) {
-        //tiles are new sorted
-        ntiles[i].x = random(40, width - 80);
-        ntiles[i].y = random(-600, height - 10);
-        mtiles[m].x = random(40, width - 80);
-        mtiles[m].y = random(-600, height - 10);
-        ntilesFIRST.show = true;
-        ntilesFIRST.x = width / 2;
-        ntilesFIRST.y = height / 2 + height * 0.1;
-
-        //Items
-        Pong.y = random(-3000, -10000);
-        Pong.x = random(Pong.sizeX / 2, width - Pong.sizeX / 2);
-        Pong.while = false;
-        Pong.startingTimer = 0;
-        Heart.x = random(Heart.sizeX / 2, width - Heart.sizeX / 2);
-        Heart.y = 0 - random(5000, 1000);
-        Coins = 100;
-        Coins = Coins + newCoins;
-        doubblejump.y = 0 - random(600, 10);
-        doubblejump.x = random(
-          doubblejump.sizeX / 2,
-          width - doubblejump.sizeX / 2
-        );
-        doubblejump.while = false;
-        shield.x = random(shield.sizeX / 2, width - shield.sizeX / 2);
-        shield.y = 0 - random(600, 10);
-        shield.while = false;
-        shield.timer = 0;
-        jumpshoe.y = 0 - random(600, 10);
-        jumpshoe.x = random(jumpshoe.sizeX / 2, width - jumpshoe.sizeX / 2);
-        jumpshoe.while = false;
-        jumpshoe.timer = 0;
-        changeKeys.timer = 0;
-        changeKeys.timercolor = 0;
-        changeKeys.choosecolor = false;
-        changeKeys.while = false;
-        changeKeys.show = true;
-        changeKeys.x = random(
-          changeKeys.sizeX / 2,
-          width - changeKeys.sizeX / 2
-        );
-        changeKeys.y = 0 - random(1500, 7000);
-        keys.moveright = 39;
-        keys.moveleft = 37;
-        keys.switchitem = 16;
-        keys.useitem = 32;
-
-        //Player
-        player.x = width / 2;
-        player.y = height - height * (1 / 6);
-        player.moving = true;
-        player.jump = true;
-        player.jumpEnd = 0;
-        player.jumpStart = height;
-        player.gravity = 3;
-        player.boost = 30;
-        player.falling = true;
-        player.affectTile = false;
-        player.yPos1 = 0;
-        player.yPos2 = 0;
-
-        //Enemys
-        ShootEnemy.moving = true;
-        ShootEnemy.shootdelay = 20;
-        ShootEnemy.cooldown = 0;
-        ShootEnemy.y = 0 - random(3000, 500);
-        ShootEnemy.x = random(ShootESizeX, width - ShootESizeX);
-        shoottiles.x = ShootEnemy.y;
-
-        RushEnemy.y = 0 - random(4000, 1000);
-        RushEnemy.x = random(RushEnemy.sizeX, width - RushEnemy.sizeX);
-
-        RushUpAndDownEnemy.y = 0 - random(7000, 3000);
-        RushUpAndDownEnemy.x = random(RushEnemy.sizeX, width - RushEnemy.sizeX);
-        RushUpAndDownEnemy.movingUp = false;
-
-        //Highscore
-        highscore.score = 0;
-        highscore.adding = true;
-
-        //Other stuff
-        firstscreen = false;
-        prescreen.show = false;
-        prescreen.showshop = false;
-        prescreen.showcontrols = false;
-        prescreen.buttontimer = 0;
-        gameOverTimer = 0;
-        widthWhile = width;
-        heightWhile = height;
-        Pong.slideX = widthWhile + widthWhile / 2;
-
-        if (prescreen.buttonactivated === true) {
-          godmodetimer = 0;
-        }
-        prescreen.reset = false;
-      }
+      ntiles[i].x = random(40, width - 80);
+      ntiles[i].y = random(-600, height - 10);
     }
+
+    for (m = 0; m < mtiles.length; m = m + 1) {
+      mtiles[m].x = random(40, width - 80);
+      mtiles[m].y = random(-600, height - 10);
+    }
+    delntile = 0;
+    addmtile = 0;
+    ntilesFIRST.show = true;
+    ntilesFIRST.x = width / 2;
+    ntilesFIRST.y = height / 2 + height * 0.1;
+
+    //Items
+    Pong.y = random(-3000, -10000);
+    Pong.x = random(Pong.sizeX / 2, width - Pong.sizeX / 2);
+    Pong.while = false;
+    Pong.startingTimer = 0;
+    Heart.x = random(Heart.sizeX / 2, width - Heart.sizeX / 2);
+    Heart.y = 0 - random(5000, 1000);
+    Coins = 100;
+    Coins = Coins + newCoins;
+    doubblejump.y = 0 - random(600, 10);
+    doubblejump.x = random(
+      doubblejump.sizeX / 2,
+      width - doubblejump.sizeX / 2
+    );
+    doubblejump.while = false;
+    shield.x = random(shield.sizeX / 2, width - shield.sizeX / 2);
+    shield.y = 0 - random(600, 10);
+    shield.while = false;
+    shield.timer = 0;
+    jumpshoe.y = 0 - random(600, 10);
+    jumpshoe.x = random(jumpshoe.sizeX / 2, width - jumpshoe.sizeX / 2);
+    jumpshoe.while = false;
+    jumpshoe.timer = 0;
+    changeKeys.timer = 0;
+    changeKeys.timercolor = 0;
+    changeKeys.choosecolor = false;
+    changeKeys.while = false;
+    changeKeys.show = true;
+    changeKeys.x = random(changeKeys.sizeX / 2, width - changeKeys.sizeX / 2);
+    changeKeys.y = 0 - random(1500, 7000);
+    keys.moveright = 39;
+    keys.moveleft = 37;
+    keys.switchitem = 16;
+    keys.useitem = 32;
+
+    //Player
+    player.x = width / 2;
+    player.y = height - height * (1 / 6);
+    player.moving = true;
+    player.jump = true;
+    player.jumpEnd = 0;
+    player.jumpStart = height;
+    player.gravity = 3;
+    player.boost = 30;
+    player.falling = true;
+    player.affectTile = false;
+    player.yPos1 = 0;
+    player.yPos2 = 0;
+
+    //Enemys
+    ShootEnemy.moving = true;
+    ShootEnemy.shootdelay = 20;
+    ShootEnemy.cooldown = 0;
+    ShootEnemy.y = 0 - random(3000, 500);
+    ShootEnemy.x = random(ShootESizeX, width - ShootESizeX);
+    shoottiles.x = ShootEnemy.y;
+
+    RushEnemy.y = 0 - random(4000, 1000);
+    RushEnemy.x = random(RushEnemy.sizeX, width - RushEnemy.sizeX);
+
+    RushUpAndDownEnemy.y = 0 - random(7000, 3000);
+    RushUpAndDownEnemy.x = random(RushEnemy.sizeX, width - RushEnemy.sizeX);
+    RushUpAndDownEnemy.movingUp = false;
+
+    //Highscore
+    highscore.score = 0;
+    highscore.adding = true;
+
+    //Background
+    environment.soundtimer = 0;
+
+    //Other stuff
+    firstscreen = false;
+    prescreen.show = false;
+    prescreen.showshop = false;
+    prescreen.showcontrols = false;
+    prescreen.buttontimer = 0;
+    gameOverTimer = 0;
+    widthWhile = width;
+    heightWhile = height;
+    Pong.slideX = widthWhile + widthWhile / 2;
+
+    if (prescreen.buttonactivated === true) {
+      godmodetimer = 0;
+    }
+    prescreen.reset = false;
   }
 }
 
 function PrescreenShop() {
   // prescreen.show = false;
   // prescreen.showshop = true;
-  // highscore.total = 2000;
+  // highscore.total = 5000;
 
-  if (
-    prescreen.show === false &&
-    prescreen.showshop === true &&
-    prescreen.showcontrols === false
-  ) {
+  if (prescreen.showshop === true) {
     //Background
     fill(environment.color);
     rect(0, 0, width * 2, height * 2);
     fill(200);
     textAlign(LEFT);
-    textSize(40);
-    text("Total: " + int(highscore.total) + " lines of code", 20, 80);
+    textSize(50);
+    text("Total: " + int(highscore.total) + " lines of code", 40, 96);
     //Back
     fill(prescreen.buttonsemicolorshop);
     rect(width - 120, 80, 160, 90);
     fill(prescreen.buttoncolorshop);
     rect(width - 122, 78, 156, 86);
     fill(200);
-    textSize(50);
-    text("back", width - 165, 96);
+    // textSize(50);
+    text("back", width - 160, 96);
     textSize(20);
 
     //Coin
@@ -814,8 +838,8 @@ function PrescreenShop() {
     rectMode(CENTER);
     fill(0);
     textSize(25);
-    text("Anmount: " + (100 + newCoins), 120, 208);
-    text("Weight: " + Coin.weight, 120, 280);
+    text("Energy Anmount: " + (100 + newCoins), 120, 208);
+    text("Battery capacity: " + Coin.weight, 120, 280);
     if (Coins <= 99999) {
       text("+ 10", width / 2 + 50, 208);
       rect(width - 70, 200, 80, 40, 5);
@@ -879,17 +903,15 @@ function PrescreenShop() {
 
     //Heart
     fill(Heart.color);
-    rect(50, 395, Heart.sizeX, Heart.sizeY, 20);
+    image(imageHeart, 50, 360, Heart.sizeX, Heart.sizeY);
 
     fill(prescreen.buttoncolor);
     rectMode(CORNER);
     rect(100, 331, width - 120, 60, 20);
-    rect(100, 400, width - 120, 60, 20);
     rectMode(CENTER);
     fill(0);
     textSize(25);
-    text("Anmount: " + HeartArrayWhile.length, 120, 370);
-    text("Weight: " + Heart.weight, 120, 438);
+    text("Max Anmount: " + HeartArrayWhile.length, 120, 370);
     if (HeartArray.length < 5) {
       text("+ 1", width / 2 + 50, 370);
       rect(width - 70, 360, 80, 40, 5);
@@ -898,15 +920,6 @@ function PrescreenShop() {
       fill(0);
     } else {
       text("max", width / 2 + 50, 370);
-    }
-    if (Heart.weight < 3) {
-      text("+ 1", width / 2 + 50, 438);
-      rect(width - 70, 428, 80, 40, 5);
-      fill(255);
-      text("soon", width - 105, 438);
-      fill(0);
-    } else {
-      text("max", width / 2 + 50, 438);
     }
     textSize(20);
     if (
@@ -932,69 +945,33 @@ function PrescreenShop() {
       }
     }
 
-    if (
-      mouseIsPressed === true &&
-      mouseX >= width - 110 &&
-      mouseX <= width - 30 &&
-      mouseY >= 410 &&
-      mouseY <= 450 &&
-      prescreen.buttontimer >= 20 &&
-      Heart.weight < 3
-    ) {
-      if (highscore.total >= shop.hwprice) {
-        // soundButton.play();
-        prescreen.buttontimer = 0;
-      } else {
-        soundDenied.play();
-        prescreen.buttontimer = 0;
-      }
-      /*
-      Heart.weight = Heart.weight + 1;
-      highscore.total = highscore.total - 500;
-      shop.hwprice = shop.hwprice + 500;
-      */
-    }
-
     //Shield
-    fill(shield.color);
-    rect(50, 560, shield.sizeX, shield.sizeY, 20);
+    image(imageShield, 50, 450, shield.sizeX, shield.sizeY);
 
     fill(prescreen.buttoncolor);
     rectMode(CORNER);
-    rect(100, 491, width - 120, 60, 20);
-    rect(100, 560, width - 120, 60, 20);
+    rect(100, 421, width - 120, 60, 20);
     rectMode(CENTER);
     fill(0);
     textSize(25);
-    text("Lapse: " + shield.maxtime / 30 + "s", 120, 530);
-    text("soon.. ", 120, 598);
+    text("Shield Time: " + shield.maxtime / 30 + "s", 120, 460);
     if (shield.maxtime < 300) {
-      text("+ 1s", width / 2 + 50, 530);
-      rect(width - 70, 520, 80, 40, 5);
+      text("+ 1s", width / 2 + 50, 460);
+      rect(width - 70, 450, 80, 40, 5);
       fill(255);
-      text(shop.slprice + " LOC", width - 105, 530);
+      text(shop.slprice + " LOC", width - 105, 460);
       fill(0);
     } else {
-      text("max", width / 2 + 50, 530);
+      text("max", width / 2 + 50, 460);
     }
-    /*
-Platzhalter für Schild  
-if (Heart.weight < 3) {
-  text("+ 1", width / 2 + 50, 598);
-  rect(width - 70, 588, 80, 40, 5);
-  fill(255);
-  text("soon", width - 95, 598);
-  fill(0);
-} else {
-  text("max", width / 2 + 50, 438);
-}*/
+
     textSize(20);
     if (
       mouseIsPressed === true &&
       mouseX >= width - 110 &&
       mouseX <= width - 30 &&
-      mouseY >= 500 &&
-      mouseY <= 540 &&
+      mouseY >= 430 &&
+      mouseY <= 470 &&
       prescreen.buttontimer >= 20 &&
       shield.maxtime < 300 &&
       shield.maxtimewhile < 300
@@ -1012,28 +989,45 @@ if (Heart.weight < 3) {
       }
     }
 
-    //Platzhalter für Schild
-    /*
-if (
-  mouseIsPressed === true &&
-  mouseX >= width - 110 &&
-  mouseX <= width - 30 &&
-  mouseY >= 410 &&
-  mouseY <= 450 &&
-  prescreen.buttontimer >= 20 &&
-  Heart.weight < 3
-) {
-  if (highscore.total >= shop.hwprice){
-  prescreen.buttontimer = 0;
-    Heart.weight = Heart.weight + 1;
-  highscore.total = highscore.total - shop.hwprice;
-  shop.hwprice = shop.hwprice + 500;
-        } else {
+    //Enemy Detection
+    image(imageEnemyDetection, 50, 540, shield.sizeX, shield.sizeY);
+
+    fill(prescreen.buttoncolor);
+    rectMode(CORNER);
+    rect(100, 511, width - 120, 60, 20);
+    rectMode(CENTER);
+    fill(0);
+    textSize(25);
+    text("VIRUS SCAN", 120, 550);
+    if (EnemyDetection === false) {
+      rect(width - 70, 540, 80, 40, 5);
+      fill(255);
+      text(shop.EDprice + " LOC", width - 105, 550);
+      fill(0);
+    } else {
+      text("ACTIVATED", width / 2 + 50, 550);
+    }
+
+    textSize(20);
+    if (
+      mouseIsPressed === true &&
+      mouseX >= width - 110 &&
+      mouseX <= width - 30 &&
+      mouseY >= 520 &&
+      mouseY <= 560 &&
+      prescreen.buttontimer >= 20 &&
+      EnemyDetection === false
+    ) {
+      if (highscore.total >= shop.EDprice) {
+        soundButton.play();
+        prescreen.buttontimer = 0;
+        EnemyDetection = true;
+        highscore.total = highscore.total - shop.EDprice;
+      } else {
         soundDenied.play();
         prescreen.buttontimer = 0;
       }
-}
-*/
+    }
 
     //Back
     if (
@@ -1044,7 +1038,8 @@ if (
     ) {
       prescreen.buttoncolorshop = color(230, 30, 30);
       prescreen.buttonsemicolorshop = color(200, 30, 30);
-      if (mouseIsPressed === true) {
+      if (mouseIsPressed === true && prescreen.buttontimer >= 20) {
+        prescreen.buttontimer = 0;
         soundButton.play();
         prescreen.show = true;
         prescreen.showshop = false;
@@ -1061,11 +1056,7 @@ function PrescreenControls() {
   // prescreen.showshop = false;
   // prescreen.showcontrols = true;
 
-  if (
-    prescreen.show === false &&
-    prescreen.showshop === false &&
-    prescreen.showcontrols === true
-  ) {
+  if (prescreen.showcontrols === true) {
     //Background
     fill(environment.color);
     rect(0, 0, width * 2, height * 2);
@@ -1096,7 +1087,7 @@ function PrescreenControls() {
     rect(width - 122, 78, 156, 86);
     fill(255, 255, 255);
     textSize(50);
-    text("back", width - 165, 96);
+    text("back", width - 160, 96);
     textSize(20);
 
     if (
@@ -1110,7 +1101,6 @@ function PrescreenControls() {
       if (mouseIsPressed === true) {
         soundButton.play();
         prescreen.show = true;
-        prescreen.showshop = false;
         prescreen.showcontrols = false;
       }
     } else {

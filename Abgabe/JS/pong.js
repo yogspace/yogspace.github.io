@@ -27,6 +27,23 @@ var yspeed = 0;
 var score = 0;
 
 function Spieler() {
+  //highscore
+  fill(Coin.color);
+  stroke(Coin.semicolor);
+  strokeWeight(5);
+  rect(
+    width / 2 - 30,
+    highscore.y + 10,
+    Coin.sizeX * (3 / 2),
+    Coin.sizeY * (3 / 2),
+    10
+  );
+  noStroke();
+  textSize(35);
+  fill(200);
+  text(Coins, width / 2 - 10, highscore.y + 20);
+  textSize(25);
+
   strokeWeight(3);
   fill(255, 255, 255);
   rectMode(CENTER);

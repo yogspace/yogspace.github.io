@@ -1,7 +1,19 @@
-//Font
+/*
+ *
+ *
+ * FONT
+ *
+ *
+ */
 var myFont;
 
-//Sound
+/*
+ *
+ *
+ * SOUND
+ *
+ *
+ */
 //Menu
 var soundButton; //good
 var soundWelcome; // good
@@ -30,16 +42,57 @@ var soundRushEnemy; //good
 var soundEnemyCooldown; //good
 var soundShootEnemy; //good
 var soundRushUpAndDownEnemy; // good
-var soundRushUpAndDownEnemy2;
+var soundRushUpAndDownEnemy2; // good
 
 //Dying
 var soundDieThroughFalling; // good
 var soundDieThroughEnemy; // good
 var soundDieThroughTimer; // good
 
+/*
+ *
+ *
+ * IMAGES
+ *
+ *
+ */
+
+var imageHeart;
+var imageShootEnemy;
+var imageRushEnemy;
+var imageRushUPDEnemyGoLeft;
+var imageRushUPDEnemyGoRight;
+var imageEnemyDetection;
+var imageJetpack;
+var imageShield;
+var imageDoubblejump;
+var imagePong;
+var imagePlayerRight;
+var imagePlayerLeft;
+var imageJetpackR;
+var imageJetpackL;
+var imageQR;
+
 function preload() {
   //Font
   myFont = loadFont("Font/BebasNeue-Regular.otf");
+
+  //Images
+  imageHeart = loadImage("Bilder/Heart.svg");
+  imageShootEnemy = loadImage("Bilder/ShootEnemy.svg");
+  imageRushEnemy = loadImage("Bilder/RushEnemy.svg");
+  imageRushUPDEnemyGoLeft = loadImage("Bilder/RushUADEnemy-GoLeft.svg");
+  imageRushUPDEnemyGoRight = loadImage("Bilder/RushUADEnemy-GoRight.svg");
+  imageEnemyDetection = loadImage("Bilder/EnemyDetection.svg");
+  imageJetpack = loadImage("Bilder/jetpack.svg");
+  imageShield = loadImage("Bilder/shield.svg");
+  imageDoubblejump = loadImage("Bilder/Doubblejump.svg");
+  imagePong = loadImage("Bilder/Pong.svg");
+  imagePlayerRight = loadImage("Bilder/Player/PlayerRight.svg");
+  imagePlayerLeft = loadImage("Bilder/Player/PlayerLeft.svg");
+  imageJetpackR = loadImage("Bilder/Player/JetpackRight.svg");
+  imageJetpackL = loadImage("Bilder/Player/JetpackLeft.svg");
+  imageQR = loadImage("Bilder/qrcode.svg");
 
   //Sounds
   soundDenied = loadSound("Sound/denied.mp3");
@@ -67,9 +120,6 @@ function preload() {
   soundPongCollusion = sounditem_heart;
   soundPongOverflow = loadSound("Sound/Pong_flow.mp3");
   sounditem_jumpshoe = loadSound("Sound/item_jumpshoe.mp3");
-
-  //Images
-  // fire = loadImage("../Bilder/Feuer/Feuer.gif");
 }
 
 function setup() {
