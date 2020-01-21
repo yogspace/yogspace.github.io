@@ -139,323 +139,196 @@ function PlayerAffectPlatform() {
     // }
 
     //weiterkommen
-    for (m = 0; m < mtiles.length; m = m + 1) {
-      for (i = 0; i < ntiles.length; i = i + 1) {
-        /*
+    /*
       Hier habe ich die Detection ob sich der Spieler auf einer Plattform
       befindet. Wie ich auf die Zahlen gekommen bin, habe ich in der Datei
       tiles-detection.pdf notiert.
       */
 
-        //First normal tile
-        if (
-          //1
-          //unten rechts
-          (player.x + player.sizeX / 2 >=
-            ntilesFIRST.x - ntilesFIRST.sizeX / 2 &&
-            player.x + player.sizeX / 2 <=
-              ntilesFIRST.x + ntilesFIRST.sizeX / 2 &&
-            player.yPos1 + player.sizeY / 2 <=
-              ntilesFIRST.y - ntilesFIRST.sizeY / 2 &&
-            player.yPos2 + player.sizeY / 2 >=
-              ntilesFIRST.y - ntilesFIRST.sizeY / 2) ||
-          //unten links
-          (player.x - player.sizeX / 2 >=
-            ntilesFIRST.x - ntilesFIRST.sizeX / 2 &&
-            player.x - player.sizeX / 2 <=
-              ntilesFIRST.x + ntilesFIRST.sizeX / 2 &&
-            player.yPos1 + player.sizeY / 2 <=
-              ntilesFIRST.y - ntilesFIRST.sizeY / 2 &&
-            player.yPos2 + player.sizeY / 2 >=
-              ntilesFIRST.y - ntilesFIRST.sizeY / 2) ||
-          //2
-          //unten rechts
-          (player.x + player.sizeX / 2 >=
-            ntilesFIRST.x - ntilesFIRST.sizeX / 2 &&
-            player.x + player.sizeX / 2 <=
-              ntilesFIRST.x + ntilesFIRST.sizeX / 2 &&
-            player.yPos1 + player.sizeY / 2 <=
-              ntilesFIRST.y + ntilesFIRST.sizeY / 2 &&
-            player.yPos2 + player.sizeY / 2 >=
-              ntilesFIRST.y + ntilesFIRST.sizeY / 2) ||
-          //unten links
-          (player.x - player.sizeX / 2 >=
-            ntilesFIRST.x - ntilesFIRST.sizeX / 2 &&
-            player.x - player.sizeX / 2 <=
-              ntilesFIRST.x + ntilesFIRST.sizeX / 2 &&
-            player.yPos1 + player.sizeY / 2 <=
-              ntilesFIRST.y + ntilesFIRST.sizeY / 2 &&
-            player.yPos2 + player.sizeY / 2 >=
-              ntilesFIRST.y + ntilesFIRST.sizeY / 2) ||
-          //3
-          //unten rechts
-          (player.x + player.sizeX / 2 >=
-            ntilesFIRST.x - ntilesFIRST.sizeX / 2 &&
-            player.x + player.sizeX / 2 <=
-              ntilesFIRST.x + ntilesFIRST.sizeX / 2 &&
-            player.yPos1 + player.sizeY / 2 <=
-              ntilesFIRST.y - ntilesFIRST.sizeY / 2 &&
-            player.yPos2 + player.sizeY / 2 >=
-              ntilesFIRST.y + ntilesFIRST.sizeY / 2) ||
-          //unten links
-          (player.x - player.sizeX / 2 >=
-            ntilesFIRST.x - ntilesFIRST.sizeX / 2 &&
-            player.x - player.sizeX / 2 <=
-              ntilesFIRST.x + ntilesFIRST.sizeX / 2 &&
-            player.yPos1 + player.sizeY / 2 <=
-              ntilesFIRST.y - ntilesFIRST.sizeY / 2 &&
-            player.yPos2 + player.sizeY / 2 >=
-              ntilesFIRST.y + ntilesFIRST.sizeY / 2) ||
-          //4
-          //unten rechts
-          (player.x + player.sizeX / 2 >=
-            ntilesFIRST.x - ntilesFIRST.sizeX / 2 &&
-            player.x + player.sizeX / 2 <=
-              ntilesFIRST.x + ntilesFIRST.sizeX / 2 &&
-            player.yPos1 + player.sizeY / 2 <=
-              ntilesFIRST.y + ntilesFIRST.sizeY / 2 &&
-            player.yPos2 + player.sizeY / 2 >=
-              ntilesFIRST.y + ntilesFIRST.sizeY / 2) ||
-          //unten links
-          (player.x - player.sizeX / 2 >=
-            ntilesFIRST.x - ntilesFIRST.sizeX / 2 &&
-            player.x - player.sizeX / 2 <=
-              ntilesFIRST.x + ntilesFIRST.sizeX / 2 &&
-            player.yPos1 + player.sizeY / 2 <=
-              ntilesFIRST.y + ntilesFIRST.sizeY / 2 &&
-            player.yPos2 + player.sizeY / 2 >=
-              ntilesFIRST.y + ntilesFIRST.sizeY / 2) ||
-          //5
-          //unten rechts
-          (player.x + player.sizeX / 2 >=
-            ntilesFIRST.x - ntilesFIRST.sizeX / 2 &&
-            player.x + player.sizeX / 2 <=
-              ntilesFIRST.x + ntilesFIRST.sizeX / 2 &&
-            player.yPos1 + player.sizeY / 2 >=
-              ntilesFIRST.y - ntilesFIRST.sizeY / 2 &&
-            player.yPos2 + player.sizeY / 2 <=
-              ntilesFIRST.y + ntilesFIRST.sizeY / 2) ||
-          //unten links
-          (player.x - player.sizeX / 2 >=
-            ntilesFIRST.x - ntilesFIRST.sizeX / 2 &&
-            player.x - player.sizeX / 2 <=
-              ntilesFIRST.x + ntilesFIRST.sizeX / 2 &&
-            player.yPos1 + player.sizeY / 2 >=
-              ntilesFIRST.y - ntilesFIRST.sizeY / 2 &&
-            player.yPos2 + player.sizeY / 2 <=
-              ntilesFIRST.y + ntilesFIRST.sizeY / 2)
-        ) {
-          if (player.jump === false && player.moving === true) {
-            if (player.y + player.sizeY / 2 >= player.jumpStart) {
-              player.y =
-                ntilesFIRST.y - ntilesFIRST.sizeY / 2 - player.sizeY / 2;
-            } else {
-              if (
-                ShootEnemy.cooldown >= 5 &&
-                RushEnemy.cooldown >= 5 &&
-                RushUpAndDownEnemy.cooldown >= 5
-              ) {
-                player.affectTile = true;
-              } else {
-                player.affectTile = false;
-              }
-
-              player.y =
-                ntilesFIRST.y - ntilesFIRST.sizeY / 2 - player.sizeY / 2;
-            }
-          }
-        }
-        // else{
-        //   player.affectTile = false;
-        //   player.jump = false;
-        //   player.gravity = 3;
-        // }
-
-        //normal tile
-        if (
-          //1
-          //unten rechts
-          (player.x + player.sizeX / 2 >= ntiles[i].x - ntiles[i].sizeX / 2 &&
-            player.x + player.sizeX / 2 <= ntiles[i].x + ntiles[i].sizeX / 2 &&
-            player.yPos1 + player.sizeY / 2 <=
-              ntiles[i].y - ntiles[i].sizeY / 2 &&
-            player.yPos2 + player.sizeY / 2 >=
-              ntiles[i].y - ntiles[i].sizeY / 2) ||
-          //unten links
-          (player.x - player.sizeX / 2 >= ntiles[i].x - ntiles[i].sizeX / 2 &&
-            player.x - player.sizeX / 2 <= ntiles[i].x + ntiles[i].sizeX / 2 &&
-            player.yPos1 + player.sizeY / 2 <=
-              ntiles[i].y - ntiles[i].sizeY / 2 &&
-            player.yPos2 + player.sizeY / 2 >=
-              ntiles[i].y - ntiles[i].sizeY / 2) ||
-          //2
-          //unten rechts
-          (player.x + player.sizeX / 2 >= ntiles[i].x - ntiles[i].sizeX / 2 &&
-            player.x + player.sizeX / 2 <= ntiles[i].x + ntiles[i].sizeX / 2 &&
-            player.yPos1 + player.sizeY / 2 <=
-              ntiles[i].y + ntiles[i].sizeY / 2 &&
-            player.yPos2 + player.sizeY / 2 >=
-              ntiles[i].y + ntiles[i].sizeY / 2) ||
-          //unten links
-          (player.x - player.sizeX / 2 >= ntiles[i].x - ntiles[i].sizeX / 2 &&
-            player.x - player.sizeX / 2 <= ntiles[i].x + ntiles[i].sizeX / 2 &&
-            player.yPos1 + player.sizeY / 2 <=
-              ntiles[i].y + ntiles[i].sizeY / 2 &&
-            player.yPos2 + player.sizeY / 2 >=
-              ntiles[i].y + ntiles[i].sizeY / 2) ||
-          //3
-          //unten rechts
-          (player.x + player.sizeX / 2 >= ntiles[i].x - ntiles[i].sizeX / 2 &&
-            player.x + player.sizeX / 2 <= ntiles[i].x + ntiles[i].sizeX / 2 &&
-            player.yPos1 + player.sizeY / 2 <=
-              ntiles[i].y - ntiles[i].sizeY / 2 &&
-            player.yPos2 + player.sizeY / 2 >=
-              ntiles[i].y + ntiles[i].sizeY / 2) ||
-          //unten links
-          (player.x - player.sizeX / 2 >= ntiles[i].x - ntiles[i].sizeX / 2 &&
-            player.x - player.sizeX / 2 <= ntiles[i].x + ntiles[i].sizeX / 2 &&
-            player.yPos1 + player.sizeY / 2 <=
-              ntiles[i].y - ntiles[i].sizeY / 2 &&
-            player.yPos2 + player.sizeY / 2 >=
-              ntiles[i].y + ntiles[i].sizeY / 2) ||
-          //4
-          //unten rechts
-          (player.x + player.sizeX / 2 >= ntiles[i].x - ntiles[i].sizeX / 2 &&
-            player.x + player.sizeX / 2 <= ntiles[i].x + ntiles[i].sizeX / 2 &&
-            player.yPos1 + player.sizeY / 2 <=
-              ntiles[i].y + ntiles[i].sizeY / 2 &&
-            player.yPos2 + player.sizeY / 2 >=
-              ntiles[i].y + ntiles[i].sizeY / 2) ||
-          //unten links
-          (player.x - player.sizeX / 2 >= ntiles[i].x - ntiles[i].sizeX / 2 &&
-            player.x - player.sizeX / 2 <= ntiles[i].x + ntiles[i].sizeX / 2 &&
-            player.yPos1 + player.sizeY / 2 <=
-              ntiles[i].y + ntiles[i].sizeY / 2 &&
-            player.yPos2 + player.sizeY / 2 >=
-              ntiles[i].y + ntiles[i].sizeY / 2) ||
-          //5
-          //unten rechts
-          (player.x + player.sizeX / 2 >= ntiles[i].x - ntiles[i].sizeX / 2 &&
-            player.x + player.sizeX / 2 <= ntiles[i].x + ntiles[i].sizeX / 2 &&
-            player.yPos1 + player.sizeY / 2 >=
-              ntiles[i].y - ntiles[i].sizeY / 2 &&
-            player.yPos2 + player.sizeY / 2 <=
-              ntiles[i].y + ntiles[i].sizeY / 2) ||
-          //unten links
-          (player.x - player.sizeX / 2 >= ntiles[i].x - ntiles[i].sizeX / 2 &&
-            player.x - player.sizeX / 2 <= ntiles[i].x + ntiles[i].sizeX / 2 &&
-            player.yPos1 + player.sizeY / 2 >=
-              ntiles[i].y - ntiles[i].sizeY / 2 &&
-            player.yPos2 + player.sizeY / 2 <=
-              ntiles[i].y + ntiles[i].sizeY / 2)
-        ) {
-          if (player.jump === false && player.moving === true) {
-            if (player.y + player.sizeY / 2 >= player.jumpStart) {
-              player.y = ntiles[i].y - ntiles[i].sizeY / 2 - player.sizeY / 2;
-            } else {
-              if (
-                ShootEnemy.cooldown >= 5 &&
-                RushEnemy.cooldown >= 5 &&
-                RushUpAndDownEnemy.cooldown >= 5
-              ) {
-                player.affectTile = true;
-              } else {
-                player.affectTile = false;
-              }
-              player.y = ntiles[i].y - ntiles[i].sizeY / 2 - player.sizeY / 2;
-            }
-          }
-        }
-        // else{
-        //   player.affectTile = false;
-        //   player.jump = false;
-        //   player.gravity = 3;
-        // }
-
-        //moving Tile
-        if (
-          //unten rechts
-          //1
-          //unten rechts
-          (player.x + player.sizeX / 2 >= mtiles[m].x - mtiles[m].sizeX / 2 &&
-            player.x + player.sizeX / 2 <= mtiles[m].x + mtiles[m].sizeX / 2 &&
-            player.yPos1 + player.sizeY / 2 <=
-              mtiles[m].y - mtiles[m].sizeY / 2 &&
-            player.yPos2 + player.sizeY / 2 >=
-              mtiles[m].y - mtiles[m].sizeY / 2) ||
-          //unten links
-          (player.x - player.sizeX / 2 >= mtiles[m].x - mtiles[m].sizeX / 2 &&
-            player.x - player.sizeX / 2 <= mtiles[m].x + mtiles[m].sizeX / 2 &&
-            player.yPos1 + player.sizeY / 2 <=
-              mtiles[m].y - mtiles[m].sizeY / 2 &&
-            player.yPos2 + player.sizeY / 2 >=
-              mtiles[m].y - mtiles[m].sizeY / 2) ||
-          //2
-          //unten rechts
-          (player.x + player.sizeX / 2 >= mtiles[m].x - mtiles[m].sizeX / 2 &&
-            player.x + player.sizeX / 2 <= mtiles[m].x + mtiles[m].sizeX / 2 &&
-            player.yPos1 + player.sizeY / 2 <=
-              mtiles[m].y + mtiles[m].sizeY / 2 &&
-            player.yPos2 + player.sizeY / 2 >=
-              mtiles[m].y + mtiles[m].sizeY / 2) ||
-          //unten links
-          (player.x - player.sizeX / 2 >= mtiles[m].x - mtiles[m].sizeX / 2 &&
-            player.x - player.sizeX / 2 <= mtiles[m].x + mtiles[m].sizeX / 2 &&
-            player.yPos1 + player.sizeY / 2 <=
-              mtiles[m].y + mtiles[m].sizeY / 2 &&
-            player.yPos2 + player.sizeY / 2 >=
-              mtiles[m].y + mtiles[m].sizeY / 2) ||
-          //3
-          //unten rechts
-          (player.x + player.sizeX / 2 >= mtiles[m].x - mtiles[m].sizeX / 2 &&
-            player.x + player.sizeX / 2 <= mtiles[m].x + mtiles[m].sizeX / 2 &&
-            player.yPos1 + player.sizeY / 2 <=
-              mtiles[m].y - mtiles[m].sizeY / 2 &&
-            player.yPos2 + player.sizeY / 2 >=
-              mtiles[m].y + mtiles[m].sizeY / 2) ||
-          //unten links
-          (player.x - player.sizeX / 2 >= mtiles[m].x - mtiles[m].sizeX / 2 &&
-            player.x - player.sizeX / 2 <= mtiles[m].x + mtiles[m].sizeX / 2 &&
-            player.yPos1 + player.sizeY / 2 <=
-              mtiles[m].y - mtiles[m].sizeY / 2 &&
-            player.yPos2 + player.sizeY / 2 >=
-              mtiles[m].y + mtiles[m].sizeY / 2) ||
-          //4
-          //unten rechts
-          (player.x + player.sizeX / 2 >= mtiles[m].x - mtiles[m].sizeX / 2 &&
-            player.x + player.sizeX / 2 <= mtiles[m].x + mtiles[m].sizeX / 2 &&
-            player.yPos1 + player.sizeY / 2 <=
-              mtiles[m].y + mtiles[m].sizeY / 2 &&
-            player.yPos2 + player.sizeY / 2 >=
-              mtiles[m].y + mtiles[m].sizeY / 2) ||
-          //unten links
-          (player.x - player.sizeX / 2 >= mtiles[m].x - mtiles[m].sizeX / 2 &&
-            player.x - player.sizeX / 2 <= mtiles[m].x + mtiles[m].sizeX / 2 &&
-            player.yPos1 + player.sizeY / 2 <=
-              mtiles[m].y + mtiles[m].sizeY / 2 &&
-            player.yPos2 + player.sizeY / 2 >=
-              mtiles[m].y + mtiles[m].sizeY / 2) ||
-          //5
-          //unten rechts
-          (player.x + player.sizeX / 2 >= mtiles[m].x - mtiles[m].sizeX / 2 &&
-            player.x + player.sizeX / 2 <= mtiles[m].x + mtiles[m].sizeX / 2 &&
-            player.yPos1 + player.sizeY / 2 >=
-              mtiles[m].y - mtiles[m].sizeY / 2 &&
-            player.yPos2 + player.sizeY / 2 <=
-              mtiles[m].y + mtiles[m].sizeY / 2) ||
-          //unten links
-          (player.x - player.sizeX / 2 >= mtiles[m].x - mtiles[m].sizeX / 2 &&
-            player.x - player.sizeX / 2 <= mtiles[m].x + mtiles[m].sizeX / 2 &&
-            player.yPos1 + player.sizeY / 2 >=
-              mtiles[m].y - mtiles[m].sizeY / 2 &&
-            player.yPos2 + player.sizeY / 2 <=
-              mtiles[m].y + mtiles[m].sizeY / 2)
-        ) {
+    //First normal tile
+    if (
+      //1
+      //unten rechts
+      (player.x + player.sizeX / 2 >= ntilesFIRST.x - ntilesFIRST.sizeX / 2 &&
+        player.x + player.sizeX / 2 <= ntilesFIRST.x + ntilesFIRST.sizeX / 2 &&
+        player.yPos1 + player.sizeY / 2 <=
+          ntilesFIRST.y - ntilesFIRST.sizeY / 2 &&
+        player.yPos2 + player.sizeY / 2 >=
+          ntilesFIRST.y - ntilesFIRST.sizeY / 2) ||
+      //unten links
+      (player.x - player.sizeX / 2 >= ntilesFIRST.x - ntilesFIRST.sizeX / 2 &&
+        player.x - player.sizeX / 2 <= ntilesFIRST.x + ntilesFIRST.sizeX / 2 &&
+        player.yPos1 + player.sizeY / 2 <=
+          ntilesFIRST.y - ntilesFIRST.sizeY / 2 &&
+        player.yPos2 + player.sizeY / 2 >=
+          ntilesFIRST.y - ntilesFIRST.sizeY / 2) ||
+      //2
+      //unten rechts
+      (player.x + player.sizeX / 2 >= ntilesFIRST.x - ntilesFIRST.sizeX / 2 &&
+        player.x + player.sizeX / 2 <= ntilesFIRST.x + ntilesFIRST.sizeX / 2 &&
+        player.yPos1 + player.sizeY / 2 <=
+          ntilesFIRST.y + ntilesFIRST.sizeY / 2 &&
+        player.yPos2 + player.sizeY / 2 >=
+          ntilesFIRST.y + ntilesFIRST.sizeY / 2) ||
+      //unten links
+      (player.x - player.sizeX / 2 >= ntilesFIRST.x - ntilesFIRST.sizeX / 2 &&
+        player.x - player.sizeX / 2 <= ntilesFIRST.x + ntilesFIRST.sizeX / 2 &&
+        player.yPos1 + player.sizeY / 2 <=
+          ntilesFIRST.y + ntilesFIRST.sizeY / 2 &&
+        player.yPos2 + player.sizeY / 2 >=
+          ntilesFIRST.y + ntilesFIRST.sizeY / 2) ||
+      //3
+      //unten rechts
+      (player.x + player.sizeX / 2 >= ntilesFIRST.x - ntilesFIRST.sizeX / 2 &&
+        player.x + player.sizeX / 2 <= ntilesFIRST.x + ntilesFIRST.sizeX / 2 &&
+        player.yPos1 + player.sizeY / 2 <=
+          ntilesFIRST.y - ntilesFIRST.sizeY / 2 &&
+        player.yPos2 + player.sizeY / 2 >=
+          ntilesFIRST.y + ntilesFIRST.sizeY / 2) ||
+      //unten links
+      (player.x - player.sizeX / 2 >= ntilesFIRST.x - ntilesFIRST.sizeX / 2 &&
+        player.x - player.sizeX / 2 <= ntilesFIRST.x + ntilesFIRST.sizeX / 2 &&
+        player.yPos1 + player.sizeY / 2 <=
+          ntilesFIRST.y - ntilesFIRST.sizeY / 2 &&
+        player.yPos2 + player.sizeY / 2 >=
+          ntilesFIRST.y + ntilesFIRST.sizeY / 2) ||
+      //4
+      //unten rechts
+      (player.x + player.sizeX / 2 >= ntilesFIRST.x - ntilesFIRST.sizeX / 2 &&
+        player.x + player.sizeX / 2 <= ntilesFIRST.x + ntilesFIRST.sizeX / 2 &&
+        player.yPos1 + player.sizeY / 2 <=
+          ntilesFIRST.y + ntilesFIRST.sizeY / 2 &&
+        player.yPos2 + player.sizeY / 2 >=
+          ntilesFIRST.y + ntilesFIRST.sizeY / 2) ||
+      //unten links
+      (player.x - player.sizeX / 2 >= ntilesFIRST.x - ntilesFIRST.sizeX / 2 &&
+        player.x - player.sizeX / 2 <= ntilesFIRST.x + ntilesFIRST.sizeX / 2 &&
+        player.yPos1 + player.sizeY / 2 <=
+          ntilesFIRST.y + ntilesFIRST.sizeY / 2 &&
+        player.yPos2 + player.sizeY / 2 >=
+          ntilesFIRST.y + ntilesFIRST.sizeY / 2) ||
+      //5
+      //unten rechts
+      (player.x + player.sizeX / 2 >= ntilesFIRST.x - ntilesFIRST.sizeX / 2 &&
+        player.x + player.sizeX / 2 <= ntilesFIRST.x + ntilesFIRST.sizeX / 2 &&
+        player.yPos1 + player.sizeY / 2 >=
+          ntilesFIRST.y - ntilesFIRST.sizeY / 2 &&
+        player.yPos2 + player.sizeY / 2 <=
+          ntilesFIRST.y + ntilesFIRST.sizeY / 2) ||
+      //unten links
+      (player.x - player.sizeX / 2 >= ntilesFIRST.x - ntilesFIRST.sizeX / 2 &&
+        player.x - player.sizeX / 2 <= ntilesFIRST.x + ntilesFIRST.sizeX / 2 &&
+        player.yPos1 + player.sizeY / 2 >=
+          ntilesFIRST.y - ntilesFIRST.sizeY / 2 &&
+        player.yPos2 + player.sizeY / 2 <=
+          ntilesFIRST.y + ntilesFIRST.sizeY / 2)
+    ) {
+      if (player.jump === false && player.moving === true) {
+        if (player.y + player.sizeY / 2 >= player.jumpStart) {
+          player.y = ntilesFIRST.y - ntilesFIRST.sizeY / 2 - player.sizeY / 2;
+        } else {
           if (
-            player.jump === false &&
-            player.y + player.sizeY / 2 < player.jumpStart &&
-            player.moving === true
+            ShootEnemy.cooldown >= 5 &&
+            RushEnemy.cooldown >= 5 &&
+            RushUpAndDownEnemy.cooldown >= 5
           ) {
+            player.affectTile = true;
+          } else {
+            player.affectTile = false;
+          }
+
+          player.y = ntilesFIRST.y - ntilesFIRST.sizeY / 2 - player.sizeY / 2;
+        }
+      }
+    }
+    // else{
+    //   player.affectTile = false;
+    //   player.jump = false;
+    //   player.gravity = 3;
+    // }
+
+    //normal tile
+    for (i = 0; i < ntiles.length; i = i + 1) {
+      if (
+        //1
+        //unten rechts
+        (player.x + player.sizeX / 2 >= ntiles[i].x - ntiles[i].sizeX / 2 &&
+          player.x + player.sizeX / 2 <= ntiles[i].x + ntiles[i].sizeX / 2 &&
+          player.yPos1 + player.sizeY / 2 <=
+            ntiles[i].y - ntiles[i].sizeY / 2 &&
+          player.yPos2 + player.sizeY / 2 >=
+            ntiles[i].y - ntiles[i].sizeY / 2) ||
+        //unten links
+        (player.x - player.sizeX / 2 >= ntiles[i].x - ntiles[i].sizeX / 2 &&
+          player.x - player.sizeX / 2 <= ntiles[i].x + ntiles[i].sizeX / 2 &&
+          player.yPos1 + player.sizeY / 2 <=
+            ntiles[i].y - ntiles[i].sizeY / 2 &&
+          player.yPos2 + player.sizeY / 2 >=
+            ntiles[i].y - ntiles[i].sizeY / 2) ||
+        //2
+        //unten rechts
+        (player.x + player.sizeX / 2 >= ntiles[i].x - ntiles[i].sizeX / 2 &&
+          player.x + player.sizeX / 2 <= ntiles[i].x + ntiles[i].sizeX / 2 &&
+          player.yPos1 + player.sizeY / 2 <=
+            ntiles[i].y + ntiles[i].sizeY / 2 &&
+          player.yPos2 + player.sizeY / 2 >=
+            ntiles[i].y + ntiles[i].sizeY / 2) ||
+        //unten links
+        (player.x - player.sizeX / 2 >= ntiles[i].x - ntiles[i].sizeX / 2 &&
+          player.x - player.sizeX / 2 <= ntiles[i].x + ntiles[i].sizeX / 2 &&
+          player.yPos1 + player.sizeY / 2 <=
+            ntiles[i].y + ntiles[i].sizeY / 2 &&
+          player.yPos2 + player.sizeY / 2 >=
+            ntiles[i].y + ntiles[i].sizeY / 2) ||
+        //3
+        //unten rechts
+        (player.x + player.sizeX / 2 >= ntiles[i].x - ntiles[i].sizeX / 2 &&
+          player.x + player.sizeX / 2 <= ntiles[i].x + ntiles[i].sizeX / 2 &&
+          player.yPos1 + player.sizeY / 2 <=
+            ntiles[i].y - ntiles[i].sizeY / 2 &&
+          player.yPos2 + player.sizeY / 2 >=
+            ntiles[i].y + ntiles[i].sizeY / 2) ||
+        //unten links
+        (player.x - player.sizeX / 2 >= ntiles[i].x - ntiles[i].sizeX / 2 &&
+          player.x - player.sizeX / 2 <= ntiles[i].x + ntiles[i].sizeX / 2 &&
+          player.yPos1 + player.sizeY / 2 <=
+            ntiles[i].y - ntiles[i].sizeY / 2 &&
+          player.yPos2 + player.sizeY / 2 >=
+            ntiles[i].y + ntiles[i].sizeY / 2) ||
+        //4
+        //unten rechts
+        (player.x + player.sizeX / 2 >= ntiles[i].x - ntiles[i].sizeX / 2 &&
+          player.x + player.sizeX / 2 <= ntiles[i].x + ntiles[i].sizeX / 2 &&
+          player.yPos1 + player.sizeY / 2 <=
+            ntiles[i].y + ntiles[i].sizeY / 2 &&
+          player.yPos2 + player.sizeY / 2 >=
+            ntiles[i].y + ntiles[i].sizeY / 2) ||
+        //unten links
+        (player.x - player.sizeX / 2 >= ntiles[i].x - ntiles[i].sizeX / 2 &&
+          player.x - player.sizeX / 2 <= ntiles[i].x + ntiles[i].sizeX / 2 &&
+          player.yPos1 + player.sizeY / 2 <=
+            ntiles[i].y + ntiles[i].sizeY / 2 &&
+          player.yPos2 + player.sizeY / 2 >=
+            ntiles[i].y + ntiles[i].sizeY / 2) ||
+        //5
+        //unten rechts
+        (player.x + player.sizeX / 2 >= ntiles[i].x - ntiles[i].sizeX / 2 &&
+          player.x + player.sizeX / 2 <= ntiles[i].x + ntiles[i].sizeX / 2 &&
+          player.yPos1 + player.sizeY / 2 >=
+            ntiles[i].y - ntiles[i].sizeY / 2 &&
+          player.yPos2 + player.sizeY / 2 <=
+            ntiles[i].y + ntiles[i].sizeY / 2) ||
+        //unten links
+        (player.x - player.sizeX / 2 >= ntiles[i].x - ntiles[i].sizeX / 2 &&
+          player.x - player.sizeX / 2 <= ntiles[i].x + ntiles[i].sizeX / 2 &&
+          player.yPos1 + player.sizeY / 2 >=
+            ntiles[i].y - ntiles[i].sizeY / 2 &&
+          player.yPos2 + player.sizeY / 2 <= ntiles[i].y + ntiles[i].sizeY / 2)
+      ) {
+        if (player.jump === false && player.moving === true) {
+          if (player.y + player.sizeY / 2 >= player.jumpStart) {
+            player.y = ntiles[i].y - ntiles[i].sizeY / 2 - player.sizeY / 2;
+          } else {
             if (
               ShootEnemy.cooldown >= 5 &&
               RushEnemy.cooldown >= 5 &&
@@ -465,20 +338,135 @@ function PlayerAffectPlatform() {
             } else {
               player.affectTile = false;
             }
-            player.y = mtiles[m].y - mtiles[m].sizeY / 2 - player.sizeY / 2;
+            player.y = ntiles[i].y - ntiles[i].sizeY / 2 - player.sizeY / 2;
           }
         }
-        // else{
-        //   player.affectTile = false;
-        //   player.jump = false;
-        //   player.gravity = 3;
-        // }
       }
     }
 
+    // else{
+    //   player.affectTile = false;
+    //   player.jump = false;
+    //   player.gravity = 3;
+    // }
+
+    //moving Tile
+    for (m = 0; m < mtiles.length; m = m + 1) {
+      if (
+        //unten rechts
+        //1
+        //unten rechts
+        (player.x + player.sizeX / 2 >= mtiles[m].x - mtiles[m].sizeX / 2 &&
+          player.x + player.sizeX / 2 <= mtiles[m].x + mtiles[m].sizeX / 2 &&
+          player.yPos1 + player.sizeY / 2 <=
+            mtiles[m].y - mtiles[m].sizeY / 2 &&
+          player.yPos2 + player.sizeY / 2 >=
+            mtiles[m].y - mtiles[m].sizeY / 2) ||
+        //unten links
+        (player.x - player.sizeX / 2 >= mtiles[m].x - mtiles[m].sizeX / 2 &&
+          player.x - player.sizeX / 2 <= mtiles[m].x + mtiles[m].sizeX / 2 &&
+          player.yPos1 + player.sizeY / 2 <=
+            mtiles[m].y - mtiles[m].sizeY / 2 &&
+          player.yPos2 + player.sizeY / 2 >=
+            mtiles[m].y - mtiles[m].sizeY / 2) ||
+        //2
+        //unten rechts
+        (player.x + player.sizeX / 2 >= mtiles[m].x - mtiles[m].sizeX / 2 &&
+          player.x + player.sizeX / 2 <= mtiles[m].x + mtiles[m].sizeX / 2 &&
+          player.yPos1 + player.sizeY / 2 <=
+            mtiles[m].y + mtiles[m].sizeY / 2 &&
+          player.yPos2 + player.sizeY / 2 >=
+            mtiles[m].y + mtiles[m].sizeY / 2) ||
+        //unten links
+        (player.x - player.sizeX / 2 >= mtiles[m].x - mtiles[m].sizeX / 2 &&
+          player.x - player.sizeX / 2 <= mtiles[m].x + mtiles[m].sizeX / 2 &&
+          player.yPos1 + player.sizeY / 2 <=
+            mtiles[m].y + mtiles[m].sizeY / 2 &&
+          player.yPos2 + player.sizeY / 2 >=
+            mtiles[m].y + mtiles[m].sizeY / 2) ||
+        //3
+        //unten rechts
+        (player.x + player.sizeX / 2 >= mtiles[m].x - mtiles[m].sizeX / 2 &&
+          player.x + player.sizeX / 2 <= mtiles[m].x + mtiles[m].sizeX / 2 &&
+          player.yPos1 + player.sizeY / 2 <=
+            mtiles[m].y - mtiles[m].sizeY / 2 &&
+          player.yPos2 + player.sizeY / 2 >=
+            mtiles[m].y + mtiles[m].sizeY / 2) ||
+        //unten links
+        (player.x - player.sizeX / 2 >= mtiles[m].x - mtiles[m].sizeX / 2 &&
+          player.x - player.sizeX / 2 <= mtiles[m].x + mtiles[m].sizeX / 2 &&
+          player.yPos1 + player.sizeY / 2 <=
+            mtiles[m].y - mtiles[m].sizeY / 2 &&
+          player.yPos2 + player.sizeY / 2 >=
+            mtiles[m].y + mtiles[m].sizeY / 2) ||
+        //4
+        //unten rechts
+        (player.x + player.sizeX / 2 >= mtiles[m].x - mtiles[m].sizeX / 2 &&
+          player.x + player.sizeX / 2 <= mtiles[m].x + mtiles[m].sizeX / 2 &&
+          player.yPos1 + player.sizeY / 2 <=
+            mtiles[m].y + mtiles[m].sizeY / 2 &&
+          player.yPos2 + player.sizeY / 2 >=
+            mtiles[m].y + mtiles[m].sizeY / 2) ||
+        //unten links
+        (player.x - player.sizeX / 2 >= mtiles[m].x - mtiles[m].sizeX / 2 &&
+          player.x - player.sizeX / 2 <= mtiles[m].x + mtiles[m].sizeX / 2 &&
+          player.yPos1 + player.sizeY / 2 <=
+            mtiles[m].y + mtiles[m].sizeY / 2 &&
+          player.yPos2 + player.sizeY / 2 >=
+            mtiles[m].y + mtiles[m].sizeY / 2) ||
+        //5
+        //unten rechts
+        (player.x + player.sizeX / 2 >= mtiles[m].x - mtiles[m].sizeX / 2 &&
+          player.x + player.sizeX / 2 <= mtiles[m].x + mtiles[m].sizeX / 2 &&
+          player.yPos1 + player.sizeY / 2 >=
+            mtiles[m].y - mtiles[m].sizeY / 2 &&
+          player.yPos2 + player.sizeY / 2 <=
+            mtiles[m].y + mtiles[m].sizeY / 2) ||
+        //unten links
+        (player.x - player.sizeX / 2 >= mtiles[m].x - mtiles[m].sizeX / 2 &&
+          player.x - player.sizeX / 2 <= mtiles[m].x + mtiles[m].sizeX / 2 &&
+          player.yPos1 + player.sizeY / 2 >=
+            mtiles[m].y - mtiles[m].sizeY / 2 &&
+          player.yPos2 + player.sizeY / 2 <= mtiles[m].y + mtiles[m].sizeY / 2)
+      ) {
+        if (
+          player.jump === false &&
+          player.y + player.sizeY / 2 < player.jumpStart &&
+          player.moving === true
+        ) {
+          player.standingOnMtile = true;
+
+          if (
+            ShootEnemy.cooldown >= 5 &&
+            RushEnemy.cooldown >= 5 &&
+            RushUpAndDownEnemy.cooldown >= 5
+          ) {
+            player.affectTile = true;
+          } else {
+            player.affectTile = false;
+          }
+          player.y = mtiles[m].y - mtiles[m].sizeY / 2 - player.sizeY / 2;
+        }
+      } else {
+        player.standingOnMtile = false;
+      }
+      // else{
+      //   player.affectTile = false;
+      //   player.jump = false;
+      //   player.gravity = 3;
+      // }
+
+      //Player follows moving platform
+      if (mtiles[m].movingR === true && player.standingOnMtile === true) {
+        player.x = player.x + 2;
+      }
+
+      if (mtiles[m].movingR === false && player.standingOnMtile === true) {
+        player.x = player.x - 2;
+      }
+    }
     if (player.y + player.sizeY / 2 >= player.jumpStart) {
       player.affectTile = false;
-      // player.y = player.jumpStart - player.sizeY / 2 - ntilesFIRST.sizeY / 2;
     }
 
     if (player.affectTile === true) {
@@ -641,26 +629,22 @@ function ShootEnemyFunction() {
         (player.x + player.sizeX / 2 >= ShootEnemy.x - ShootEnemy.sizeX / 2 &&
           player.x + player.sizeX / 2 <= ShootEnemy.x + ShootEnemy.sizeX / 2 &&
           player.y + player.sizeY / 2 <= ShootEnemy.y + ShootEnemy.sizeY / 2 &&
-          player.y + player.sizeY / 2 >= ShootEnemy.y - ShootEnemy.sizeY / 2 &&
-          ShootEnemy.cooldown > 30) ||
+          player.y + player.sizeY / 2 >= ShootEnemy.y - ShootEnemy.sizeY / 2) ||
         //oben rechts
         (player.x + player.sizeX / 2 >= ShootEnemy.x - ShootEnemy.sizeX / 2 &&
           player.x + player.sizeX / 2 <= ShootEnemy.x + ShootEnemy.sizeX / 2 &&
           player.y - player.sizeY / 2 <= ShootEnemy.y + ShootEnemy.sizeY / 2 &&
-          player.y - player.sizeY / 2 >= ShootEnemy.y - ShootEnemy.sizeY / 2 &&
-          ShootEnemy.cooldown > 30) ||
+          player.y - player.sizeY / 2 >= ShootEnemy.y - ShootEnemy.sizeY / 2) ||
         //unten links
         (player.x - player.sizeX / 2 >= ShootEnemy.x - ShootEnemy.sizeX / 2 &&
           player.x - player.sizeX / 2 <= ShootEnemy.x + ShootEnemy.sizeX / 2 &&
           player.y + player.sizeY / 2 <= ShootEnemy.y + ShootEnemy.sizeY / 2 &&
-          player.y + player.sizeY / 2 >= ShootEnemy.y - ShootEnemy.sizeY / 2 &&
-          ShootEnemy.cooldown > 30) ||
+          player.y + player.sizeY / 2 >= ShootEnemy.y - ShootEnemy.sizeY / 2) ||
         //oben links
         (player.x - player.sizeX / 2 >= ShootEnemy.x - ShootEnemy.sizeX / 2 &&
           player.x - player.sizeX / 2 <= ShootEnemy.x + ShootEnemy.sizeX / 2 &&
           player.y - player.sizeY / 2 <= ShootEnemy.y + ShootEnemy.sizeY / 2 &&
-          player.y - player.sizeY / 2 >= ShootEnemy.y - ShootEnemy.sizeY / 2 &&
-          ShootEnemy.cooldown > 30)
+          player.y - player.sizeY / 2 >= ShootEnemy.y - ShootEnemy.sizeY / 2)
       ) {
         if (
           (player.jump === false &&
@@ -683,11 +667,13 @@ function ShootEnemyFunction() {
           Coins = Coins + Coin.weight;
           // player.affectTile = true;
         } else {
-          soundgetHitted.play();
-          ShootEnemy.cooldown = 0;
-          RushUpAndDownEnemy.cooldown = 0;
-          RushEnemy.cooldown = 0;
-          HeartArray.pop();
+          if (ShootEnemy.cooldown >= 30) {
+            soundgetHitted.play();
+            ShootEnemy.cooldown = 0;
+            RushUpAndDownEnemy.cooldown = 0;
+            RushEnemy.cooldown = 0;
+            HeartArray.pop();
+          }
         }
       }
     }
@@ -781,26 +767,22 @@ function RushEnemyFunction() {
         (player.x + player.sizeX / 2 >= RushEnemy.x - RushEnemy.sizeX / 2 &&
           player.x + player.sizeX / 2 <= RushEnemy.x + RushEnemy.sizeX / 2 &&
           player.y + player.sizeY / 2 <= RushEnemy.y + RushEnemy.sizeY / 2 &&
-          player.y + player.sizeY / 2 >= RushEnemy.y - RushEnemy.sizeY / 2 &&
-          RushEnemy.cooldown > 30) ||
+          player.y + player.sizeY / 2 >= RushEnemy.y - RushEnemy.sizeY / 2) ||
         //oben rechts
         (player.x + player.sizeX / 2 >= RushEnemy.x - RushEnemy.sizeX / 2 &&
           player.x + player.sizeX / 2 <= RushEnemy.x + RushEnemy.sizeX / 2 &&
           player.y - player.sizeY / 2 <= RushEnemy.y + RushEnemy.sizeY / 2 &&
-          player.y - player.sizeY / 2 >= RushEnemy.y - RushEnemy.sizeY / 2 &&
-          RushEnemy.cooldown > 30) ||
+          player.y - player.sizeY / 2 >= RushEnemy.y - RushEnemy.sizeY / 2) ||
         //unten links
         (player.x - player.sizeX / 2 >= RushEnemy.x - RushEnemy.sizeX / 2 &&
           player.x - player.sizeX / 2 <= RushEnemy.x + RushEnemy.sizeX / 2 &&
           player.y + player.sizeY / 2 <= RushEnemy.y + RushEnemy.sizeY / 2 &&
-          player.y + player.sizeY / 2 >= RushEnemy.y - RushEnemy.sizeY / 2 &&
-          RushEnemy.cooldown > 30) ||
+          player.y + player.sizeY / 2 >= RushEnemy.y - RushEnemy.sizeY / 2) ||
         //oben links
         (player.x - player.sizeX / 2 >= RushEnemy.x - RushEnemy.sizeX / 2 &&
           player.x - player.sizeX / 2 <= RushEnemy.x + RushEnemy.sizeX / 2 &&
           player.y - player.sizeY / 2 <= RushEnemy.y + RushEnemy.sizeY / 2 &&
-          player.y - player.sizeY / 2 >= RushEnemy.y - RushEnemy.sizeY / 2 &&
-          RushEnemy.cooldown > 30)
+          player.y - player.sizeY / 2 >= RushEnemy.y - RushEnemy.sizeY / 2)
       ) {
         if (
           (player.jump === false &&
@@ -823,11 +805,13 @@ function RushEnemyFunction() {
           Coins = Coins + Coin.weight;
           // player.affectTile = true;
         } else {
-          soundgetHitted.play();
-          ShootEnemy.cooldown = 0;
-          RushUpAndDownEnemy.cooldown = 0;
-          RushEnemy.cooldown = 0;
-          HeartArray.pop();
+          if (RushEnemy.cooldown > 30) {
+            soundgetHitted.play();
+            ShootEnemy.cooldown = 0;
+            RushUpAndDownEnemy.cooldown = 0;
+            RushEnemy.cooldown = 0;
+            HeartArray.pop();
+          }
         }
       }
     }
@@ -985,8 +969,7 @@ function RushEnemyUpAndDownFunction() {
           player.y + player.sizeY / 2 <=
             RushUpAndDownEnemy.y + RushUpAndDownEnemy.sizeY / 2 &&
           player.y + player.sizeY / 2 >=
-            RushUpAndDownEnemy.y - RushUpAndDownEnemy.sizeY / 2 &&
-          RushUpAndDownEnemy.cooldown > 30) ||
+            RushUpAndDownEnemy.y - RushUpAndDownEnemy.sizeY / 2) ||
         //oben rechts
         (player.x + player.sizeX / 2 >=
           RushUpAndDownEnemy.x - RushUpAndDownEnemy.sizeX / 2 &&
@@ -995,8 +978,7 @@ function RushEnemyUpAndDownFunction() {
           player.y - player.sizeY / 2 <=
             RushUpAndDownEnemy.y + RushUpAndDownEnemy.sizeY / 2 &&
           player.y - player.sizeY / 2 >=
-            RushUpAndDownEnemy.y - RushUpAndDownEnemy.sizeY / 2 &&
-          RushUpAndDownEnemy.cooldown > 30) ||
+            RushUpAndDownEnemy.y - RushUpAndDownEnemy.sizeY / 2) ||
         //unten links
         (player.x - player.sizeX / 2 >=
           RushUpAndDownEnemy.x - RushUpAndDownEnemy.sizeX / 2 &&
@@ -1005,8 +987,7 @@ function RushEnemyUpAndDownFunction() {
           player.y + player.sizeY / 2 <=
             RushUpAndDownEnemy.y + RushUpAndDownEnemy.sizeY / 2 &&
           player.y + player.sizeY / 2 >=
-            RushUpAndDownEnemy.y - RushUpAndDownEnemy.sizeY / 2 &&
-          RushUpAndDownEnemy.cooldown > 30) ||
+            RushUpAndDownEnemy.y - RushUpAndDownEnemy.sizeY / 2) ||
         //oben links
         (player.x - player.sizeX / 2 >=
           RushUpAndDownEnemy.x - RushUpAndDownEnemy.sizeX / 2 &&
@@ -1015,8 +996,7 @@ function RushEnemyUpAndDownFunction() {
           player.y - player.sizeY / 2 <=
             RushUpAndDownEnemy.y + RushUpAndDownEnemy.sizeY / 2 &&
           player.y - player.sizeY / 2 >=
-            RushUpAndDownEnemy.y - RushUpAndDownEnemy.sizeY / 2 &&
-          RushUpAndDownEnemy.cooldown > 30)
+            RushUpAndDownEnemy.y - RushUpAndDownEnemy.sizeY / 2)
       ) {
         if (
           (player.jump === false &&
@@ -1040,11 +1020,13 @@ function RushEnemyUpAndDownFunction() {
           Coins = Coins + Coin.weight;
           // player.affectTile = true;
         } else {
-          soundgetHitted.play();
-          ShootEnemy.cooldown = 0;
-          RushUpAndDownEnemy.cooldown = 0;
-          RushEnemy.cooldown = 0;
-          HeartArray.pop();
+          if (RushUpAndDownEnemy.cooldown > 30) {
+            soundgetHitted.play();
+            ShootEnemy.cooldown = 0;
+            RushUpAndDownEnemy.cooldown = 0;
+            RushEnemy.cooldown = 0;
+            HeartArray.pop();
+          }
         }
       }
     }
@@ -1565,6 +1547,8 @@ function items() {
     }
 
     //changing keys
+    // console.log(changeKeys.timercolor);
+    // console.log(changeKeys.y);
     if (changeKeys.show === true) {
       if (changeKeys.y + changeKeys.sizeY / 2 < 0) {
         changeKeys.timercolor = 0;
@@ -1572,14 +1556,58 @@ function items() {
       changeKeys.timercolor = changeKeys.timercolor + 1;
 
       if (changeKeys.timercolor === 1) {
-        changeKeys.choosecolor = true;
-        if (changeKeys.choosecolor === true) {
-          changeKeys.color = random(itemcolors);
-          changeKeys.choosecolor = false;
+        changeKeys.chooseimage = true;
+        if (changeKeys.chooseimage === true) {
+          changeKeys.imageCount = int(random(0, 4));
+          changeKeys.chooseimage = false;
         }
       }
-      fill(changeKeys.color);
-      rect(changeKeys.x, changeKeys.y, changeKeys.sizeX, changeKeys.sizeY, 20);
+
+      if (changeKeys.imageCount === 0) {
+        image(
+          imageShield,
+          changeKeys.x,
+          changeKeys.y,
+          changeKeys.sizeX,
+          changeKeys.sizeY
+        );
+      }
+      if (changeKeys.imageCount === 1) {
+        image(
+          imageHeart,
+          changeKeys.x,
+          changeKeys.y,
+          changeKeys.sizeX,
+          changeKeys.sizeY
+        );
+      }
+      if (changeKeys.imageCount === 2) {
+        image(
+          imageJetpack,
+          changeKeys.x,
+          changeKeys.y,
+          changeKeys.sizeX,
+          changeKeys.sizeY
+        );
+      }
+      if (changeKeys.imageCount === 3) {
+        image(
+          imageDoubblejump,
+          changeKeys.x,
+          changeKeys.y,
+          changeKeys.sizeX,
+          changeKeys.sizeY
+        );
+      }
+      if (changeKeys.imageCount === 4) {
+        image(
+          imagePong,
+          changeKeys.x,
+          changeKeys.y,
+          changeKeys.sizeX,
+          changeKeys.sizeY
+        );
+      }
 
       if (
         player.affectTile === true &&
@@ -2057,18 +2085,6 @@ function movetiles() {
       }
       if (player.affectTileTooClose === true && player.moving === true) {
         mtiles[m].y = mtiles[m].y + player.boost;
-      }
-      if (
-        player.x - player.sizeX / 2 >= mtiles[m].x - mtiles[m].sizeX &&
-        player.x + player.sizeX <= mtiles[m].x + mtiles[m].sizeX / 2 &&
-        player.y + player.sizeY >= mtiles[m].y - mtiles[m].sizeY * 2 &&
-        player.y + player.sizeY <= mtiles[m].y + mtiles[m].sizeY * 2
-      ) {
-        if (mtiles[m].movingR === false) {
-          player.x = player.x - 2;
-        } else {
-          player.x = player.x + 2;
-        }
       }
     }
   }

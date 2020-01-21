@@ -106,6 +106,7 @@ var player = {
   //if affect platform
   affectTile: false,
   affectTileTooClose: false,
+  standingOnMtile: false,
   //items
   jetpackR: false,
   jetpackL: false,
@@ -302,11 +303,11 @@ var changeKeys = {
   y: random(-600, -10),
   sizeX: 50,
   sizeY: 50,
-  color: color(0, 255, 0),
+  imageCount: 5,
   show: true,
   timer: 0,
   timercolor: 0,
-  choosecolor: false,
+  chooseimage: false,
   while: false
 };
 
@@ -443,15 +444,6 @@ var godmodetimer = 0;
 //Canvas width
 var widthWhile;
 var heightWhile;
-
-//Colors
-itemcolors = [
-  jumpshoe.color,
-  doubblejump.color,
-  Pong.color,
-  Heart.color,
-  shield.color
-];
 
 //The Prescreen
 function Intro() {
@@ -694,7 +686,7 @@ function PrescreenFunction() {
 }
 
 function reset() {
-  console.log(ntiles.length);
+  // console.log(ntiles.length);
   if (prescreen.reset === true) {
     //tiles are new sorted
     for (i = 0; i < ntiles.length; i = i + 1) {
@@ -1055,6 +1047,7 @@ function PrescreenControls() {
   // prescreen.show = false;
   // prescreen.showshop = false;
   // prescreen.showcontrols = true;
+  // showIntro = false;
 
   if (prescreen.showcontrols === true) {
     //Background
