@@ -528,6 +528,7 @@ function ShootEnemyFunction() {
         ShootEnemy.y - ShootEnemy.sizeY / 2 > height
       ) {
         ShootEnemy.show = false;
+        soundShootEnemy.stop();
       } else {
         ShootEnemy.show = true;
         if (ShootEnemy.show === true && ShootEnemy.moving === true) {
@@ -657,6 +658,7 @@ function ShootEnemyFunction() {
         ) {
           soundkillEnemy.play();
           ShootEnemy.cooldown = 0;
+          soundShootEnemy.stop();
           if (doubblejump.while === false && jumpshoe.while === false) {
             player.jump = true;
             player.jumpEnd = 0;
@@ -1297,8 +1299,8 @@ function items() {
           player.y - player.sizeY / 2 >= jumpshoe.y - jumpshoe.sizeY / 2)
       ) {
         soundgetItem.play();
-        jumpshoe.show = false;
         JumpshoeArray.push(1);
+        jumpshoe.show = false;
         jumpshoe.x = random(jumpshoe.sizeX / 2, width - jumpshoe.sizeX / 2);
         jumpshoe.y = random(-10000, -2000);
         jumpshoe.show = true;
@@ -2155,7 +2157,7 @@ function environmentfunction() {
     environment.soundtimer = environment.soundtimer + 1;
     if (environment.soundtimer === 1) {
       soundBackground.play();
-      if (environment.soundtimer >= 131 * 30) {
+      if (environment.soundtimer >= 2700) {
         environment.soundtimer = 0;
       }
     }
@@ -2315,6 +2317,7 @@ function gameOver() {
       ShootEnemy.moving = false;
       RushEnemy.moving = false;
       RushUpAndDownEnemy.moving = false;
+      soundBackground.stop();
       rotatePortal.starting = false;
       prescreen.delay = prescreen.delay + 1;
       player.y = player.y + 10;

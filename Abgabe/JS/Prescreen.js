@@ -1,13 +1,33 @@
-/*
- *                This is DoodleJump!
+/***********************************************************************************
  *
  *
+ *                     This is ANTIVIRUS!
+ *            ___________________________________
  *
  *
+ *             _________________________________
+ *            ***********************************
+ *           *###################################*
+ *           *#|*******************************|#*
+ *           *#|*        programmed by:       *|#*
+ *           *#|*                             *|#*
+ *           *#|*          yogspace           *|#*
+ *           *#|*                             *|#*
+ *           *#|*                             *|#*
+ *           *#|*                             *|#*
+ *           *#|*        Version: 1.0         *|#*
+ *           *#|*******************************|#*
+ *           *###################################*
+ *           *************************************
+ *           |-----------------------------------|
+ *          / 1  2  3  4  5  6  7  8  9  0  ?  / |
+ *         / q w e r t z u i o  p  ü +  [ ]   / /
+ *        / a  s  d  f  g  h  j  k  l    []  / /
+ *       / <  y  x  c  v  b  n  m  ,  .  -  / /
+ *      / STR  ALT [///////////]  < // >   / /
+ *     /_________________________________ / /
+ *    /__________________________________/_/
  *
- *             programmed by: yogspace
- *
- *                   Version: 1.5
  *
  *
  *
@@ -26,17 +46,26 @@
  * Sounds:
  * https://www.zapsplat.com/sound-effect-categories/
  *
+ * Prescreen-backroundmusic:
+ * https://freemusicarchive.org/genre/Electronic
  *
  *
  * folgende Bugs müssen noch gefixt werden:
  *
  * - Tiles können nicht auf gleicher Position spawnen
  * - hängt sich manchmal auf (im Godmode)
+ * - Spieler sammelt manchmal ein Item nicht auf
  * - ab und zu bewegen sich feste tiles um ein paar Pixel
+ * - height wird hinzugefügt, obwohl der Spieler nicht weiter kommt
  *
  *
  *
- *
+ * - Dinge, die noch hinzugefügt werden:
+ * - Item: Torch und Darkness
+ * - je höher der Spieler, desto dunkler der Hintergrund
+ * - Portal rotation
+ * - Variablen Namen anpassen
+ * - Tasten verändern
  *
  *
  *
@@ -81,7 +110,7 @@ var prescreen = {
   buttonactivated: false,
   buttontimer: 0,
   delay: 0,
-  soundtimer: 1
+  soundtimer: 0
 };
 
 //for prescreen
@@ -484,6 +513,20 @@ function Intro() {
 
 function PrescreenFunction() {
   //after the round
+  if (
+    prescreen.show === true ||
+    prescreen.showshop === true ||
+    prescreen.showcontrols === true ||
+    showIntro === true
+  ) {
+    prescreen.soundtimer = prescreen.soundtimer + 1;
+    if (prescreen.soundtimer === 1) {
+      soundPrescreenBackground.play();
+    }
+    if (prescreen.soundtimer >= 4430) {
+      prescreen.soundtimer = 0;
+    }
+  }
   if (prescreen.show === true) {
     //if there are less tiles than at the beginning
 
@@ -781,6 +824,8 @@ function reset() {
     prescreen.showshop = false;
     prescreen.showcontrols = false;
     prescreen.buttontimer = 0;
+    prescreen.soundtimer = 0;
+    soundPrescreenBackground.stop();
     gameOverTimer = 0;
     widthWhile = width;
     heightWhile = height;

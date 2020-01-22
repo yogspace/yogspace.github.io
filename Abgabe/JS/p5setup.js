@@ -21,6 +21,7 @@ var soundBackground; //good
 var soundPongOverflow; //good
 var soundPongCollusion; //good
 var soundDenied; //good
+var soundPrescreenBackground; //good
 
 var soundjumping; //good
 var soundjumpingLanding; // good
@@ -95,6 +96,7 @@ function preload() {
   imageQR = loadImage("Bilder/qrcode.svg");
 
   //Sounds
+  soundPrescreenBackground = loadSound("Sound/prescreenbackground.mp3");
   soundDenied = loadSound("Sound/denied.mp3");
   soundRushUpAndDownEnemy2 = loadSound("Sound/EnemyRushUpAndDown.mp3");
   soundRushUpAndDownEnemy = loadSound("Sound/EnemyUpDown.mp3");
