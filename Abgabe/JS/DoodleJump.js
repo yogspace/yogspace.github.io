@@ -148,7 +148,10 @@ function touchStarted() {
     prescreen.show === false &&
     prescreen.showshop === false &&
     prescreen.showcontrols === false &&
-    showIntro === false
+    showIntro === false &&
+    gameOverCoins === false &&
+    gameOverFall === false &&
+    gameOverLifes === false
   ) {
     if (
       mouseX >= 0 &&
@@ -1973,6 +1976,8 @@ function itemfunction() {
     rect(Pong.slideX, heightWhile / 2, width, height * 2);
 
     player.moving = false;
+    player.touchL = false;
+    player.touchR = false;
     player.affectTileTooClose = false;
     ShootEnemy.moving = false;
     if (Pong.slidingR === false) {
@@ -2027,6 +2032,8 @@ function itemfunction() {
 
   //change Keys
   if (changeKeys.while === true) {
+    player.touchL = false;
+    player.touchR = false;
     changeKeys.timer = changeKeys.timer + 1;
     keysMovement[3] = keysMovementWhile[2];
     keysMovement[0] = keysMovementWhile[1];
@@ -2473,14 +2480,35 @@ function gameOver() {
         player.y > height - 30 - player.sizeY / 2
       ) {
         gameOverFall = true;
+        player.touchL = false;
+        player.touchR = false;
+        //Pong
+        touchDownLeft = false;
+        touchDownRight = false;
+        touchUpLeft = false;
+        touchUpRight = false;
       }
       if (prescreen.delay > 0 && Coins <= 0) {
         gameOverCoins = true;
         player.falling = false;
+        player.touchL = false;
+        player.touchR = false;
+        //Pong
+        touchDownLeft = false;
+        touchDownRight = false;
+        touchUpLeft = false;
+        touchUpRight = false;
       }
       if (HeartArray.length < 1 && prescreen.delay > 0) {
         gameOverLifes = true;
         player.falling = false;
+        player.touchL = false;
+        player.touchR = false;
+        //Pong
+        touchDownLeft = false;
+        touchDownRight = false;
+        touchUpLeft = false;
+        touchUpRight = false;
       }
 
       if (gameOverFall === true && prescreen.delay > 0 && player.y > height) {
