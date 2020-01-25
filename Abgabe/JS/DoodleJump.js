@@ -6,6 +6,8 @@ function PlayerFunction() {
     prescreen.showcontrols === false &&
     showIntro === false
   ) {
+    console.log("KeyCode: " + keyCode);
+
     //first tile
     if (ntilesFIRST.show === true) {
       // fill(70, 70, 70);
@@ -49,7 +51,7 @@ function PlayerFunction() {
 
     //Movement of player
     if (keyIsPressed === true && player.moving === true) {
-      if (keyIsDown(keys.moveleft)) {
+      if (keyIsDown(keysMovement[1])) {
         player.moveR = false;
         if (player.affectTile === false) {
           player.x = player.x - 10;
@@ -57,13 +59,28 @@ function PlayerFunction() {
           player.x = player.x - 1 / 10;
         }
       }
-      if (keyIsDown(keys.moveright)) {
+      if (keyIsDown(keysMovement[0])) {
         player.moveR = true;
         if (player.affectTile === false) {
           player.x = player.x + 10;
         } else {
           player.x = player.x + 1 / 10;
         }
+      }
+    }
+    //For Mobile
+    if (player.touchL === false && player.touchR === true) {
+      if (player.affectTile === false) {
+        player.x = player.x + 10;
+      } else {
+        player.x = player.x + 1 / 10;
+      }
+    }
+    if (player.touchR === false && player.touchL === true) {
+      if (player.affectTile === false) {
+        player.x = player.x - 10;
+      } else {
+        player.x = player.x - 1 / 10;
       }
     }
 
@@ -110,18 +127,143 @@ function PlayerFunction() {
     //Border left / right
     if (
       player.x - player.sizeX / 2 <= 0 &&
-      keyIsDown(keys.moveleft) &&
+      keyIsDown(keysMovement[1]) &&
       player.moving === true
     ) {
       player.x = width - player.sizeX / 2;
     }
     if (
       player.x + player.sizeX / 2 >= width &&
-      keyIsDown(keys.moveright) &&
+      keyIsDown(keysMovement[0]) &&
       player.moving === true
     ) {
       player.x = player.sizeX / 2;
     }
+  }
+}
+
+//For mobile
+function touchStarted() {
+  if (
+    prescreen.show === false &&
+    prescreen.showshop === false &&
+    prescreen.showcontrols === false &&
+    showIntro === false
+  ) {
+    if (
+      mouseX >= 0 &&
+      mouseX < width / 2 &&
+      mouseY >= height / 2 &&
+      mouseY <= height
+    ) {
+      if (Pong.while === false) {
+        player.touchR = false;
+        player.touchL = true;
+        player.moveR = false;
+      }
+      //Pong
+      touchDownLeft = true;
+      touchUpLeft = false;
+      touchDownRight = false;
+      touchUpRight = false;
+    }
+
+    if (
+      mouseX >= width / 2 &&
+      mouseX <= width &&
+      mouseY >= height / 2 &&
+      mouseY <= height
+    ) {
+      if (Pong.while === false) {
+        player.touchL = false;
+        player.touchR = true;
+        player.moveR = true;
+      }
+      //Pong
+      touchDownRight = true;
+      touchDownLeft = false;
+      touchUpRight = false;
+      touchUpLeft = false;
+    }
+
+    if (
+      mouseX >= width / 2 &&
+      mouseX <= width &&
+      mouseY >= 0 &&
+      mouseY < height / 2
+    ) {
+      //Pong
+      touchDownRight = false;
+      touchDownLeft = false;
+      touchUpRight = true;
+      touchUpLeft = false;
+    }
+    if (
+      mouseX >= 0 &&
+      mouseX < width / 2 &&
+      mouseY >= 0 &&
+      mouseY < height / 2
+    ) {
+      //Pong
+      touchDownRight = false;
+      touchDownLeft = false;
+      touchUpRight = false;
+      touchUpLeft = true;
+    }
+
+    //Use Item
+    if (mouseX >= 0 && mouseX <= 100) {
+      if (
+        mouseY > height / 2 - jumpshoe.sizeY / 2 &&
+        mouseY < height / 2 + jumpshoe.sizeY / 2 &&
+        JumpshoeArray.length > 0 &&
+        prescreen.buttontimer >= 15 &&
+        jumpshoe.while === false &&
+        doubblejump.while === false &&
+        Pong.while === false
+      ) {
+        jumpshoe.while = true;
+        JumpshoeArray.pop();
+      }
+      if (
+        mouseY > height / 2 + 70 - doubblejump.sizeY / 2 &&
+        mouseY < height / 2 + 70 + doubblejump.sizeY / 2 &&
+        DoubblejumpArray.length > 0 &&
+        prescreen.buttontimer >= 15 &&
+        jumpshoe.while === false &&
+        doubblejump.while === false &&
+        Pong.while === false
+      ) {
+        doubblejump.while = true;
+        DoubblejumpArray.pop();
+      }
+      if (
+        mouseY > height / 2 + 140 - shield.sizeY / 2 &&
+        mouseY < height / 2 + 140 + shield.sizeY / 2 &&
+        DoubblejumpArray.length > 0 &&
+        prescreen.buttontimer >= 15 &&
+        Pong.while === false
+      ) {
+        shield.while = true;
+        shieldArray.pop();
+      }
+    }
+  }
+}
+function touchEnded() {
+  if (
+    prescreen.show === false &&
+    prescreen.showshop === false &&
+    prescreen.showcontrols === false &&
+    showIntro === false
+  ) {
+    player.touchL = false;
+    player.touchR = false;
+    //Pong
+    touchDownLeft = false;
+    touchDownRight = false;
+    touchUpLeft = false;
+    touchUpRight = false;
   }
 }
 
@@ -132,6 +274,9 @@ function PlayerAffectPlatform() {
     prescreen.showshop === false &&
     prescreen.showcontrols === false
   ) {
+    if (prescreen.buttontimer >= 120) {
+      soundPrescreenBackground.stop();
+    }
     // if (player.jump === false) {
     //   console.log("1: " + int(player.y));
     //   console.log("2: " + int(player.yPos1 + player.sizeY / 2));
@@ -149,75 +294,95 @@ function PlayerAffectPlatform() {
     if (
       //1
       //unten rechts
-      (player.x + player.sizeX / 2 >= ntilesFIRST.x - ntilesFIRST.sizeX / 2 &&
-        player.x + player.sizeX / 2 <= ntilesFIRST.x + ntilesFIRST.sizeX / 2 &&
+      (player.x + player.sizeX / 2 - 10 >=
+        ntilesFIRST.x - ntilesFIRST.sizeX / 2 &&
+        player.x + player.sizeX / 2 - 10 <=
+          ntilesFIRST.x + ntilesFIRST.sizeX / 2 &&
         player.yPos1 + player.sizeY / 2 <=
           ntilesFIRST.y - ntilesFIRST.sizeY / 2 &&
         player.yPos2 + player.sizeY / 2 >=
           ntilesFIRST.y - ntilesFIRST.sizeY / 2) ||
       //unten links
-      (player.x - player.sizeX / 2 >= ntilesFIRST.x - ntilesFIRST.sizeX / 2 &&
-        player.x - player.sizeX / 2 <= ntilesFIRST.x + ntilesFIRST.sizeX / 2 &&
+      (player.x - player.sizeX / 2 + 10 >=
+        ntilesFIRST.x - ntilesFIRST.sizeX / 2 &&
+        player.x - player.sizeX / 2 + 10 <=
+          ntilesFIRST.x + ntilesFIRST.sizeX / 2 &&
         player.yPos1 + player.sizeY / 2 <=
           ntilesFIRST.y - ntilesFIRST.sizeY / 2 &&
         player.yPos2 + player.sizeY / 2 >=
           ntilesFIRST.y - ntilesFIRST.sizeY / 2) ||
       //2
       //unten rechts
-      (player.x + player.sizeX / 2 >= ntilesFIRST.x - ntilesFIRST.sizeX / 2 &&
-        player.x + player.sizeX / 2 <= ntilesFIRST.x + ntilesFIRST.sizeX / 2 &&
+      (player.x + player.sizeX / 2 - 10 >=
+        ntilesFIRST.x - ntilesFIRST.sizeX / 2 &&
+        player.x + player.sizeX / 2 - 10 <=
+          ntilesFIRST.x + ntilesFIRST.sizeX / 2 &&
         player.yPos1 + player.sizeY / 2 <=
           ntilesFIRST.y + ntilesFIRST.sizeY / 2 &&
         player.yPos2 + player.sizeY / 2 >=
           ntilesFIRST.y + ntilesFIRST.sizeY / 2) ||
       //unten links
-      (player.x - player.sizeX / 2 >= ntilesFIRST.x - ntilesFIRST.sizeX / 2 &&
-        player.x - player.sizeX / 2 <= ntilesFIRST.x + ntilesFIRST.sizeX / 2 &&
+      (player.x - player.sizeX / 2 + 10 >=
+        ntilesFIRST.x - ntilesFIRST.sizeX / 2 &&
+        player.x - player.sizeX / 2 + 10 <=
+          ntilesFIRST.x + ntilesFIRST.sizeX / 2 &&
         player.yPos1 + player.sizeY / 2 <=
           ntilesFIRST.y + ntilesFIRST.sizeY / 2 &&
         player.yPos2 + player.sizeY / 2 >=
           ntilesFIRST.y + ntilesFIRST.sizeY / 2) ||
       //3
       //unten rechts
-      (player.x + player.sizeX / 2 >= ntilesFIRST.x - ntilesFIRST.sizeX / 2 &&
-        player.x + player.sizeX / 2 <= ntilesFIRST.x + ntilesFIRST.sizeX / 2 &&
+      (player.x + player.sizeX / 2 - 10 >=
+        ntilesFIRST.x - ntilesFIRST.sizeX / 2 &&
+        player.x + player.sizeX / 2 - 10 <=
+          ntilesFIRST.x + ntilesFIRST.sizeX / 2 &&
         player.yPos1 + player.sizeY / 2 <=
           ntilesFIRST.y - ntilesFIRST.sizeY / 2 &&
         player.yPos2 + player.sizeY / 2 >=
           ntilesFIRST.y + ntilesFIRST.sizeY / 2) ||
       //unten links
-      (player.x - player.sizeX / 2 >= ntilesFIRST.x - ntilesFIRST.sizeX / 2 &&
-        player.x - player.sizeX / 2 <= ntilesFIRST.x + ntilesFIRST.sizeX / 2 &&
+      (player.x - player.sizeX / 2 + 10 >=
+        ntilesFIRST.x - ntilesFIRST.sizeX / 2 &&
+        player.x - player.sizeX / 2 + 10 <=
+          ntilesFIRST.x + ntilesFIRST.sizeX / 2 &&
         player.yPos1 + player.sizeY / 2 <=
           ntilesFIRST.y - ntilesFIRST.sizeY / 2 &&
         player.yPos2 + player.sizeY / 2 >=
           ntilesFIRST.y + ntilesFIRST.sizeY / 2) ||
       //4
       //unten rechts
-      (player.x + player.sizeX / 2 >= ntilesFIRST.x - ntilesFIRST.sizeX / 2 &&
-        player.x + player.sizeX / 2 <= ntilesFIRST.x + ntilesFIRST.sizeX / 2 &&
+      (player.x + player.sizeX / 2 - 10 >=
+        ntilesFIRST.x - ntilesFIRST.sizeX / 2 &&
+        player.x + player.sizeX / 2 - 10 <=
+          ntilesFIRST.x + ntilesFIRST.sizeX / 2 &&
         player.yPos1 + player.sizeY / 2 <=
           ntilesFIRST.y + ntilesFIRST.sizeY / 2 &&
         player.yPos2 + player.sizeY / 2 >=
           ntilesFIRST.y + ntilesFIRST.sizeY / 2) ||
       //unten links
-      (player.x - player.sizeX / 2 >= ntilesFIRST.x - ntilesFIRST.sizeX / 2 &&
-        player.x - player.sizeX / 2 <= ntilesFIRST.x + ntilesFIRST.sizeX / 2 &&
+      (player.x - player.sizeX / 2 + 10 >=
+        ntilesFIRST.x - ntilesFIRST.sizeX / 2 &&
+        player.x - player.sizeX / 2 + 10 <=
+          ntilesFIRST.x + ntilesFIRST.sizeX / 2 &&
         player.yPos1 + player.sizeY / 2 <=
           ntilesFIRST.y + ntilesFIRST.sizeY / 2 &&
         player.yPos2 + player.sizeY / 2 >=
           ntilesFIRST.y + ntilesFIRST.sizeY / 2) ||
       //5
       //unten rechts
-      (player.x + player.sizeX / 2 >= ntilesFIRST.x - ntilesFIRST.sizeX / 2 &&
-        player.x + player.sizeX / 2 <= ntilesFIRST.x + ntilesFIRST.sizeX / 2 &&
+      (player.x + player.sizeX / 2 - 10 >=
+        ntilesFIRST.x - ntilesFIRST.sizeX / 2 &&
+        player.x + player.sizeX / 2 - 10 <=
+          ntilesFIRST.x + ntilesFIRST.sizeX / 2 &&
         player.yPos1 + player.sizeY / 2 >=
           ntilesFIRST.y - ntilesFIRST.sizeY / 2 &&
         player.yPos2 + player.sizeY / 2 <=
           ntilesFIRST.y + ntilesFIRST.sizeY / 2) ||
       //unten links
-      (player.x - player.sizeX / 2 >= ntilesFIRST.x - ntilesFIRST.sizeX / 2 &&
-        player.x - player.sizeX / 2 <= ntilesFIRST.x + ntilesFIRST.sizeX / 2 &&
+      (player.x - player.sizeX / 2 + 10 >=
+        ntilesFIRST.x - ntilesFIRST.sizeX / 2 &&
+        player.x - player.sizeX / 2 + 10 - 10 <=
+          ntilesFIRST.x + ntilesFIRST.sizeX / 2 &&
         player.yPos1 + player.sizeY / 2 >=
           ntilesFIRST.y - ntilesFIRST.sizeY / 2 &&
         player.yPos2 + player.sizeY / 2 <=
@@ -252,75 +417,95 @@ function PlayerAffectPlatform() {
       if (
         //1
         //unten rechts
-        (player.x + player.sizeX / 2 >= ntiles[i].x - ntiles[i].sizeX / 2 &&
-          player.x + player.sizeX / 2 <= ntiles[i].x + ntiles[i].sizeX / 2 &&
+        (player.x + player.sizeX / 2 - 10 >=
+          ntiles[i].x - ntiles[i].sizeX / 2 &&
+          player.x + player.sizeX / 2 - 10 <=
+            ntiles[i].x + ntiles[i].sizeX / 2 &&
           player.yPos1 + player.sizeY / 2 <=
             ntiles[i].y - ntiles[i].sizeY / 2 &&
           player.yPos2 + player.sizeY / 2 >=
             ntiles[i].y - ntiles[i].sizeY / 2) ||
         //unten links
-        (player.x - player.sizeX / 2 >= ntiles[i].x - ntiles[i].sizeX / 2 &&
-          player.x - player.sizeX / 2 <= ntiles[i].x + ntiles[i].sizeX / 2 &&
+        (player.x - player.sizeX / 2 + 10 >=
+          ntiles[i].x - ntiles[i].sizeX / 2 &&
+          player.x - player.sizeX / 2 + 10 <=
+            ntiles[i].x + ntiles[i].sizeX / 2 &&
           player.yPos1 + player.sizeY / 2 <=
             ntiles[i].y - ntiles[i].sizeY / 2 &&
           player.yPos2 + player.sizeY / 2 >=
             ntiles[i].y - ntiles[i].sizeY / 2) ||
         //2
         //unten rechts
-        (player.x + player.sizeX / 2 >= ntiles[i].x - ntiles[i].sizeX / 2 &&
-          player.x + player.sizeX / 2 <= ntiles[i].x + ntiles[i].sizeX / 2 &&
+        (player.x + player.sizeX / 2 - 10 >=
+          ntiles[i].x - ntiles[i].sizeX / 2 &&
+          player.x + player.sizeX / 2 - 10 <=
+            ntiles[i].x + ntiles[i].sizeX / 2 &&
           player.yPos1 + player.sizeY / 2 <=
             ntiles[i].y + ntiles[i].sizeY / 2 &&
           player.yPos2 + player.sizeY / 2 >=
             ntiles[i].y + ntiles[i].sizeY / 2) ||
         //unten links
-        (player.x - player.sizeX / 2 >= ntiles[i].x - ntiles[i].sizeX / 2 &&
-          player.x - player.sizeX / 2 <= ntiles[i].x + ntiles[i].sizeX / 2 &&
+        (player.x - player.sizeX / 2 + 10 >=
+          ntiles[i].x - ntiles[i].sizeX / 2 &&
+          player.x - player.sizeX / 2 + 10 <=
+            ntiles[i].x + ntiles[i].sizeX / 2 &&
           player.yPos1 + player.sizeY / 2 <=
             ntiles[i].y + ntiles[i].sizeY / 2 &&
           player.yPos2 + player.sizeY / 2 >=
             ntiles[i].y + ntiles[i].sizeY / 2) ||
         //3
         //unten rechts
-        (player.x + player.sizeX / 2 >= ntiles[i].x - ntiles[i].sizeX / 2 &&
-          player.x + player.sizeX / 2 <= ntiles[i].x + ntiles[i].sizeX / 2 &&
+        (player.x + player.sizeX / 2 - 10 >=
+          ntiles[i].x - ntiles[i].sizeX / 2 &&
+          player.x + player.sizeX / 2 - 10 <=
+            ntiles[i].x + ntiles[i].sizeX / 2 &&
           player.yPos1 + player.sizeY / 2 <=
             ntiles[i].y - ntiles[i].sizeY / 2 &&
           player.yPos2 + player.sizeY / 2 >=
             ntiles[i].y + ntiles[i].sizeY / 2) ||
         //unten links
-        (player.x - player.sizeX / 2 >= ntiles[i].x - ntiles[i].sizeX / 2 &&
-          player.x - player.sizeX / 2 <= ntiles[i].x + ntiles[i].sizeX / 2 &&
+        (player.x - player.sizeX / 2 + 10 >=
+          ntiles[i].x - ntiles[i].sizeX / 2 &&
+          player.x - player.sizeX / 2 + 10 <=
+            ntiles[i].x + ntiles[i].sizeX / 2 &&
           player.yPos1 + player.sizeY / 2 <=
             ntiles[i].y - ntiles[i].sizeY / 2 &&
           player.yPos2 + player.sizeY / 2 >=
             ntiles[i].y + ntiles[i].sizeY / 2) ||
         //4
         //unten rechts
-        (player.x + player.sizeX / 2 >= ntiles[i].x - ntiles[i].sizeX / 2 &&
-          player.x + player.sizeX / 2 <= ntiles[i].x + ntiles[i].sizeX / 2 &&
+        (player.x + player.sizeX / 2 - 10 >=
+          ntiles[i].x - ntiles[i].sizeX / 2 &&
+          player.x + player.sizeX / 2 - 10 <=
+            ntiles[i].x + ntiles[i].sizeX / 2 &&
           player.yPos1 + player.sizeY / 2 <=
             ntiles[i].y + ntiles[i].sizeY / 2 &&
           player.yPos2 + player.sizeY / 2 >=
             ntiles[i].y + ntiles[i].sizeY / 2) ||
         //unten links
-        (player.x - player.sizeX / 2 >= ntiles[i].x - ntiles[i].sizeX / 2 &&
-          player.x - player.sizeX / 2 <= ntiles[i].x + ntiles[i].sizeX / 2 &&
+        (player.x - player.sizeX / 2 + 10 >=
+          ntiles[i].x - ntiles[i].sizeX / 2 &&
+          player.x - player.sizeX / 2 + 10 <=
+            ntiles[i].x + ntiles[i].sizeX / 2 &&
           player.yPos1 + player.sizeY / 2 <=
             ntiles[i].y + ntiles[i].sizeY / 2 &&
           player.yPos2 + player.sizeY / 2 >=
             ntiles[i].y + ntiles[i].sizeY / 2) ||
         //5
         //unten rechts
-        (player.x + player.sizeX / 2 >= ntiles[i].x - ntiles[i].sizeX / 2 &&
-          player.x + player.sizeX / 2 <= ntiles[i].x + ntiles[i].sizeX / 2 &&
+        (player.x + player.sizeX / 2 - 10 >=
+          ntiles[i].x - ntiles[i].sizeX / 2 &&
+          player.x + player.sizeX / 2 - 10 <=
+            ntiles[i].x + ntiles[i].sizeX / 2 &&
           player.yPos1 + player.sizeY / 2 >=
             ntiles[i].y - ntiles[i].sizeY / 2 &&
           player.yPos2 + player.sizeY / 2 <=
             ntiles[i].y + ntiles[i].sizeY / 2) ||
         //unten links
-        (player.x - player.sizeX / 2 >= ntiles[i].x - ntiles[i].sizeX / 2 &&
-          player.x - player.sizeX / 2 <= ntiles[i].x + ntiles[i].sizeX / 2 &&
+        (player.x - player.sizeX / 2 + 10 >=
+          ntiles[i].x - ntiles[i].sizeX / 2 &&
+          player.x - player.sizeX / 2 + 10 <=
+            ntiles[i].x + ntiles[i].sizeX / 2 &&
           player.yPos1 + player.sizeY / 2 >=
             ntiles[i].y - ntiles[i].sizeY / 2 &&
           player.yPos2 + player.sizeY / 2 <= ntiles[i].y + ntiles[i].sizeY / 2)
@@ -356,75 +541,95 @@ function PlayerAffectPlatform() {
         //unten rechts
         //1
         //unten rechts
-        (player.x + player.sizeX / 2 >= mtiles[m].x - mtiles[m].sizeX / 2 &&
-          player.x + player.sizeX / 2 <= mtiles[m].x + mtiles[m].sizeX / 2 &&
+        (player.x + player.sizeX / 2 - 10 >=
+          mtiles[m].x - mtiles[m].sizeX / 2 &&
+          player.x + player.sizeX / 2 - 10 <=
+            mtiles[m].x + mtiles[m].sizeX / 2 &&
           player.yPos1 + player.sizeY / 2 <=
             mtiles[m].y - mtiles[m].sizeY / 2 &&
           player.yPos2 + player.sizeY / 2 >=
             mtiles[m].y - mtiles[m].sizeY / 2) ||
         //unten links
-        (player.x - player.sizeX / 2 >= mtiles[m].x - mtiles[m].sizeX / 2 &&
-          player.x - player.sizeX / 2 <= mtiles[m].x + mtiles[m].sizeX / 2 &&
+        (player.x - player.sizeX / 2 + 10 >=
+          mtiles[m].x - mtiles[m].sizeX / 2 &&
+          player.x - player.sizeX / 2 + 10 <=
+            mtiles[m].x + mtiles[m].sizeX / 2 &&
           player.yPos1 + player.sizeY / 2 <=
             mtiles[m].y - mtiles[m].sizeY / 2 &&
           player.yPos2 + player.sizeY / 2 >=
             mtiles[m].y - mtiles[m].sizeY / 2) ||
         //2
         //unten rechts
-        (player.x + player.sizeX / 2 >= mtiles[m].x - mtiles[m].sizeX / 2 &&
-          player.x + player.sizeX / 2 <= mtiles[m].x + mtiles[m].sizeX / 2 &&
+        (player.x + player.sizeX / 2 - 10 >=
+          mtiles[m].x - mtiles[m].sizeX / 2 &&
+          player.x + player.sizeX / 2 - 10 <=
+            mtiles[m].x + mtiles[m].sizeX / 2 &&
           player.yPos1 + player.sizeY / 2 <=
             mtiles[m].y + mtiles[m].sizeY / 2 &&
           player.yPos2 + player.sizeY / 2 >=
             mtiles[m].y + mtiles[m].sizeY / 2) ||
         //unten links
-        (player.x - player.sizeX / 2 >= mtiles[m].x - mtiles[m].sizeX / 2 &&
-          player.x - player.sizeX / 2 <= mtiles[m].x + mtiles[m].sizeX / 2 &&
+        (player.x - player.sizeX / 2 + 10 >=
+          mtiles[m].x - mtiles[m].sizeX / 2 &&
+          player.x - player.sizeX / 2 + 10 <=
+            mtiles[m].x + mtiles[m].sizeX / 2 &&
           player.yPos1 + player.sizeY / 2 <=
             mtiles[m].y + mtiles[m].sizeY / 2 &&
           player.yPos2 + player.sizeY / 2 >=
             mtiles[m].y + mtiles[m].sizeY / 2) ||
         //3
         //unten rechts
-        (player.x + player.sizeX / 2 >= mtiles[m].x - mtiles[m].sizeX / 2 &&
-          player.x + player.sizeX / 2 <= mtiles[m].x + mtiles[m].sizeX / 2 &&
+        (player.x + player.sizeX / 2 - 10 >=
+          mtiles[m].x - mtiles[m].sizeX / 2 &&
+          player.x + player.sizeX / 2 - 10 <=
+            mtiles[m].x + mtiles[m].sizeX / 2 &&
           player.yPos1 + player.sizeY / 2 <=
             mtiles[m].y - mtiles[m].sizeY / 2 &&
           player.yPos2 + player.sizeY / 2 >=
             mtiles[m].y + mtiles[m].sizeY / 2) ||
         //unten links
-        (player.x - player.sizeX / 2 >= mtiles[m].x - mtiles[m].sizeX / 2 &&
-          player.x - player.sizeX / 2 <= mtiles[m].x + mtiles[m].sizeX / 2 &&
+        (player.x - player.sizeX / 2 + 10 >=
+          mtiles[m].x - mtiles[m].sizeX / 2 &&
+          player.x - player.sizeX / 2 + 10 <=
+            mtiles[m].x + mtiles[m].sizeX / 2 &&
           player.yPos1 + player.sizeY / 2 <=
             mtiles[m].y - mtiles[m].sizeY / 2 &&
           player.yPos2 + player.sizeY / 2 >=
             mtiles[m].y + mtiles[m].sizeY / 2) ||
         //4
         //unten rechts
-        (player.x + player.sizeX / 2 >= mtiles[m].x - mtiles[m].sizeX / 2 &&
-          player.x + player.sizeX / 2 <= mtiles[m].x + mtiles[m].sizeX / 2 &&
+        (player.x + player.sizeX / 2 - 10 >=
+          mtiles[m].x - mtiles[m].sizeX / 2 &&
+          player.x + player.sizeX / 2 - 10 <=
+            mtiles[m].x + mtiles[m].sizeX / 2 &&
           player.yPos1 + player.sizeY / 2 <=
             mtiles[m].y + mtiles[m].sizeY / 2 &&
           player.yPos2 + player.sizeY / 2 >=
             mtiles[m].y + mtiles[m].sizeY / 2) ||
         //unten links
-        (player.x - player.sizeX / 2 >= mtiles[m].x - mtiles[m].sizeX / 2 &&
-          player.x - player.sizeX / 2 <= mtiles[m].x + mtiles[m].sizeX / 2 &&
+        (player.x - player.sizeX / 2 + 10 >=
+          mtiles[m].x - mtiles[m].sizeX / 2 &&
+          player.x - player.sizeX / 2 + 10 <=
+            mtiles[m].x + mtiles[m].sizeX / 2 &&
           player.yPos1 + player.sizeY / 2 <=
             mtiles[m].y + mtiles[m].sizeY / 2 &&
           player.yPos2 + player.sizeY / 2 >=
             mtiles[m].y + mtiles[m].sizeY / 2) ||
         //5
         //unten rechts
-        (player.x + player.sizeX / 2 >= mtiles[m].x - mtiles[m].sizeX / 2 &&
-          player.x + player.sizeX / 2 <= mtiles[m].x + mtiles[m].sizeX / 2 &&
+        (player.x + player.sizeX / 2 - 10 >=
+          mtiles[m].x - mtiles[m].sizeX / 2 &&
+          player.x + player.sizeX / 2 - 10 <=
+            mtiles[m].x + mtiles[m].sizeX / 2 &&
           player.yPos1 + player.sizeY / 2 >=
             mtiles[m].y - mtiles[m].sizeY / 2 &&
           player.yPos2 + player.sizeY / 2 <=
             mtiles[m].y + mtiles[m].sizeY / 2) ||
         //unten links
-        (player.x - player.sizeX / 2 >= mtiles[m].x - mtiles[m].sizeX / 2 &&
-          player.x - player.sizeX / 2 <= mtiles[m].x + mtiles[m].sizeX / 2 &&
+        (player.x - player.sizeX / 2 + 10 >=
+          mtiles[m].x - mtiles[m].sizeX / 2 &&
+          player.x - player.sizeX / 2 + 10 <=
+            mtiles[m].x + mtiles[m].sizeX / 2 &&
           player.yPos1 + player.sizeY / 2 >=
             mtiles[m].y - mtiles[m].sizeY / 2 &&
           player.yPos2 + player.sizeY / 2 <= mtiles[m].y + mtiles[m].sizeY / 2)
@@ -1114,7 +1319,7 @@ function itembar() {
       }
 
       //Choose items
-      if (keyIsDown(keys.switchitem)) {
+      if (keyIsDown(keysMovement[2])) {
         if (doubblejump.choose === true && prescreen.buttontimer >= 5) {
           soundchangeItem.play();
           // console.log("jumpshoe");
@@ -1785,11 +1990,12 @@ function itemfunction() {
         Pong.starting = true;
         shield.while = false;
         shield.timer = 0;
+        sounditem_shield_close.stop();
         Pong.startingTimer = 0;
-        keys.moveright = 39;
-        keys.moveleft = 37;
-        keys.switchitem = 16;
-        keys.useitem = 32;
+        keysMovement[0] = keysMovementWhile[0];
+        keysMovement[1] = keysMovementWhile[1];
+        keysMovement[2] = keysMovementWhile[2];
+        keysMovement[3] = keysMovementWhile[3];
         changeKeys.timer = 0;
         changeKeys.while = false;
         changeKeys.choosecolor = false;
@@ -1822,15 +2028,15 @@ function itemfunction() {
   //change Keys
   if (changeKeys.while === true) {
     changeKeys.timer = changeKeys.timer + 1;
-    keys.moveright = 37;
-    keys.moveleft = 39;
-    keys.switchitem = 32;
-    keys.useitem = 16;
+    keysMovement[3] = keysMovementWhile[2];
+    keysMovement[0] = keysMovementWhile[1];
+    keysMovement[1] = keysMovementWhile[0];
+    keysMovement[2] = keysMovementWhile[3];
     if (changeKeys.timer >= 180) {
-      keys.moveright = 39;
-      keys.moveleft = 37;
-      keys.switchitem = 16;
-      keys.useitem = 32;
+      keysMovement[0] = keysMovementWhile[0];
+      keysMovement[1] = keysMovementWhile[1];
+      keysMovement[2] = keysMovementWhile[2];
+      keysMovement[3] = keysMovementWhile[3];
       changeKeys.timer = 0;
       changeKeys.while = false;
     }
@@ -1840,7 +2046,7 @@ function itemfunction() {
   }
 
   //Doubblejump use
-  if (keyIsDown(keys.useitem)) {
+  if (keyIsDown(keysMovement[3])) {
     if (
       doubblejump.choose === true &&
       DoubblejumpArray.length > 0 &&
@@ -1866,7 +2072,7 @@ function itemfunction() {
   }
 
   //Jumpshoe use
-  if (keyIsDown(keys.useitem)) {
+  if (keyIsDown(keysMovement[3])) {
     if (
       jumpshoe.choose === true &&
       JumpshoeArray.length > 0 &&
@@ -1912,7 +2118,7 @@ function itemfunction() {
   }
 
   //Shield use
-  if (keyIsDown(keys.useitem)) {
+  if (keyIsDown(keysMovement[3])) {
     if (
       shield.choose === true &&
       shieldArray.length > 0 &&
@@ -2115,7 +2321,7 @@ function changetiles() {
         addtile = true;
         factoradd.push(addmtile);
       }
-      if (mtiles[m].y > height + ntiles[m].sizeY) {
+      if (mtiles[m].y > height + mtiles[m].sizeY) {
         if (addtile === true) {
           //ich definiere hier das Objekt nochmal,
           //damit jedes Mal wirklich ein neues Objekt erstellt wird.
@@ -2287,6 +2493,7 @@ function gameOver() {
       }
 
       if (gameOverCoins === true && prescreen.delay > 0) {
+        Coins = 0;
         gameOverFall = false;
         gameOverTimer = gameOverTimer + 1;
         if (gameOverTimer === 1) {
@@ -2318,6 +2525,12 @@ function gameOver() {
       RushEnemy.moving = false;
       RushUpAndDownEnemy.moving = false;
       soundBackground.stop();
+      soundEnemyShooting.stop();
+      soundRushEnemy.stop();
+      soundShootEnemy.stop();
+      soundRushUpAndDownEnemy.stop();
+      soundRushUpAndDownEnemy2.stop();
+      sounditem_shield_close.stop();
       rotatePortal.starting = false;
       prescreen.delay = prescreen.delay + 1;
       player.y = player.y + 10;

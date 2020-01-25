@@ -53,7 +53,6 @@
  * folgende Bugs müssen noch gefixt werden:
  *
  * - Tiles können nicht auf gleicher Position spawnen
- * - hängt sich manchmal auf (im Godmode)
  * - Spieler sammelt manchmal ein Item nicht auf
  * - ab und zu bewegen sich feste tiles um ein paar Pixel
  * - height wird hinzugefügt, obwohl der Spieler nicht weiter kommt
@@ -63,9 +62,9 @@
  * - Dinge, die noch hinzugefügt werden:
  * - Item: Torch und Darkness
  * - je höher der Spieler, desto dunkler der Hintergrund
- * - Portal rotation
+ * - Portal rotation *
  * - Variablen Namen anpassen
- * - Tasten verändern
+ *
  *
  *
  *
@@ -75,404 +74,6 @@
  *
  *
  */
-
-//Changable values:
-//Start value: anmount of platforms
-//normal tiles
-var ntilesanmount;
-if (windowWidth >= displayWidth - displayWidth / 5) {
-  ntilesanmount = 60;
-} else {
-  ntilesanmount = 35;
-}
-var ntilesanmounthalfwidth = 35;
-//moving tiles
-var mtilesanmount = 2;
-//the value for the height when tiles will despawn
-var heightdeleted = 20;
-var heightadded = 75;
-
-//value for the speed of the tiles
-var speed = 3;
-
-var prescreen = {
-  reset: false,
-  show: false,
-  showshop: false,
-  showcontrols: false,
-  buttoncolor: color(200, 30, 30),
-  buttonsemicolor: color(170, 30, 30),
-  buttoncolorshop: color(200, 30, 30),
-  buttonsemicolorshop: color(170, 30, 30),
-  buttoncolorcontrols: color(200, 30, 30),
-  buttonsemicolorcontrols: color(170, 30, 30),
-  buttoncolorMODI: color(200, 30, 30),
-  buttonactivated: false,
-  buttontimer: 0,
-  delay: 0,
-  soundtimer: 0
-};
-
-//for prescreen
-var showIntro = true;
-var firstscreen = true;
-
-//Player
-var player = {
-  x: width / 2,
-  y: height - height * (1 / 6),
-  sizeX: 70,
-  sizeY: 90,
-  color: color(255, 255, 255),
-  moving: true,
-  moveR: false,
-  jump: true,
-  jumpEnd: 0,
-  jumpStart: height,
-  gravity: 3,
-  boost: 30,
-  falling: true,
-  //if affect platform
-  affectTile: false,
-  affectTileTooClose: false,
-  standingOnMtile: false,
-  //items
-  jetpackR: false,
-  jetpackL: false,
-  //detection
-  yPos1: 0,
-  yPos2: 0,
-  //sound
-  soundTimer: 0
-};
-
-//Array for normal platforms
-var ntiles = [];
-//random positions of normal platforms
-for (i = 0; i < ntilesanmount; i++) {
-  ntiles[i] = {
-    x: random(40, width - 80),
-    y: random(-600, height - 10),
-    sizeX: 80,
-    sizeY: 10,
-    change: false,
-    color: color(70, 70, 70)
-  };
-}
-var ntilesNEW = {
-  x: random(40, width - 80),
-  y: random(-600, height - 10),
-  sizeX: random(20, 90),
-  sizeY: random(20, 90),
-  change: false,
-  color: color(70, 70, 70)
-};
-
-//this is the first tile the player will interact with..
-var ntilesFIRST = {
-  x: width / 2,
-  y: height / 2 + height * 0.1,
-  sizeX: 80,
-  sizeY: 10,
-  show: true,
-  color: color(70, 70, 70)
-};
-
-//Array for moving platforms
-var mtiles = [];
-//random position of moving platforms
-for (m = 0; m < mtilesanmount; m = m + 1) {
-  mtiles[m] = {
-    x: random(40, width - 80),
-    y: random(-600, height - 10),
-    sizeX: 80,
-    sizeY: 10,
-    change: false,
-    movingR: true,
-    color: color(120, 120, 120)
-  };
-}
-
-//New Moving Platforms
-var mtilesNEW = {
-  x: random(40, width - 80),
-  y: random(-600, -10),
-  sizeX: 80,
-  sizeY: 10,
-  change: false,
-  movingR: true,
-  color: color(120, 120, 120)
-};
-
-//highscore stuff
-var rounds = [];
-var highscore = {
-  x: 10,
-  y: 30,
-  score: 0,
-  total: 0,
-  adding: true
-};
-
-//keys
-var keys = {
-  moveright: 39,
-  moveleft: 37,
-  switchitem: 16,
-  useitem: 32
-};
-
-//Background
-var environment = {
-  color: color(8, 0, 30),
-  soundtimer: 0
-};
-
-// //RandomText
-// RTxt = ["10100101110100101011"];
-// var randomText = {
-//   color: color(50, 205, 50, 100),
-//   timer: 0,
-//   x: 10,
-//   y: width / 2
-// };
-
-/*
-item stuff
-*/
-
-//Jumpshoe
-var JumpshoeArray = [];
-var jumpshoewhile = 150;
-
-var jumpshoe = {
-  x: random(50, width - 50),
-  y: random(-600, -10),
-  sizeX: 50,
-  sizeY: 50,
-  color: color(20, 100, 200),
-  show: true,
-  choose: true,
-  while: false,
-  timer: 0,
-  using: 3 / 2,
-  usingafter: 30
-};
-
-//Doubblejump
-var DoubblejumpArray = [];
-var doubblejump = {
-  x: random(50, width - 50),
-  y: random(-600, -10),
-  sizeX: 50,
-  sizeY: 50,
-  color: color(199, 21, 133),
-  show: true,
-  choose: false,
-  while: false
-};
-
-//Shield
-var shieldArray = [];
-var shield = {
-  x: random(50, width - 50),
-  y: random(-600, -10),
-  sizeX: 50,
-  sizeY: 50,
-  color: color(32, 178, 170),
-  show: true,
-  choose: false,
-  while: false,
-  timer: 0,
-  maxtime: 120,
-  maxtimewhile: 120
-};
-var shieldshowtime = 0;
-
-//Pong
-var Pong = {
-  x: random(40, width - 80),
-  y: random(-2000, -10000),
-  sizeX: 50,
-  sizeY: 50,
-  color: color(0, 100, 100),
-  while: false,
-  show: true,
-  slideX: width + width / 2,
-  slidingR: false,
-  slidingL: false,
-  starting: false,
-  startingTimer: 0
-};
-
-//Coins
-var Coins = 100;
-var newCoins = 0;
-var CoinTimer = 0;
-var Coin = {
-  x: random(40, width - 40),
-  y: random(-600, -10),
-  sizeX: 20,
-  sizeY: 40,
-  sizeXWhile: 20,
-  color: color(0, 255, 0),
-  semicolor: color(70, 70, 70),
-  show: true,
-  weight: 5,
-  animation: false,
-
-  //For highscore
-  colortimer: color(200, 200, 200),
-  colortimer2: color(200, 0, 0)
-};
-
-//ChangeKeys
-var changeKeys = {
-  x: random(50, width - 50),
-  y: random(-600, -10),
-  sizeX: 50,
-  sizeY: 50,
-  imageCount: 5,
-  show: true,
-  timer: 0,
-  timercolor: 0,
-  chooseimage: false,
-  while: false
-};
-
-//Hearts
-var HeartArray = [1, 1, 1];
-var HeartArrayWhile = [1, 1, 1];
-var Heart = {
-  x: random(40, width - 80),
-  y: random(-600, -10),
-  sizeX: 50,
-  sizeY: 50,
-  color: color(200, 10, 10),
-  show: true,
-  weight: 1,
-  cooldown: 0
-};
-
-var EnemyDetection = false;
-
-/*
- *
- *
- * Enemies
- *
- *
- */
-var RushEnemy = {
-  x: random(25, width - 25),
-  y: 0 - random(3000, 500),
-  // y: random(100, 500),
-  sizeX: 90,
-  sizeY: 75,
-  color: color(170, 120, 20),
-  show: true,
-  moving: true,
-  movingR: true,
-  cooldown: 0,
-  rush: false,
-  speed: 7,
-  soundTimer: 0
-};
-
-var RushUpAndDownEnemy = {
-  x: random(25, width - 25),
-  y: 0 - random(3000, 500),
-  // y: random(100, 500),
-  sizeX: 90,
-  sizeY: 100,
-  color: color(170, 120, 20),
-  show: true,
-  moving: true,
-  movingR: true,
-  movingUp: false,
-  movingUpDown: false,
-  movingtimer: 0,
-  cooldown: 0,
-  rush: false,
-  speed: 7,
-  soundTimer: 0
-};
-
-//Shoot Enemy
-var ShootESizeX = 80;
-var ShootESizeXTotal = random(ShootESizeX, width - ShootESizeX);
-var ShootESizeY = 160;
-var ShootEnemy = {
-  x: ShootESizeXTotal,
-  y: 0 - random(3000, 500),
-  sizeX: ShootESizeX,
-  sizeY: ShootESizeY,
-  color: color(170, 120, 20),
-  show: true,
-  moving: true,
-  shooting: true,
-  shootdelay: 20,
-  cooldown: 0
-};
-
-//Shoottiles
-var shoottiles = {
-  x: ShootESizeXTotal,
-  y: ShootESizeY,
-  size: 10,
-  color: color(124, 252, 0),
-  show: false,
-  moving: false,
-  speed: 10
-};
-
-//Portal rotate
-var rotatePortal = {
-  x1: 0,
-  x2: width,
-  y1: 0,
-  y2: 0,
-  color: color(124, 252, 0),
-  starting: false,
-  timer: 0,
-  faktor: 1,
-  show: false
-};
-
-//Loosing
-var gameOverCoins = false;
-var gameOverFall = false;
-var gameOverTimer = 0;
-var gameOverLifes = false;
-var dying = ["killed by an Error"];
-var falling = ["you lost control"];
-var noCoinsLeft = ["you ran out of Energy"];
-
-//factors for deltion/adding of platforms
-var factordel = [];
-var delntile = 0;
-var deletetile = false;
-var factoradd = [];
-var addmtile = 0;
-var addtile = false;
-
-//for shop
-var shop = {
-  cwprice: 150,
-  caprice: 100,
-  haprice: 500,
-  slprice: 300,
-  EDprice: 3000
-};
-
-//for developer stats
-var showStats = false;
-var showStatsTimer = 0;
-var godmodetimer = 0;
-
-//Canvas width
-var widthWhile;
-var heightWhile;
 
 //The Prescreen
 function Intro() {
@@ -489,6 +90,7 @@ function Intro() {
     fill(255);
     textSize(80);
     text("ANTIVIRUS", width / 2, height / 2);
+
     if (prescreen.buttontimer >= 30) {
       textSize(40);
       fill(170, 170, 170, prescreen.buttontimer * 5);
@@ -506,13 +108,16 @@ function Intro() {
   }
   if (prescreen.buttontimer >= 50 && showIntro === true) {
     prescreen.show = true;
+    soundWelcome.play();
     prescreen.buttontimer = 0;
     showIntro = false;
+    prescreen.soundtimer = 0;
   }
 }
 
 function PrescreenFunction() {
   //after the round
+  // highscore.total = 5000;
   if (
     prescreen.show === true ||
     prescreen.showshop === true ||
@@ -520,9 +125,11 @@ function PrescreenFunction() {
     showIntro === true
   ) {
     prescreen.soundtimer = prescreen.soundtimer + 1;
-    if (prescreen.soundtimer === 1) {
+    if (prescreen.soundtimer === 1 && showIntro === false) {
+      soundPrescreenBackground.setVolume(0.7);
       soundPrescreenBackground.play();
     }
+
     if (prescreen.soundtimer >= 4430) {
       prescreen.soundtimer = 0;
     }
@@ -621,10 +228,6 @@ function PrescreenFunction() {
       textAlign(LEFT);
       textSize(20);
     } else {
-      if (prescreen.buttontimer === 30) {
-        soundWelcome.play();
-      }
-
       //modi godmode
       fill(200);
       textSize(20);
@@ -669,7 +272,9 @@ function PrescreenFunction() {
       //stuff to reset
       if (
         (mouseIsPressed === true && prescreen.buttontimer >= 20) ||
-        (keyIsPressed === true && keyCode === 32 && prescreen.buttontimer >= 20)
+        (keyIsPressed === true &&
+          keyCode === keysMovementWhile[3] &&
+          prescreen.buttontimer >= 20)
       ) {
         soundButton.play();
         prescreen.delay = 0;
@@ -692,7 +297,9 @@ function PrescreenFunction() {
       prescreen.buttonsemicolorshop = color(170, 30, 30);
       if (
         (mouseIsPressed === true && prescreen.buttontimer >= 20) ||
-        (keyIsPressed === true && keyCode === 32 && prescreen.buttontimer >= 20)
+        (keyIsPressed === true &&
+          keyCode === keysMovement[3] &&
+          prescreen.buttontimer >= 20)
       ) {
         soundButton.play();
         prescreen.show = false;
@@ -714,7 +321,9 @@ function PrescreenFunction() {
       prescreen.buttonsemicolorcontrols = color(170, 30, 30);
       if (
         (mouseIsPressed === true && prescreen.buttontimer >= 20) ||
-        (keyIsPressed === true && keyCode === 32 && prescreen.buttontimer >= 20)
+        (keyIsPressed === true &&
+          keyCode === keysMovement[3] &&
+          prescreen.buttontimer >= 20)
       ) {
         soundButton.play();
         prescreen.show = false;
@@ -748,7 +357,7 @@ function reset() {
     ntilesFIRST.y = height / 2 + height * 0.1;
 
     //Items
-    Pong.y = random(-3000, -10000);
+    Pong.y = random(-4000, -10000);
     Pong.x = random(Pong.sizeX / 2, width - Pong.sizeX / 2);
     Pong.while = false;
     Pong.startingTimer = 0;
@@ -777,10 +386,6 @@ function reset() {
     changeKeys.show = true;
     changeKeys.x = random(changeKeys.sizeX / 2, width - changeKeys.sizeX / 2);
     changeKeys.y = 0 - random(1500, 7000);
-    keys.moveright = 39;
-    keys.moveleft = 37;
-    keys.switchitem = 16;
-    keys.useitem = 32;
 
     //Player
     player.x = width / 2;
@@ -803,6 +408,7 @@ function reset() {
     ShootEnemy.y = 0 - random(3000, 500);
     ShootEnemy.x = random(ShootESizeX, width - ShootESizeX);
     shoottiles.x = ShootEnemy.y;
+    // soundEnemy
 
     RushEnemy.y = 0 - random(4000, 1000);
     RushEnemy.x = random(RushEnemy.sizeX, width - RushEnemy.sizeX);
@@ -819,13 +425,16 @@ function reset() {
     environment.soundtimer = 0;
 
     //Other stuff
+    keysMovement[0] = keysMovementWhile[0];
+    keysMovement[1] = keysMovementWhile[1];
+    keysMovement[2] = keysMovementWhile[2];
+    keysMovement[3] = keysMovementWhile[3];
     firstscreen = false;
     prescreen.show = false;
     prescreen.showshop = false;
     prescreen.showcontrols = false;
     prescreen.buttontimer = 0;
     prescreen.soundtimer = 0;
-    soundPrescreenBackground.stop();
     gameOverTimer = 0;
     widthWhile = width;
     heightWhile = height;
@@ -1093,30 +702,69 @@ function PrescreenControls() {
   // prescreen.showshop = false;
   // prescreen.showcontrols = true;
   // showIntro = false;
+  // soundPrescreenBackground.pause();
 
   if (prescreen.showcontrols === true) {
     //Background
+    //KEYSTUFF
     fill(environment.color);
     rect(0, 0, width * 2, height * 2);
     fill(200);
     textAlign(LEFT);
+    textSize(50);
+    text("KEYBOARD", width * 0.1, 130);
     textSize(30);
     text("move right: ", width * 0.1, 200);
     text("move left: ", width * 0.1, 260);
     text("switch item: ", width * 0.1, 320);
     text("use item: ", width * 0.1, 380);
 
-    /*
-    String.fromCharCode(keyCode);
-    keys.moveright
-    keys.moveleft 
-    keys.switchitem
-    keys.useitem
-    */
-    text(" right arrow", width * 0.1 + 200, 200);
-    text(" left arrow", width * 0.1 + 200, 260);
-    text(" shift", width * 0.1 + 200, 320);
-    text(" space", width * 0.1 + 200, 380);
+    text(keyInfo[keysMovement[0]], width * 0.1 + 200, 200);
+    text(keyInfo[keysMovement[1]], width * 0.1 + 200, 260);
+    text(keyInfo[keysMovement[2]], width * 0.1 + 200, 320);
+    text(keyInfo[keysMovement[3]], width * 0.1 + 200, 380);
+
+    textSize(50);
+    text("TABLET", width * 0.1 + 550, 130);
+    textSize(30);
+    text("move right: ", width * 0.1 + 550, 200);
+    text("move left: ", width * 0.1 + 550, 260);
+    text("use item: ", width * 0.1 + 550, 320);
+    text("touch right side", width * 0.1 + 200 + 550, 200);
+    text("touch left side", width * 0.1 + 200 + 550, 260);
+    text("touch itembar", width * 0.1 + 200 + 550, 320);
+
+    if (
+      mouseX >= width * 0.1 &&
+      mouseX <= width * 0.1 + 250 &&
+      mouseY >= 420 &&
+      mouseY <= 480
+    ) {
+      fill(160);
+    } else {
+      fill(200);
+    }
+    rect(width * 0.1 + 125, 450, 250, 60);
+    if (keys.changing === false) {
+      fill(0);
+      text("click here to change", width * 0.1 + 20, 460);
+    } else {
+      fill(0);
+      text("click to save", width * 0.1 + 60, 460);
+    }
+    if (
+      mouseX >= width * 0.1 &&
+      mouseX <= width * 0.1 + 250 &&
+      mouseY >= 490 &&
+      mouseY <= 550
+    ) {
+      fill(160);
+    } else {
+      fill(200);
+    }
+    rect(width * 0.1 + 125, 520, 250, 60);
+    fill(0);
+    text("reset", width * 0.1 + 105, 530);
 
     //Back
     fill(prescreen.buttonsemicolorshop);
@@ -1128,6 +776,7 @@ function PrescreenControls() {
     text("back", width - 160, 96);
     textSize(20);
 
+    //Back
     if (
       mouseX >= width - 200 &&
       mouseX <= width - 40 &&
@@ -1136,14 +785,183 @@ function PrescreenControls() {
     ) {
       prescreen.buttoncolorshop = color(230, 30, 30);
       prescreen.buttonsemicolorshop = color(200, 30, 30);
-      if (mouseIsPressed === true) {
+      if (mouseIsPressed === true && prescreen.buttontimer >= 20) {
+        prescreen.buttontimer = 0;
         soundButton.play();
         prescreen.show = true;
         prescreen.showcontrols = false;
+        keys.changing = false;
       }
     } else {
       prescreen.buttoncolorshop = color(200, 30, 30);
       prescreen.buttonsemicolorshop = color(170, 30, 30);
+    }
+
+    //Change Keys
+    if (
+      mouseX >= width * 0.1 &&
+      mouseX <= width * 0.1 + 250 &&
+      mouseY >= 420 &&
+      mouseY <= 480 &&
+      mouseIsPressed === true &&
+      prescreen.buttontimer >= 20
+    ) {
+      if (keys.changing === false) {
+        soundButton.play();
+        prescreen.buttontimer = 0;
+        keys.changing = true;
+      } else {
+        soundButton.play();
+        prescreen.buttontimer = 0;
+        keys.changing = false;
+      }
+    }
+
+    //reset
+    if (
+      mouseX >= width * 0.1 &&
+      mouseX <= width * 0.1 + 250 &&
+      mouseY >= 490 &&
+      mouseY <= 550 &&
+      mouseIsPressed === true &&
+      prescreen.buttontimer >= 20
+    ) {
+      keysMovementWhile[0] = 39;
+      keysMovementWhile[1] = 37;
+      keysMovementWhile[2] = 16;
+      keysMovementWhile[3] = 32;
+      keysMovement[0] = 39;
+      keysMovement[1] = 37;
+      keysMovement[2] = 16;
+      keysMovement[3] = 32;
+      soundButton.play();
+      prescreen.buttontimer = 0;
+    }
+
+    if (keys.changing === true) {
+      if (
+        mouseY >= 160 &&
+        mouseY <= 220 &&
+        mouseX >= width * 0.1 + 150 &&
+        mouseX <= width * 0.1 + 350
+      ) {
+        fill(200);
+        rect(width * 0.1 + 450, 190, 50, 30);
+        triangle(
+          width * 0.1 + 400,
+          190,
+          width * 0.1 + 430,
+          165,
+          width * 0.1 + 430,
+          215
+        );
+        if (
+          keyIsPressed === true &&
+          prescreen.buttontimer >= 20 &&
+          keyCode != keysMovement[0] &&
+          keyCode != keysMovement[1] &&
+          keyCode != keysMovement[2] &&
+          keyCode != keysMovement[3]
+        ) {
+          prescreen.buttontimer = 0;
+          // console.log(keysMovement[0]);
+          // console.log("KeyCode: " + keyCode);
+          soundButton.play();
+          keysMovement.splice(0, 1, keyCode);
+          // console.log(keysMovement[0]);
+          keysMovementWhile.splice(0, 1, keyCode);
+        }
+      }
+      if (
+        mouseY > 220 &&
+        mouseY <= 280 &&
+        mouseX >= width * 0.1 + 150 &&
+        mouseX <= width * 0.1 + 350
+      ) {
+        fill(200);
+        rect(width * 0.1 + 450, 250, 50, 30);
+        triangle(
+          width * 0.1 + 400,
+          250,
+          width * 0.1 + 430,
+          225,
+          width * 0.1 + 430,
+          275
+        );
+        if (
+          keyIsPressed === true &&
+          prescreen.buttontimer >= 20 &&
+          keyCode != keysMovement[0] &&
+          keyCode != keysMovement[1] &&
+          keyCode != keysMovement[2] &&
+          keyCode != keysMovement[3]
+        ) {
+          prescreen.buttontimer = 0;
+          soundButton.play();
+          keysMovement.splice(1, 1, keyCode);
+          keysMovementWhile.splice(1, 1, keyCode);
+        }
+      }
+      if (
+        mouseY > 280 &&
+        mouseY <= 340 &&
+        mouseX >= width * 0.1 + 150 &&
+        mouseX <= width * 0.1 + 350
+      ) {
+        fill(200);
+        rect(width * 0.1 + 450, 310, 50, 30);
+        triangle(
+          width * 0.1 + 400,
+          310,
+          width * 0.1 + 430,
+          285,
+          width * 0.1 + 430,
+          335
+        );
+        if (
+          keyIsPressed === true &&
+          prescreen.buttontimer >= 20 &&
+          keyCode != keysMovement[0] &&
+          keyCode != keysMovement[1] &&
+          keyCode != keysMovement[2] &&
+          keyCode != keysMovement[3]
+        ) {
+          prescreen.buttontimer = 0;
+          soundButton.play();
+          keysMovement.splice(2, 1, keyCode);
+          keysMovementWhile.splice(2, 1, keyCode);
+        }
+      }
+      if (
+        mouseY > 340 &&
+        mouseY <= 400 &&
+        mouseX >= width * 0.1 + 150 &&
+        mouseX <= width * 0.1 + 350
+      ) {
+        fill(200);
+        rect(width * 0.1 + 450, 370, 50, 30);
+        triangle(
+          width * 0.1 + 400,
+          370,
+          width * 0.1 + 430,
+          345,
+          width * 0.1 + 430,
+          395
+        );
+        if (
+          keyIsPressed === true &&
+          prescreen.buttontimer >= 20 &&
+          keyCode != keysMovement[0] &&
+          keyCode != keysMovement[1] &&
+          keyCode != keysMovement[2] &&
+          keyCode != keysMovement[3]
+        ) {
+          prescreen.buttontimer = 0;
+          soundButton.play();
+          keysMovement.splice(3, 1, keyCode);
+          keysMovementWhile.splice(3, 1, keyCode);
+        }
+      }
     }
   }
 }

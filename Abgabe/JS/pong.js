@@ -26,6 +26,11 @@ var ballspeed = 10;
 var yspeed = 0;
 var score = 0;
 
+var touchDownLeft = false;
+var touchDownRight = false;
+var touchUpLeft = false;
+var touchUpRight = false;
+
 function Spieler() {
   //highscore
   fill(Coin.color);
@@ -51,18 +56,18 @@ function Spieler() {
   rect(xPos2, yPos2, 10, 40);
 
   //Spieler 1
-  if (keyIsDown(83)) {
+  if (keyIsDown(83) || touchDownLeft === true) {
     yPos1 = yPos1 + 10;
   }
-  if (keyIsDown(87)) {
+  if (keyIsDown(87) || touchUpLeft === true) {
     yPos1 = yPos1 - 10;
   }
 
   //Spieler 2
-  if (keyIsDown(40)) {
+  if (keyIsDown(40) || touchDownRight === true) {
     yPos2 = yPos2 + 10;
   }
-  if (keyIsDown(38)) {
+  if (keyIsDown(38) || touchUpRight === true) {
     yPos2 = yPos2 - 10;
   }
 
