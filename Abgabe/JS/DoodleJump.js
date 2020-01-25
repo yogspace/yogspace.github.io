@@ -6,8 +6,6 @@ function PlayerFunction() {
     prescreen.showcontrols === false &&
     showIntro === false
   ) {
-    console.log("KeyCode: " + keyCode);
-
     //first tile
     if (ntilesFIRST.show === true) {
       // fill(70, 70, 70);
@@ -1243,6 +1241,7 @@ function RushEnemyUpAndDownFunction() {
   }
 }
 
+//First attempt of the portal
 function PortalRotation() {
   if (
     prescreen.show === false &&
@@ -1457,7 +1456,10 @@ function items() {
     prescreen.show === false &&
     prescreen.showshop === false &&
     prescreen.showcontrols === false &&
-    showIntro === false
+    showIntro === false &&
+    gameOverCoins === false &&
+    gameOverFall === false &&
+    gameOverLifes === false
   ) {
     //Jumpshoe
     if (jumpshoe.show === true) {
@@ -2364,39 +2366,44 @@ function environmentfunction() {
     prescreen.showcontrols === false &&
     showIntro === false
   ) {
-    // for (m = 0; m < mtiles.length; m++) {
-    //   for (i = 0; i < ntiles.length; i++) {
-    background(environment.color);
-    environment.soundtimer = environment.soundtimer + 1;
-    if (environment.soundtimer === 1) {
-      soundBackground.play();
-      if (environment.soundtimer >= 2700) {
-        environment.soundtimer = 0;
+    for (k = 1; k < 100; k++) {
+      // for (m = 0; m < mtiles.length; m++) {
+      //   for (i = 0; i < ntiles.length; i++) {
+      background(environment.color);
+      environment.soundtimer = environment.soundtimer + 1;
+      if (environment.soundtimer === 1) {
+        soundBackground.play();
+        if (environment.soundtimer >= 2700) {
+          environment.soundtimer = 0;
+        }
       }
+      if (int(highscore.score) === k * 100) {
+        environment.color = color(random(255), random(0, 100), random(255));
+      }
+
+      // if (player.y < heightWhile / 5) {
+      //   player.affectTileTooClose = true;
+      // } else {
+      //   player.affectTileTooClose = false;
+      // }
+
+      // if (player.affectTileTooClose === true) {
+      //   // player.affectTiles = true;
+      //   ntiles[i].y = ntiles[i].y + 5;
+      //   mtiles[m].y = mtiles[m].y + 5;
+      //   ShootEnemy.y = ShootEnemy.y + 5;
+      //   RushEnemy.y = RushEnemy.y + 5;
+      //   RushUpAndDownEnemy.y = RushUpAndDownEnemy.y;
+      //   Pong.y = Pong.y + 5;
+      //   jumpshoe.y = jumpshoe.y + 5;
+      //   doubblejump.y = doubblejump.y + 5;
+      //   Coin.y = Coin.y + 5;
+      //   shield.y = shield.y + 5;
+      //   changeKeys.y = changeKeys.y + 5;
+      // }
+      //   }
+      // }
     }
-
-    // if (player.y < heightWhile / 5) {
-    //   player.affectTileTooClose = true;
-    // } else {
-    //   player.affectTileTooClose = false;
-    // }
-
-    // if (player.affectTileTooClose === true) {
-    //   // player.affectTiles = true;
-    //   ntiles[i].y = ntiles[i].y + 5;
-    //   mtiles[m].y = mtiles[m].y + 5;
-    //   ShootEnemy.y = ShootEnemy.y + 5;
-    //   RushEnemy.y = RushEnemy.y + 5;
-    //   RushUpAndDownEnemy.y = RushUpAndDownEnemy.y;
-    //   Pong.y = Pong.y + 5;
-    //   jumpshoe.y = jumpshoe.y + 5;
-    //   doubblejump.y = doubblejump.y + 5;
-    //   Coin.y = Coin.y + 5;
-    //   shield.y = shield.y + 5;
-    //   changeKeys.y = changeKeys.y + 5;
-    // }
-    //   }
-    // }
   }
 }
 
@@ -2547,6 +2554,7 @@ function gameOver() {
       // console.log(highscore.score);
       // console.log(highscore.total);
       changeKeys.timer = 0;
+      environment.color = color(8, 0, 30);
       player.affectTileTooClose = false;
       changeKeys.while = false;
       ShootEnemy.moving = false;

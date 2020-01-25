@@ -61,10 +61,9 @@
  *										   *
  * - Dinge, die noch hinzugefügt werden:					   *
  * - Item: Torch und Darkness							   *
- * - je höher der Spieler, desto dunkler der Hintergrund			   *		
+ * - je höher der Spieler, desto dunkler der Hintergrund (momentan: random color)  *		
  * - Portal rotation								   *
  * - Variablen Namen anpassen							   *
- * - Tasten verändern								   *
  *										   *
  *										   *
  *										   *

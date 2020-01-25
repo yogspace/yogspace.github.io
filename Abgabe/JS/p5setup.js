@@ -78,22 +78,39 @@ function preload() {
   //Font
   myFont = loadFont("Font/BebasNeue-Regular.otf");
 
-  //Images
-  imageHeart = loadImage("Bilder/Heart.svg");
-  imageShootEnemy = loadImage("Bilder/ShootEnemy.svg");
-  imageRushEnemy = loadImage("Bilder/RushEnemy.svg");
-  imageRushUPDEnemyGoLeft = loadImage("Bilder/RushUADEnemy-GoLeft.svg");
-  imageRushUPDEnemyGoRight = loadImage("Bilder/RushUADEnemy-GoRight.svg");
-  imageEnemyDetection = loadImage("Bilder/EnemyDetection.svg");
-  imageJetpack = loadImage("Bilder/jetpack.svg");
-  imageShield = loadImage("Bilder/shield.svg");
-  imageDoubblejump = loadImage("Bilder/Doubblejump.svg");
-  imagePong = loadImage("Bilder/Pong.svg");
-  imagePlayerRight = loadImage("Bilder/Player/PlayerRight.svg");
-  imagePlayerLeft = loadImage("Bilder/Player/PlayerLeft.svg");
-  imageJetpackR = loadImage("Bilder/Player/JetpackRight.svg");
-  imageJetpackL = loadImage("Bilder/Player/JetpackLeft.svg");
-  imageQR = loadImage("Bilder/qrcode.svg");
+  //Images SVG (Funktioniert leider nicht in Firefox)
+  // imageHeart = loadImage("Bilder/SVG/Heart.svg");
+  // imageShootEnemy = loadImage("Bilder/SVG/ShootEnemy.svg");
+  // imageRushEnemy = loadImage("Bilder/SVG/RushEnemy.svg");
+  // imageRushUPDEnemyGoLeft = loadImage("Bilder/SVG/RushUADEnemy-GoLeft.svg");
+  // imageRushUPDEnemyGoRight = loadImage("Bilder/SVG/RushUADEnemy-GoRight.svg");
+  // imageEnemyDetection = loadImage("Bilder/SVG/EnemyDetection.svg");
+  // imageJetpack = loadImage("Bilder/SVG/jetpack.svg");
+  // imageShield = loadImage("Bilder/SVG/shield.svg");
+  // imageDoubblejump = loadImage("Bilder/SVG/Doubblejump.svg");
+  // imagePong = loadImage("Bilder/SVG/Pong.svg");
+  // imagePlayerRight = loadImage("Bilder/SVG/Player/PlayerRight.svg");
+  // imagePlayerLeft = loadImage("Bilder/SVG/Player/PlayerLeft.svg");
+  // imageJetpackR = loadImage("Bilder/SVG/Player/JetpackRight.svg");
+  // imageJetpackL = loadImage("Bilder/SVG/Player/JetpackLeft.svg");
+  // imageQR = loadImage("Bilder/SVG/qrcode.svg");
+
+  //Images (PNG)
+  imageHeart = loadImage("Bilder/PNG/Heart.png");
+  imageShootEnemy = loadImage("Bilder/PNG/ShootEnemy.png");
+  imageRushEnemy = loadImage("Bilder/PNG/RushEnemy.png");
+  imageRushUPDEnemyGoLeft = loadImage("Bilder/PNG/RushUADEnemy-GoLeft.png");
+  imageRushUPDEnemyGoRight = loadImage("Bilder/PNG/RushUADEnemy-GoRight.png");
+  imageEnemyDetection = loadImage("Bilder/PNG/EnemyDetection.png");
+  imageJetpack = loadImage("Bilder/PNG/jetpack.png");
+  imageShield = loadImage("Bilder/PNG/shield.png");
+  imageDoubblejump = loadImage("Bilder/PNG/Doubblejump.png");
+  imagePong = loadImage("Bilder/PNG/Pong.png");
+  imagePlayerRight = loadImage("Bilder/PNG/Player/PlayerRight.png");
+  imagePlayerLeft = loadImage("Bilder/PNG/Player/PlayerLeft.png");
+  imageJetpackR = loadImage("Bilder/PNG/Player/JetpackRight.png");
+  imageJetpackL = loadImage("Bilder/PNG/Player/JetpackLeft.png");
+  imageQR = loadImage("Bilder/PNG/qrcode.png");
 
   //Sounds
   soundPrescreenBackground = loadSound("Sound/prescreenbackground.mp3");
