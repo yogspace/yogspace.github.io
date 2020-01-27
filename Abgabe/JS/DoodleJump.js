@@ -2369,6 +2369,11 @@ function environmentfunction() {
     for (k = 1; k < 100; k++) {
       // for (m = 0; m < mtiles.length; m++) {
       //   for (i = 0; i < ntiles.length; i++) {
+      environment.color = color(
+        158 - environment.colortimer / 2,
+        150 - environment.colortimer,
+        180 - environment.colortimer / 2
+      );
       background(environment.color);
       environment.soundtimer = environment.soundtimer + 1;
       if (environment.soundtimer === 1) {
@@ -2377,8 +2382,10 @@ function environmentfunction() {
           environment.soundtimer = 0;
         }
       }
-      if (int(highscore.score) === k * 100) {
-        environment.color = color(random(255), random(0, 100), random(255));
+      // highscore.score = highscore.score + 1 / 50;
+      if (int(highscore.score) === k * 50 && environment.colortimer <= 400) {
+        environment.colortimer = environment.colortimer + 20;
+        highscore.score = highscore.score + 1;
       }
 
       // if (player.y < heightWhile / 5) {
@@ -2554,6 +2561,7 @@ function gameOver() {
       // console.log(highscore.score);
       // console.log(highscore.total);
       changeKeys.timer = 0;
+      environment.colortimer = 300;
       environment.color = color(8, 0, 30);
       player.affectTileTooClose = false;
       changeKeys.while = false;

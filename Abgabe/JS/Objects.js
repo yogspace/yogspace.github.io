@@ -153,6 +153,7 @@ var keysMovementWhile = [39, 37, 16, 32];
 //Background
 var environment = {
   color: color(8, 0, 30),
+  colortimer: 0,
   soundtimer: 0
 };
 

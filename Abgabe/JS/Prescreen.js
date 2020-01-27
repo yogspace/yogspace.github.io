@@ -61,7 +61,6 @@
  *
  * - Dinge, die noch hinzugefügt werden:
  * - Item: Torch und Darkness
- * - je höher der Spieler, desto dunkler der Hintergrund
  * - Portal rotation *
  * - Variablen Namen anpassen
  *
@@ -423,6 +422,7 @@ function reset() {
 
     //Background
     environment.soundtimer = 0;
+    environment.colortimer = 0;
 
     //Other stuff
     keysMovement[0] = keysMovementWhile[0];

@@ -1,0 +1,60 @@
+body {
+  background-color: rgb(8, 0, 30);
+  color: rgb(200, 200, 200);
+  margin: 0px;
+  padding: 0px;
+  /* overflow: hidden; */
+  font-family: bebas neue;
+  src: url(Font/BebasNeue-Regular.otf);
+}
+
+header {
+  background-color: rgb(0, 0, 30);
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  padding: 50px;
+  font-size: 20px;
+}
+
+.HeadBox {
+  margin-top: -50px;
+  text-align: center;
+  font-size: 6em;
+}
+
+.secondheadline {
+  text-align: center;
+  font-size: 20px;
+  letter-spacing: 10px;
+  margin-top: -100px;
+}
+
+.line {
+  margin-top: -80px;
+  border-width: 2px;
+  outline-style: none none groove none;
+}
+
+.mainArea {
+  text-align: CENTER;
+  margin-top: -10px;
+
+  padding: 0;
+  color: rgb(0, 255, 0);
+  font-size: 1em;
+}
+
+a:link,
+a:visited {
+  font-size: 4em;
+  color: rgb(200, 200, 200);
+  padding: 14px 25px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+}
+a:hover,
+a:active {
+  color: rgb(0, 255, 0);
+}
