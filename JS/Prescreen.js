@@ -404,6 +404,7 @@ function reset() {
       width - doubblejump.sizeX / 2
     );
     doubblejump.while = false;
+    doubblejump.activated = false;
     shield.x = random(shield.sizeX / 2, width - shield.sizeX / 2);
     shield.y = 0 - random(600, 10);
     shield.while = false;

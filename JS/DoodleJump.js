@@ -38,6 +38,7 @@ function PlayerFunction() {
       }
       if (player.y + player.sizeY / 2 >= player.jumpStart) {
         soundjumping.play();
+        doubblejump.activated = false;
         player.soundTimer = 0;
         player.jump = true;
       }
@@ -1995,14 +1996,15 @@ function itemfunction() {
       Pong.slideX = Pong.slideX - 15;
       if (Pong.slideX < width / 2) {
         Pong.starting = true;
+        Pong.startingTimer = 0;
         shield.while = false;
         shield.timer = 0;
         sounditem_shield_close.stop();
-        Pong.startingTimer = 0;
         keysMovement[0] = keysMovementWhile[0];
         keysMovement[1] = keysMovementWhile[1];
         keysMovement[2] = keysMovementWhile[2];
         keysMovement[3] = keysMovementWhile[3];
+        doubblejump.activated = false;
         changeKeys.timer = 0;
         changeKeys.while = false;
         changeKeys.choosecolor = false;
@@ -2062,13 +2064,15 @@ function itemfunction() {
       prescreen.buttontimer >= 15 &&
       jumpshoe.while === false &&
       doubblejump.while === false &&
-      Pong.while === false
+      Pong.while === false &&
+      doubblejump.activated === false
     ) {
       // console.log("doubblejump yeah");
       sounditem_doubblejump.play();
       prescreen.buttontimer = 0;
       doubblejump.while = true;
       DoubblejumpArray.pop();
+      doubblejump.activated = true;
     }
   }
   if (doubblejump.while === true) {

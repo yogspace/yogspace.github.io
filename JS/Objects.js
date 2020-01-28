@@ -191,7 +191,8 @@ var doubblejump = {
   color: color(199, 21, 133),
   show: true,
   choose: false,
-  while: false
+  while: false,
+  activated: false
 };
 
 //Shield
