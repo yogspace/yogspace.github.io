@@ -10,12 +10,19 @@ function PlayerFunction() {
     if (ntilesFIRST.show === true) {
       // fill(70, 70, 70);
       // rect(ntilesFIRST.x, ntilesFIRST.y, ntilesFIRST.sizeX, ntilesFIRST.sizeY);
-      fill(0, 255, 0);
-      textSize(15);
-      text(
-        "01101010101011",
-        ntilesFIRST.x - ntilesFIRST.sizeX / 2,
-        ntilesFIRST.y + ntilesFIRST.sizeY
+      // fill(0, 255, 0);
+      // textSize(15);
+      // text(
+      //   "01101010101011",
+      //   ntilesFIRST.x - ntilesFIRST.sizeX / 2,
+      //   ntilesFIRST.y + ntilesFIRST.sizeY
+      // );
+      image(
+        imageNtile,
+        ntilesFIRST.x,
+        ntilesFIRST.y + ntilesFIRST.sizeY / 2,
+        ntilesFIRST.sizeX,
+        ntilesFIRST.sizeY
       );
     }
     //Gravitation and boost of player
@@ -707,7 +714,7 @@ function ShootEnemyFunction() {
   ) {
     // prescreen.show = false;
     // player.moving = false;
-    if (player.moving === true) {
+    if (Pong.while === false) {
       fill(ShootEnemy.color);
       //Movement and appearance of the Enemy
       image(
@@ -748,6 +755,7 @@ function ShootEnemyFunction() {
       } else {
         ShootEnemy.show = true;
         if (ShootEnemy.show === true && ShootEnemy.moving === true) {
+          soundShootEnemy.playMode("restart");
           soundShootEnemy.play();
         }
       }
@@ -907,7 +915,7 @@ function RushEnemyFunction() {
   ) {
     // prescreen.show = false;
     // player.moving = false;
-    if (player.moving === true) {
+    if (Pong.while === false) {
       fill(RushEnemy.color);
       //Movement and appearance of the Enemy
       image(
@@ -1045,7 +1053,7 @@ function RushEnemyUpAndDownFunction() {
   ) {
     // prescreen.show = false;
     // player.moving = false;
-    if (player.moving === true) {
+    if (Pong.while === false) {
       if (RushUpAndDownEnemy.movingR === true) {
         image(
           imageRushUPDEnemyGoRight,
@@ -1267,44 +1275,69 @@ function PortalRotation() {
 
     //Portal
     if (rotatePortal.show === true) {
-      fill(rotatePortal.color);
-      rect(widthWhile / 2, rotatePortal.y, (widthWhile * 3) / 2, 20);
+      fill(random(255), random(255), random(255));
+      rect(widthWhile / 2, rotatePortal.y, (widthWhile * 3) / 2, 2);
+      rotatePortal.soundtimer++;
+      if (rotatePortal.soundtimer === 30) {
+        sound_rotatePortal.play();
+      }
+      if (rotatePortal.soundtimer >= 520) {
+        rotatePortal.soundtimer = 0;
+      }
+    }
+    if (
+      player.affectTile === true &&
+      player.y <= height - height / 3 &&
+      player.moving === true
+    ) {
+      rotatePortal.y = rotatePortal.y + player.gravity;
+    }
+    if (player.affectTileTooClose === true && player.moving === true) {
+      rotatePortal.y = rotatePortal.y + player.boost;
+    }
+    if (rotatePortal.y >= height) {
+      rotatePortal.y = random(-4000, -7000);
+    }
 
-      if (
-        player.affectTile === true &&
-        player.y <= height - height / 3 &&
-        player.moving === true
-      ) {
-        rotatePortal.y = rotatePortal.y + player.gravity;
-      }
-      if (player.affectTileTooClose === true && player.moving === true) {
-        rotatePortal.y = rotatePortal.y + player.boost;
-      }
-      if (rotatePortal.y >= height) {
-        rotatePortal.y = random(-4000, -7000);
-      }
+    if (rotatePortal.y >= 0 - 500) {
+      rotatePortal.show = true;
+    } else {
+      rotatePortal.show = false;
+      rotatePortal.soundtimer = 0;
+    }
+    // } else {
+    // sound_rotatePortal.pause();
+    // }
 
-      if (
-        //unten
-        (player.y + player.sizeY / 2 <= rotatePortal.y &&
-          Pong.while === false) ||
-        //oben
-        (player.y - player.sizeY / 2 <= rotatePortal.y && Pong.while === false)
-      ) {
-        // rotatePortal.y = random(-100, -20);
+    if (
+      //unten
+      (player.y + player.sizeY / 2 <= rotatePortal.y && Pong.while === false) ||
+      //oben
+      (player.y - player.sizeY / 2 <= rotatePortal.y && Pong.while === false)
+    ) {
+      // rotatePortal.y = random(-100, -20);
+      if (rotatePortal.rotated === false) {
         rotatePortal.while = true;
+        rotatePortal.y = random(-500, -3000);
+        sound_rotatePortal.stop();
+      } else {
+        rotatePortal.turning = true;
+        rotatePortal.y = random(-4000, -9000);
+        sound_rotatePortal.stop();
       }
     }
 
     if (rotatePortal.while === true) {
-      rotatePortal.timer = rotatePortal.timer + 1;
       if (rotatePortal.angle < 180 && rotatePortal.starting === true) {
-        rotatePortal.angle = rotatePortal.angle + 1.25;
+        rotatePortal.angle = rotatePortal.angle + 2;
+        ShootEnemy.cooldown = 0;
+        RushUpAndDownEnemy.cooldown = 0;
+        RushEnemy.cooldown = 0;
         jumpshoe.timer = 0;
         player.moving = false;
       }
       if (rotatePortal.angle === 180 && rotatePortal.starting === true) {
-        rotatePortal.y = random(-4000, -7000);
+        rotatePortal.rotated = true;
         player.moving = true;
         player.jump = true;
         player.jumpEnd = 0;
@@ -1313,16 +1346,20 @@ function PortalRotation() {
         rotatePortal.starting = false;
       }
 
-      if (rotatePortal.timer >= 600) {
+      if (rotatePortal.turning === true) {
         if (rotatePortal.angle > 0) {
           jumpshoe.timer = 0;
-          rotatePortal.angle = rotatePortal.angle - 1.25;
+          rotatePortal.angle = rotatePortal.angle - 2;
+          ShootEnemy.cooldown = 0;
+          RushUpAndDownEnemy.cooldown = 0;
+          RushEnemy.cooldown = 0;
           player.moving = false;
         }
         if (rotatePortal.angle <= 0) {
           rotatePortal.while = false;
+          rotatePortal.turning = true;
+          rotatePortal.rotated = false;
           player.moving = true;
-          rotatePortal.timer = 0;
           rotatePortal.starting = true;
         }
         if (rotatePortal.angle === 0) {
@@ -1343,7 +1380,8 @@ function itembar() {
     prescreen.show === false &&
     prescreen.showshop === false &&
     prescreen.showcontrols === false &&
-    showIntro === false
+    showIntro === false &&
+    Pong.while === false
   ) {
     //Show Enemys
     if (EnemyDetection === true) {
@@ -1553,6 +1591,11 @@ function items() {
         (player.x - player.sizeX / 2 >= jumpshoe.x - jumpshoe.sizeX / 2 &&
           player.x - player.sizeX / 2 <= jumpshoe.x + jumpshoe.sizeX / 2 &&
           player.y - player.sizeY / 2 <= jumpshoe.y + jumpshoe.sizeY / 2 &&
+          player.y - player.sizeY / 2 >= jumpshoe.y - jumpshoe.sizeY / 2) ||
+        //mitten drin
+        (player.x - player.sizeX / 2 >= jumpshoe.x - jumpshoe.sizeX / 2 &&
+          player.x + player.sizeX / 2 <= jumpshoe.x + jumpshoe.sizeX / 2 &&
+          player.y + player.sizeY / 2 <= jumpshoe.y + jumpshoe.sizeY / 2 &&
           player.y - player.sizeY / 2 >= jumpshoe.y - jumpshoe.sizeY / 2)
       ) {
         soundgetItem.play();
@@ -1623,6 +1666,14 @@ function items() {
             doubblejump.x + doubblejump.sizeX / 2 &&
           player.y - player.sizeY / 2 <=
             doubblejump.y + doubblejump.sizeY / 2 &&
+          player.y - player.sizeY / 2 >=
+            doubblejump.y - doubblejump.sizeY / 2) ||
+        //mitten drin
+        (player.x - player.sizeX / 2 >= doubblejump.x - doubblejump.sizeX / 2 &&
+          player.x + player.sizeX / 2 <=
+            doubblejump.x + doubblejump.sizeX / 2 &&
+          player.y + player.sizeY / 2 <=
+            doubblejump.y + doubblejump.sizeY / 2 &&
           player.y - player.sizeY / 2 >= doubblejump.y - doubblejump.sizeY / 2)
       ) {
         soundgetItem.play();
@@ -1676,6 +1727,11 @@ function items() {
         (player.x - player.sizeX / 2 >= shield.x - shield.sizeX / 2 &&
           player.x - player.sizeX / 2 <= shield.x + shield.sizeX / 2 &&
           player.y - player.sizeY / 2 <= shield.y + shield.sizeY / 2 &&
+          player.y - player.sizeY / 2 >= shield.y - shield.sizeY / 2) ||
+        //mitten drin
+        (player.x - player.sizeX / 2 >= shield.x - shield.sizeX / 2 &&
+          player.x + player.sizeX / 2 <= shield.x + shield.sizeX / 2 &&
+          player.y + player.sizeY / 2 <= shield.y + shield.sizeY / 2 &&
           player.y - player.sizeY / 2 >= shield.y - shield.sizeY / 2)
       ) {
         soundgetItem.play();
@@ -1731,6 +1787,12 @@ function items() {
         (player.x - player.sizeX / 2 >= Heart.x - Heart.sizeX / 2 &&
           player.x - player.sizeX / 2 <= Heart.x + Heart.sizeX / 2 &&
           player.y - player.sizeY / 2 <= Heart.y + Heart.sizeY / 2 &&
+          player.y - player.sizeY / 2 >= Heart.y - Heart.sizeY / 2 &&
+          Heart.cooldown > 60) ||
+        //mitten drin
+        (player.x - player.sizeX / 2 >= Heart.x - Heart.sizeX / 2 &&
+          player.x + player.sizeX / 2 <= Heart.x + Heart.sizeX / 2 &&
+          player.y + player.sizeY / 2 <= Heart.y + Heart.sizeY / 2 &&
           player.y - player.sizeY / 2 >= Heart.y - Heart.sizeY / 2 &&
           Heart.cooldown > 60)
       ) {
@@ -1792,6 +1854,11 @@ function items() {
         (player.x - player.sizeX / 2 >= Pong.x - Pong.sizeX / 2 &&
           player.x - player.sizeX / 2 <= Pong.x + Pong.sizeX / 2 &&
           player.y - player.sizeY / 2 <= Pong.y + Pong.sizeY / 2 &&
+          player.y - player.sizeY / 2 >= Pong.y - Pong.sizeY / 2) ||
+        //mitten drin
+        (player.x - player.sizeX / 2 >= Pong.x - Pong.sizeX / 2 &&
+          player.x + player.sizeX / 2 <= Pong.x + Pong.sizeX / 2 &&
+          player.y + player.sizeY / 2 <= Pong.y + Pong.sizeY / 2 &&
           player.y - player.sizeY / 2 >= Pong.y - Pong.sizeY / 2)
       ) {
         if (HeartArray.length >= 1) {
@@ -1809,8 +1876,7 @@ function items() {
     // console.log(changeKeys.timercolor);
     // console.log(changeKeys.y);
     if (changeKeys.show === true) {
-      if (changeKeys.y + changeKeys.sizeY / 2 < 0) {
-        changeKeys.timercolor = 0;
+      if (changeKeys.y + changeKeys.sizeY / 2 < -height / 2) {
       }
       changeKeys.timercolor = changeKeys.timercolor + 1;
 
@@ -1908,6 +1974,11 @@ function items() {
         (player.x - player.sizeX / 2 >= changeKeys.x - changeKeys.sizeX / 2 &&
           player.x - player.sizeX / 2 <= changeKeys.x + changeKeys.sizeX / 2 &&
           player.y - player.sizeY / 2 <= changeKeys.y + changeKeys.sizeY / 2 &&
+          player.y - player.sizeY / 2 >= changeKeys.y - changeKeys.sizeY / 2) ||
+        //oben links
+        (player.x - player.sizeX / 2 >= changeKeys.x - changeKeys.sizeX / 2 &&
+          player.x + player.sizeX / 2 <= changeKeys.x + changeKeys.sizeX / 2 &&
+          player.y + player.sizeY / 2 <= changeKeys.y + changeKeys.sizeY / 2 &&
           player.y - player.sizeY / 2 >= changeKeys.y - changeKeys.sizeY / 2)
       ) {
         soundgetItem.play();
@@ -1967,6 +2038,7 @@ function items() {
           player.x - player.sizeX / 2 <= Coin.x + Coin.sizeX / 2 &&
           player.y - player.sizeY / 2 <= Coin.y + Coin.sizeY / 2 &&
           player.y - player.sizeY / 2 >= Coin.y - Coin.sizeY / 2) ||
+        //Coin in Player
         (player.x + player.sizeX / 2 >= Coin.x &&
           player.x - player.sizeX / 2 <= Coin.x &&
           player.y - player.sizeY <= Coin.y &&
@@ -2064,9 +2136,10 @@ function itemfunction() {
         soundPongOverflow.play();
       }
       rotatePortal.while = false;
-      rotatePortal.timer = 0;
       rotatePortal.starting = true;
       rotatePortal.angle = 0;
+      rotatePortal.rotated = false;
+      rotatePortal.turning = false;
       Pong.slideX = Pong.slideX + 15;
       if (Pong.slideX > width + width / 2) {
         Pong.slidingR = false;
@@ -2215,6 +2288,8 @@ function itemfunction() {
       shield.timer != shield.maxtime - 21
     ) {
       fill(32, 178, 170, 200);
+    } else {
+      fill(255, 8, 17, 200);
     }
     ellipse(player.x, player.y, player.sizeX * 2, player.sizeY * 2);
     if (shield.timer >= shield.maxtime || Pong.while === true) {
@@ -2250,13 +2325,21 @@ function normaltile() {
     ) {
       // fill(ntiles[i].color);
       // rect(ntiles[i].x, ntiles[i].y, ntiles[i].sizeX, ntiles[i].sizeY);
-      fill(0, 255, 0);
-      textSize(15);
-      text(
-        "01101010101011",
-        ntiles[i].x - ntiles[i].sizeX / 2,
-        ntiles[i].y + ntilesFIRST.sizeY
+      image(
+        imageNtile,
+        ntiles[i].x,
+        ntiles[i].y + ntilesFIRST.sizeY / 2,
+        ntiles[i].sizeX,
+        ntiles[i].sizeY
       );
+
+      // fill(255, 255, 0);
+      // textSize(15);
+      // text(
+      //   "01101010101011",
+      //   ntiles[i].x - ntiles[i].sizeX / 2,
+      //   ntiles[i].y + ntilesFIRST.sizeY
+      // );
     }
   }
 }
@@ -2272,12 +2355,20 @@ function movingtile() {
     for (m = 0; m < mtiles.length; m++) {
       // fill(mtiles[m].color);
       // rect(mtiles[m].x, mtiles[m].y, mtiles[m].sizeX, mtiles[m].sizeY);
-      fill(255, 0, 0);
-      textSize(15);
-      text(
-        "01101010101011",
-        mtiles[m].x - mtiles[m].sizeX / 2,
-        mtiles[m].y + ntilesFIRST.sizeY
+      // fill(255, 0, 0);
+      // textSize(15);
+      // text(
+      //   "01101010101011",
+      //   mtiles[m].x - mtiles[m].sizeX / 2,
+      //   mtiles[m].y + ntilesFIRST.sizeY
+      // );
+
+      image(
+        imageMtile,
+        mtiles[m].x,
+        mtiles[m].y + ntilesFIRST.sizeY / 2,
+        mtiles[m].sizeX,
+        mtiles[m].sizeY
       );
 
       if (player.moving === true) {
@@ -2626,6 +2717,7 @@ function gameOver() {
       soundEnemyShooting.stop();
       soundRushEnemy.stop();
       soundShootEnemy.stop();
+      sound_rotatePortal.stop();
       soundRushUpAndDownEnemy.stop();
       soundRushUpAndDownEnemy2.stop();
       sounditem_shield_close.stop();

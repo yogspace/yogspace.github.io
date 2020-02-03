@@ -10,7 +10,8 @@ body {
   color: rgb(255, 255, 255);
   text-align: CENTER;
   padding: 0px;
-  margin-top: 19%;
+  margin-top: 30vh;
+  left: 50%;
   overflow: hidden;
   font-family: bebas neue;
   src: url(Font/BebasNeue-Regular.otf);

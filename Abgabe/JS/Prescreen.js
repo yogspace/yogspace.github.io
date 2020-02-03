@@ -390,7 +390,7 @@ function reset() {
     ntilesFIRST.y = height / 2 + height * 0.1;
 
     //Items
-    Pong.y = random(-4000, -10000);
+    Pong.y = 0 - random(4000, 10000);
     Pong.x = random(Pong.sizeX / 2, width - Pong.sizeX / 2);
     Pong.while = false;
     Pong.startingTimer = 0;
@@ -421,10 +421,12 @@ function reset() {
     changeKeys.x = random(changeKeys.sizeX / 2, width - changeKeys.sizeX / 2);
     changeKeys.y = 0 - random(1500, 7000);
     rotatePortal.while = false;
-    rotatePortal.timer = 0;
+    rotatePortal.rotated = false;
+    rotatePortal.turning = false;
     rotatePortal.starting = true;
     rotatePortal.angle = 0;
-    rotatePortal.y = 0 - random(500, 900);
+    rotatePortal.y = 0 - random(1500, 4000);
+    rotatePortal.rotated = false;
 
     //Player
     player.x = width / 2;

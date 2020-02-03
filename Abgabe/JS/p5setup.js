@@ -34,6 +34,7 @@ var sounditem_jumpshoe; //good
 var sounditem_shield_close; //good
 var sounditem_shield_open; //good
 var sounditem_heart; // good
+var sound_rotatePortal; // good
 
 //Enemies
 var soundkillEnemy; //good
@@ -73,6 +74,8 @@ var imagePlayerLeft;
 var imageJetpackR;
 var imageJetpackL;
 var imageQR;
+var imageNtile;
+var imageMtile;
 
 function preload() {
   //Font
@@ -111,6 +114,8 @@ function preload() {
   imageJetpackR = loadImage("Bilder/PNG/Player/JetpackRight.png");
   imageJetpackL = loadImage("Bilder/PNG/Player/JetpackLeft.png");
   imageQR = loadImage("Bilder/PNG/qrcode.png");
+  imageNtile = loadImage("Bilder/PNG/ntile.png");
+  imageMtile = loadImage("Bilder/PNG/mtile.png");
 
   //Sounds
   soundPrescreenBackground = loadSound("Sound/prescreenbackground.mp3");
@@ -130,7 +135,7 @@ function preload() {
   soundkillEnemy = loadSound("Sound/enemy_killed.mp3");
   soundkillEnemy.setVolume(0.6);
   soundShootEnemy = loadSound("Sound/enemy_shootEnemy.mp3");
-  soundShootEnemy.setVolume(0.6);
+  soundShootEnemy.setVolume(1);
   soundgetCoin = loadSound("Sound/getCoins.mp3");
   soundgetCoin.setVolume(0.6);
   soundjumping = loadSound("Sound/jumping.mp3");
@@ -156,6 +161,7 @@ function preload() {
   soundPongOverflow = loadSound("Sound/Pong_flow.mp3");
   soundPongOverflow.setVolume(0.6);
   sounditem_jumpshoe = loadSound("Sound/item_jumpshoe.mp3");
+  sound_rotatePortal = loadSound("Sound/rotatePortal.mp3");
 }
 
 function setup() {

@@ -359,7 +359,10 @@ var rotatePortal = {
   timer: 0,
   show: true,
   angle: 0,
-  starting: true
+  starting: true,
+  rotated: false,
+  turning: false,
+  soundtimer: 0
 };
 
 //Loosing
