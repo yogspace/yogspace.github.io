@@ -170,6 +170,7 @@ function setup() {
   imageMode(CENTER);
   rectMode(CENTER);
   textStyle(BOLD);
+  angleMode(DEGREES);
 
   // sound_jumping.setVolume(0.1);
 }

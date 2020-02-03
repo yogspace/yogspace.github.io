@@ -144,13 +144,22 @@ function PlayerFunction() {
 //For mobile
 function touchStarted() {
   if (
-    prescreen.show === false &&
-    prescreen.showshop === false &&
-    prescreen.showcontrols === false &&
-    showIntro === false &&
-    gameOverCoins === false &&
-    gameOverFall === false &&
-    gameOverLifes === false
+    (prescreen.show === false &&
+      prescreen.showshop === false &&
+      prescreen.showcontrols === false &&
+      showIntro === false &&
+      gameOverCoins === false &&
+      gameOverFall === false &&
+      gameOverLifes === false &&
+      rotatePortal.angle < 1) ||
+    (prescreen.show === false &&
+      prescreen.showshop === false &&
+      prescreen.showcontrols === false &&
+      showIntro === false &&
+      gameOverCoins === false &&
+      gameOverFall === false &&
+      gameOverLifes === false &&
+      rotatePortal.angle >= 180)
   ) {
     if (
       mouseX >= 0 &&
@@ -1248,30 +1257,81 @@ function PortalRotation() {
     prescreen.show === false &&
     prescreen.showshop === false &&
     prescreen.showcontrols === false &&
-    showIntro === false
+    showIntro === false &&
+    gameOverCoins === false &&
+    gameOverFall === false &&
+    gameOverLifes === false
   ) {
-    fill(rotatePortal.color);
+    // console.log(rotatePortal.y);
+    // console.log(rotatePortal.show);
 
+    //Portal
     if (rotatePortal.show === true) {
-      stroke(rotatePortal.color);
-      strokeWeight(5);
-      line(rotatePortal.x1, rotatePortal.y1, rotatePortal.x2, rotatePortal.y2);
-      noStroke();
+      fill(rotatePortal.color);
+      rect(widthWhile / 2, rotatePortal.y, (widthWhile * 3) / 2, 20);
 
-      if (player.affectTile === true && player.y <= height - height / 3) {
-        rotatePortal.y1 = rotatePortal.y1 + player.gravity;
-        rotatePortal.y2 = rotatePortal.y2 + player.gravity;
+      if (
+        player.affectTile === true &&
+        player.y <= height - height / 3 &&
+        player.moving === true
+      ) {
+        rotatePortal.y = rotatePortal.y + player.gravity;
       }
-      if (rotatePortal.y1 >= height) {
-        rotatePortal.y1 = random(-10, -20);
-        rotatePortal.y2 = rotatePortal.y1;
+      if (player.affectTileTooClose === true && player.moving === true) {
+        rotatePortal.y = rotatePortal.y + player.boost;
+      }
+      if (rotatePortal.y >= height) {
+        rotatePortal.y = random(-4000, -7000);
       }
 
-      if (player.y - player.sizeY / 2 <= rotatePortal.y1) {
-        rotatePortal.show = false;
-        rotatePortal.y1 = random(-10, -20);
-        rotatePortal.y1 = rotatePortal.y2;
-        rotatePortal.show = true;
+      if (
+        //unten
+        (player.y + player.sizeY / 2 <= rotatePortal.y &&
+          Pong.while === false) ||
+        //oben
+        (player.y - player.sizeY / 2 <= rotatePortal.y && Pong.while === false)
+      ) {
+        // rotatePortal.y = random(-100, -20);
+        rotatePortal.while = true;
+      }
+    }
+
+    if (rotatePortal.while === true) {
+      rotatePortal.timer = rotatePortal.timer + 1;
+      if (rotatePortal.angle < 180 && rotatePortal.starting === true) {
+        rotatePortal.angle = rotatePortal.angle + 1.25;
+        jumpshoe.timer = 0;
+        player.moving = false;
+      }
+      if (rotatePortal.angle === 180 && rotatePortal.starting === true) {
+        rotatePortal.y = random(-4000, -7000);
+        player.moving = true;
+        player.jump = true;
+        player.jumpEnd = 0;
+        player.gravity = 3;
+        player.boost = 25;
+        rotatePortal.starting = false;
+      }
+
+      if (rotatePortal.timer >= 600) {
+        if (rotatePortal.angle > 0) {
+          jumpshoe.timer = 0;
+          rotatePortal.angle = rotatePortal.angle - 1.25;
+          player.moving = false;
+        }
+        if (rotatePortal.angle <= 0) {
+          rotatePortal.while = false;
+          player.moving = true;
+          rotatePortal.timer = 0;
+          rotatePortal.starting = true;
+        }
+        if (rotatePortal.angle === 0) {
+          player.moving = true;
+          player.jump = true;
+          player.jumpEnd = 0;
+          player.gravity = 3;
+          player.boost = 25;
+        }
       }
     }
   }
@@ -1285,164 +1345,150 @@ function itembar() {
     prescreen.showcontrols === false &&
     showIntro === false
   ) {
-    if (player.moving === true) {
-      //Show Enemys
-      if (EnemyDetection === true) {
-        if (ShootEnemy.y > 0 - 400 && ShootEnemy.y < 0 - ShootEnemy.sizeY / 2) {
-          image(
-            imageShootEnemy,
-            ShootEnemy.x,
-            50,
-            ShootEnemy.sizeX / 2,
-            ShootEnemy.sizeY / 2
-          );
-        }
-        if (RushEnemy.y > 0 - 400 && RushEnemy.y < 0 - RushEnemy.sizeY / 2) {
-          image(
-            imageRushEnemy,
-            RushEnemy.x,
-            50,
-            RushEnemy.sizeX / 2,
-            RushEnemy.sizeY / 2
-          );
-        }
-
-        if (
-          RushUpAndDownEnemy.y > 0 - 400 &&
-          RushUpAndDownEnemy.y < 0 - RushUpAndDownEnemy.sizeY / 2
-        ) {
-          image(
-            imageRushUPDEnemyGoRight,
-            RushUpAndDownEnemy.x,
-            50,
-            RushUpAndDownEnemy.sizeX / 2,
-            RushUpAndDownEnemy.sizeY / 2
-          );
-        }
-      }
-
-      //Choose items
-      if (keyIsDown(keysMovement[2])) {
-        if (doubblejump.choose === true && prescreen.buttontimer >= 5) {
-          soundchangeItem.play();
-          // console.log("jumpshoe");
-          doubblejump.choose = false;
-          shield.choose = false;
-          jumpshoe.choose = true;
-          prescreen.buttontimer = 0;
-        }
-        if (jumpshoe.choose === true && prescreen.buttontimer >= 5) {
-          soundchangeItem.play();
-          // console.log("doubblejump");
-          jumpshoe.choose = false;
-          doubblejump.choose = false;
-          shield.choose = true;
-          prescreen.buttontimer = 0;
-        }
-        if (shield.choose === true && prescreen.buttontimer >= 5) {
-          soundchangeItem.play();
-          // console.log("doubblejump");
-          jumpshoe.choose = false;
-          shield.choose = false;
-          doubblejump.choose = true;
-          prescreen.buttontimer = 0;
-        }
-      }
-
-      //Jumpshoe
-      if (
-        jumpshoe.choose === true &&
-        doubblejump.choose === false &&
-        shield.choose === false
-      ) {
-        fill(200);
-        rect(50, height / 2, jumpshoe.sizeX * 1.2, jumpshoe.sizeY * 1.2, 5);
-      }
-      fill(jumpshoe.color);
-      image(imageJetpack, 50, height / 2, jumpshoe.sizeX, jumpshoe.sizeY);
-      fill(200);
-      textSize(25);
-      text(JumpshoeArray.length, 100, height - height / 2);
-
-      //Doubblejump
-      if (
-        doubblejump.choose === true &&
-        jumpshoe.choose === false &&
-        shield.choose == false
-      ) {
-        fill(200);
-        rect(
+    //Show Enemys
+    if (EnemyDetection === true) {
+      if (ShootEnemy.y > 0 - 400 && ShootEnemy.y < 0 - ShootEnemy.sizeY / 2) {
+        image(
+          imageShootEnemy,
+          ShootEnemy.x,
           50,
-          height / 2 + 70,
-          jumpshoe.sizeX * 1.2,
-          jumpshoe.sizeY * 1.2,
-          5
+          ShootEnemy.sizeX / 2,
+          ShootEnemy.sizeY / 2
         );
       }
-      fill(doubblejump.color);
-      image(
-        imageDoubblejump,
-        50,
-        height / 2 + 70,
-        jumpshoe.sizeX,
-        jumpshoe.sizeY
-      );
-      fill(200);
-      text(DoubblejumpArray.length, 100, height / 2 + 70);
+      if (RushEnemy.y > 0 - 400 && RushEnemy.y < 0 - RushEnemy.sizeY / 2) {
+        image(
+          imageRushEnemy,
+          RushEnemy.x,
+          50,
+          RushEnemy.sizeX / 2,
+          RushEnemy.sizeY / 2
+        );
+      }
 
-      //Shield
       if (
-        shield.choose === true &&
-        doubblejump.choose === false &&
-        jumpshoe.choose === false
+        RushUpAndDownEnemy.y > 0 - 400 &&
+        RushUpAndDownEnemy.y < 0 - RushUpAndDownEnemy.sizeY / 2
       ) {
-        fill(200);
-        rect(50, height / 2 + 140, shield.sizeX * 1.2, shield.sizeY * 1.2, 5);
+        image(
+          imageRushUPDEnemyGoRight,
+          RushUpAndDownEnemy.x,
+          50,
+          RushUpAndDownEnemy.sizeX / 2,
+          RushUpAndDownEnemy.sizeY / 2
+        );
       }
-      fill(shield.color);
-      image(imageShield, 50, height / 2 + 140, shield.sizeX, shield.sizeY);
-      fill(30);
-      if (shield.while === true) {
-        shieldshowtime = (shield.maxtime - shield.timer) / 30;
-        text(int(shieldshowtime), 45, height / 2 + 148);
-      }
-      fill(200);
-      text(shieldArray.length, 100, height / 2 + 140);
+    }
 
-      // prescreen.show = false;
-      // player.moving = false;
-      // prescreen.showshop = false;
-      //Heart
-      fill(Heart.color);
-      if (HeartArray.length > 0) {
-        image(imageHeart, width - 75, height - 40, Heart.sizeX, Heart.sizeY);
-        if (HeartArray.length > 1) {
-          image(imageHeart, width - 150, height - 40, Heart.sizeX, Heart.sizeY);
-          if (HeartArray.length > 2) {
+    //Choose items
+    if (keyIsDown(keysMovement[2])) {
+      if (doubblejump.choose === true && prescreen.buttontimer >= 5) {
+        soundchangeItem.play();
+        // console.log("jumpshoe");
+        doubblejump.choose = false;
+        shield.choose = false;
+        jumpshoe.choose = true;
+        prescreen.buttontimer = 0;
+      }
+      if (jumpshoe.choose === true && prescreen.buttontimer >= 5) {
+        soundchangeItem.play();
+        // console.log("doubblejump");
+        jumpshoe.choose = false;
+        doubblejump.choose = false;
+        shield.choose = true;
+        prescreen.buttontimer = 0;
+      }
+      if (shield.choose === true && prescreen.buttontimer >= 5) {
+        soundchangeItem.play();
+        // console.log("doubblejump");
+        jumpshoe.choose = false;
+        shield.choose = false;
+        doubblejump.choose = true;
+        prescreen.buttontimer = 0;
+      }
+    }
+
+    //Jumpshoe
+    if (
+      jumpshoe.choose === true &&
+      doubblejump.choose === false &&
+      shield.choose === false
+    ) {
+      fill(200);
+      rect(50, height / 2, jumpshoe.sizeX * 1.2, jumpshoe.sizeY * 1.2, 5);
+    }
+    fill(jumpshoe.color);
+    image(imageJetpack, 50, height / 2, jumpshoe.sizeX, jumpshoe.sizeY);
+    fill(200);
+    textSize(25);
+    text(JumpshoeArray.length, 100, height - height / 2);
+
+    //Doubblejump
+    if (
+      doubblejump.choose === true &&
+      jumpshoe.choose === false &&
+      shield.choose == false
+    ) {
+      fill(200);
+      rect(50, height / 2 + 70, jumpshoe.sizeX * 1.2, jumpshoe.sizeY * 1.2, 5);
+    }
+    fill(doubblejump.color);
+    image(
+      imageDoubblejump,
+      50,
+      height / 2 + 70,
+      jumpshoe.sizeX,
+      jumpshoe.sizeY
+    );
+    fill(200);
+    text(DoubblejumpArray.length, 100, height / 2 + 70);
+
+    //Shield
+    if (
+      shield.choose === true &&
+      doubblejump.choose === false &&
+      jumpshoe.choose === false
+    ) {
+      fill(200);
+      rect(50, height / 2 + 140, shield.sizeX * 1.2, shield.sizeY * 1.2, 5);
+    }
+    fill(shield.color);
+    image(imageShield, 50, height / 2 + 140, shield.sizeX, shield.sizeY);
+    fill(30);
+    if (shield.while === true) {
+      shieldshowtime = (shield.maxtime - shield.timer) / 30;
+      text(int(shieldshowtime), 45, height / 2 + 148);
+    }
+    fill(200);
+    text(shieldArray.length, 100, height / 2 + 140);
+
+    // prescreen.show = false;
+    // player.moving = false;
+    // prescreen.showshop = false;
+    //Heart
+    fill(Heart.color);
+    if (HeartArray.length > 0) {
+      image(imageHeart, width - 75, height - 40, Heart.sizeX, Heart.sizeY);
+      if (HeartArray.length > 1) {
+        image(imageHeart, width - 150, height - 40, Heart.sizeX, Heart.sizeY);
+        if (HeartArray.length > 2) {
+          image(imageHeart, width - 225, height - 40, Heart.sizeX, Heart.sizeY);
+          if (HeartArray.length > 3) {
             image(
               imageHeart,
-              width - 225,
+              width - 300,
               height - 40,
               Heart.sizeX,
               Heart.sizeY
             );
-            if (HeartArray.length > 3) {
+            if (HeartArray.length > 4) {
               image(
                 imageHeart,
-                width - 300,
+                width - 375,
                 height - 40,
                 Heart.sizeX,
                 Heart.sizeY
               );
-              if (HeartArray.length > 4) {
-                image(
-                  imageHeart,
-                  width - 375,
-                  height - 40,
-                  Heart.sizeX,
-                  Heart.sizeY
-                );
-              }
             }
           }
         }
@@ -2017,6 +2063,10 @@ function itemfunction() {
       if (Pong.startingTimer === 1) {
         soundPongOverflow.play();
       }
+      rotatePortal.while = false;
+      rotatePortal.timer = 0;
+      rotatePortal.starting = true;
+      rotatePortal.angle = 0;
       Pong.slideX = Pong.slideX + 15;
       if (Pong.slideX > width + width / 2) {
         Pong.slidingR = false;
@@ -2149,7 +2199,7 @@ function itemfunction() {
     if (shield.timer === 1) {
       sounditem_shield_open.play();
     }
-    if (shield.timer === shield.maxtime - 5 && player.moving === true) {
+    if (shield.timer === shield.maxtime - 5) {
       sounditem_shield_close.play();
     }
     if (
@@ -2637,11 +2687,22 @@ function draw() {
   PrescreenFunction();
   PrescreenShop();
   PrescreenControls();
+
   reset();
   Intro();
 
   environmentfunction();
+  //item Portal rotation
+  push();
+  translate(widthWhile / 2, heightWhile / 2);
+  rotate(rotatePortal.angle);
+  translate(-widthWhile / 2, -heightWhile / 2);
 
+  PortalRotation();
+
+  /* 
+  Start PortalRotation
+  */
   //Different platforms
   normaltile();
   movingtile();
@@ -2660,9 +2721,14 @@ function draw() {
 
   //Item stuff
   items();
-  itembar();
   itemfunction();
-  // PortalRotation();
+
+  /* 
+  End PortalRotation
+  */
+  pop();
+
+  itembar();
 
   highscorefunction();
 

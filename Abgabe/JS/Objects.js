@@ -353,13 +353,13 @@ var shoottiles = {
 var rotatePortal = {
   x1: 0,
   x2: width,
-  y1: 0,
-  y2: 0,
-  color: color(124, 252, 0),
-  starting: false,
+  y: 0,
+  color: color(255, 0, 0),
+  while: false,
   timer: 0,
-  faktor: 1,
-  show: false
+  show: true,
+  angle: 0,
+  starting: true
 };
 
 //Loosing

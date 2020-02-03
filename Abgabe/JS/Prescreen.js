@@ -420,6 +420,11 @@ function reset() {
     changeKeys.show = true;
     changeKeys.x = random(changeKeys.sizeX / 2, width - changeKeys.sizeX / 2);
     changeKeys.y = 0 - random(1500, 7000);
+    rotatePortal.while = false;
+    rotatePortal.timer = 0;
+    rotatePortal.starting = true;
+    rotatePortal.angle = 0;
+    rotatePortal.y = 0 - random(500, 900);
 
     //Player
     player.x = width / 2;
@@ -1001,6 +1006,7 @@ function PrescreenControls() {
   }
 }
 
+//Back to Main
 function openRequestedPopup() {
   window.open("index.html", "_self");
 }
