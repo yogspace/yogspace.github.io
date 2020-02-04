@@ -244,8 +244,8 @@ function touchStarted() {
         JumpshoeArray.pop();
       }
       if (
-        mouseY > height / 2 + 70 - doubblejump.sizeY / 2 &&
-        mouseY < height / 2 + 70 + doubblejump.sizeY / 2 &&
+        mouseY > height / 2 + 70 * scale - doubblejump.sizeY / 2 &&
+        mouseY < height / 2 + 70 * scale + doubblejump.sizeY / 2 &&
         DoubblejumpArray.length > 0 &&
         prescreen.buttontimer >= 15 &&
         jumpshoe.while === false &&
@@ -256,8 +256,8 @@ function touchStarted() {
         DoubblejumpArray.pop();
       }
       if (
-        mouseY > height / 2 + 140 - shield.sizeY / 2 &&
-        mouseY < height / 2 + 140 + shield.sizeY / 2 &&
+        mouseY > height / 2 + 140 * scale - shield.sizeY / 2 &&
+        mouseY < height / 2 + 140 * scale + shield.sizeY / 2 &&
         DoubblejumpArray.length > 0 &&
         prescreen.buttontimer >= 15 &&
         Pong.while === false
@@ -1389,7 +1389,8 @@ function itembar() {
     prescreen.showshop === false &&
     prescreen.showcontrols === false &&
     showIntro === false &&
-    Pong.while === false
+    Pong.while === false &&
+    prescreen.delay < 1
   ) {
     //Show Enemys
     if (EnemyDetection === true) {
@@ -1521,7 +1522,7 @@ function itembar() {
     fill(30);
     if (shield.while === true) {
       shieldshowtime = (shield.maxtime - shield.timer) / 30;
-      text(int(shieldshowtime), 45, height / 2 + 148);
+      text(int(shieldshowtime), 45, height / 2 + 148 * scale);
     }
     fill(200);
     text(shieldArray.length, 100 * scale, height / 2 + 140 * scale);
@@ -1535,7 +1536,7 @@ function itembar() {
       image(
         imageHeart,
         width - scale * 75,
-        height - 40,
+        height - 40 * scale,
         Heart.sizeX,
         Heart.sizeY
       );
@@ -1543,7 +1544,7 @@ function itembar() {
         image(
           imageHeart,
           width - scale * 150,
-          height - 40,
+          height - 40 * scale,
           Heart.sizeX,
           Heart.sizeY
         );
@@ -1551,7 +1552,7 @@ function itembar() {
           image(
             imageHeart,
             width - scale * 225,
-            height - 40,
+            height - 40 * scale,
             Heart.sizeX,
             Heart.sizeY
           );
@@ -1559,7 +1560,7 @@ function itembar() {
             image(
               imageHeart,
               width - scale * 300,
-              height - 40,
+              height - 40 * scale,
               Heart.sizeX,
               Heart.sizeY
             );
@@ -1567,7 +1568,7 @@ function itembar() {
               image(
                 imageHeart,
                 width - scale * 375,
-                height - 40,
+                height - 40 * scale,
                 Heart.sizeX,
                 Heart.sizeY
               );
