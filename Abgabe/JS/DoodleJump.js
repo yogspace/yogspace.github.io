@@ -21,27 +21,27 @@ function PlayerFunction() {
         imageNtile,
         ntilesFIRST.x,
         ntilesFIRST.y + ntilesFIRST.sizeY / 2,
-        ntilesFIRST.sizeX,
-        ntilesFIRST.sizeY
+        ntilesFIRST.sizeX * scale,
+        ntilesFIRST.sizeY * scale
       );
     }
     //Gravitation and boost of player
     if (player.jump === true && player.moving === true) {
-      player.gravity = 3;
+      player.gravity = 3 * scale;
       player.boost = player.boost - jumpshoe.using;
-      player.y = player.y - player.boost;
+      player.y = player.y - scale * player.boost;
       if (player.boost <= 0 || player.y <= player.jumpEnd) {
         player.jump = false;
       }
     }
     if (player.jump === false && player.moving === true) {
       player.boost = jumpshoe.usingafter;
-      player.gravity = player.gravity + 1 / 2;
+      player.gravity = player.gravity + (1 / 2) * scale;
       player.yPos1 = player.y;
       player.y = player.y + player.gravity;
       player.yPos2 = player.yPos1 + player.gravity;
-      if (player.gravity >= 27.5) {
-        player.gravity = 27.5;
+      if (player.gravity >= 27.5 * scale) {
+        player.gravity = 27.5 * scale;
       }
       if (player.y + player.sizeY / 2 >= player.jumpStart) {
         soundjumping.play();
@@ -60,7 +60,7 @@ function PlayerFunction() {
       if (keyIsDown(keysMovement[1])) {
         player.moveR = false;
         if (player.affectTile === false) {
-          player.x = player.x - 10;
+          player.x = player.x - 10 * scale * 0.75;
         } else {
           player.x = player.x - 1 / 10;
         }
@@ -68,7 +68,7 @@ function PlayerFunction() {
       if (keyIsDown(keysMovement[0])) {
         player.moveR = true;
         if (player.affectTile === false) {
-          player.x = player.x + 10;
+          player.x = player.x + 10 * scale * 0.75;
         } else {
           player.x = player.x + 1 / 10;
         }
@@ -761,7 +761,7 @@ function ShootEnemyFunction() {
       }
       //randomizer position Enemy
       if (ShootEnemy.y - ShootEnemy.sizeY / 2 > height) {
-        ShootEnemy.y = 0 - random(3000, 500);
+        ShootEnemy.y = 0 - scale * random(3000, 500);
         ShootEnemy.x = random(
           ShootEnemy.sizeX / 2,
           width - ShootEnemy.sizeX / 2
@@ -815,10 +815,10 @@ function ShootEnemyFunction() {
         //Shoot direction
         if (shoottiles.move === true) {
           if (player.x < ShootEnemy.x) {
-            shoottiles.x = shoottiles.x - shoottiles.speed;
+            shoottiles.x = shoottiles.x - shoottiles.speed * scale * 0.75;
           }
           if (player.x > ShootEnemy.x) {
-            shoottiles.x = shoottiles.x + shoottiles.speed;
+            shoottiles.x = shoottiles.x + shoottiles.speed * scale * 0.75;
           }
           if (shoottiles.x < 0 || shoottiles.x > width) {
             ShootEnemy.shootdelay = 0;
@@ -889,7 +889,7 @@ function ShootEnemyFunction() {
             player.gravity = 3;
             player.boost = 25;
           }
-          ShootEnemy.y = 0 - random(6000, 500);
+          ShootEnemy.y = 0 - scale * random(6000, 500);
           Coins = Coins + Coin.weight;
           // player.affectTile = true;
         } else {
@@ -952,7 +952,7 @@ function RushEnemyFunction() {
       }
       //randomizer position Enemy
       if (RushEnemy.y - RushEnemy.sizeY / 2 > height) {
-        RushEnemy.y = 0 - random(3000, 500);
+        RushEnemy.y = 0 - scale * random(3000, 500);
         RushEnemy.x = random(RushEnemy.sizeX / 2, width - RushEnemy.sizeX / 2);
       }
 
@@ -979,9 +979,9 @@ function RushEnemyFunction() {
         }
 
         if (RushEnemy.movingR === true) {
-          RushEnemy.x = RushEnemy.x + RushEnemy.speed;
+          RushEnemy.x = RushEnemy.x + RushEnemy.speed * scale * 0.75;
         } else {
-          RushEnemy.x = RushEnemy.x - RushEnemy.speed;
+          RushEnemy.x = RushEnemy.x - RushEnemy.speed * scale * 0.75;
         }
       }
 
@@ -1027,7 +1027,7 @@ function RushEnemyFunction() {
             player.gravity = 3;
             player.boost = 25;
           }
-          RushEnemy.y = 0 - random(6000, 500);
+          RushEnemy.y = 0 - scale * random(6000, 500);
           Coins = Coins + Coin.weight;
           // player.affectTile = true;
         } else {
@@ -1096,7 +1096,7 @@ function RushEnemyUpAndDownFunction() {
       }
       //randomizer position Enemy
       if (RushUpAndDownEnemy.y - RushUpAndDownEnemy.sizeY / 2 > height) {
-        RushUpAndDownEnemy.y = 0 - random(3000, 500);
+        RushUpAndDownEnemy.y = 0 - scale * random(3000, 500);
         RushUpAndDownEnemy.x = random(
           RushUpAndDownEnemy.sizeX / 2,
           width - RushUpAndDownEnemy.sizeX / 2
@@ -1132,10 +1132,10 @@ function RushEnemyUpAndDownFunction() {
 
         if (RushUpAndDownEnemy.movingR === true) {
           RushUpAndDownEnemy.x =
-            RushUpAndDownEnemy.x + RushUpAndDownEnemy.speed;
+            RushUpAndDownEnemy.x + RushUpAndDownEnemy.speed * scale * 0.75;
         } else {
           RushUpAndDownEnemy.x =
-            RushUpAndDownEnemy.x - RushUpAndDownEnemy.speed;
+            RushUpAndDownEnemy.x - RushUpAndDownEnemy.speed * scale * 0.75;
         }
 
         if (
@@ -1162,7 +1162,8 @@ function RushEnemyUpAndDownFunction() {
           RushUpAndDownEnemy.movingUpDown === true &&
           RushUpAndDownEnemy.movingUp === false
         ) {
-          RushUpAndDownEnemy.y = RushUpAndDownEnemy.y + RushEnemy.speed;
+          RushUpAndDownEnemy.y =
+            RushUpAndDownEnemy.y + RushEnemy.speed * 0.75 * scale;
           RushUpAndDownEnemy.movingtimer = RushUpAndDownEnemy.movingtimer + 1;
           if (RushUpAndDownEnemy.movingtimer > 30) {
             soundRushUpAndDownEnemy.play();
@@ -1174,7 +1175,8 @@ function RushEnemyUpAndDownFunction() {
           RushUpAndDownEnemy.movingUpDown === true &&
           RushUpAndDownEnemy.movingUp === true
         ) {
-          RushUpAndDownEnemy.y = RushUpAndDownEnemy.y - RushEnemy.speed;
+          RushUpAndDownEnemy.y =
+            RushUpAndDownEnemy.y - RushEnemy.speed * 0.75 * scale;
           RushUpAndDownEnemy.movingtimer = RushUpAndDownEnemy.movingtimer + 1;
           if (RushUpAndDownEnemy.movingtimer > 30) {
             soundRushUpAndDownEnemy.play();
@@ -1242,7 +1244,7 @@ function RushEnemyUpAndDownFunction() {
             player.gravity = 3;
             player.boost = 25;
           }
-          RushUpAndDownEnemy.y = 0 - random(6000, 500);
+          RushUpAndDownEnemy.y = 0 - scale * random(6000, 500);
           Coins = Coins + Coin.weight;
           // player.affectTile = true;
         } else {
@@ -1296,7 +1298,7 @@ function PortalRotation() {
       rotatePortal.y = rotatePortal.y + player.boost;
     }
     if (rotatePortal.y >= height) {
-      rotatePortal.y = random(-4000, -7000);
+      rotatePortal.y = scale * random(-4000, -7000);
     }
 
     if (rotatePortal.y >= 0 - 500) {
@@ -1318,17 +1320,20 @@ function PortalRotation() {
       // rotatePortal.y = random(-100, -20);
       if (rotatePortal.rotated === false) {
         rotatePortal.while = true;
-        rotatePortal.y = random(-500, -3000);
+        rotatePortal.y = scale * random(-500, -3000);
         sound_rotatePortal.stop();
       } else {
         rotatePortal.turning = true;
-        rotatePortal.y = random(-4000, -9000);
+        rotatePortal.y = scale * random(-4000, -9000);
         sound_rotatePortal.stop();
       }
     }
 
     if (rotatePortal.while === true) {
       if (rotatePortal.angle < 180 && rotatePortal.starting === true) {
+        if (rotatePortal.angle === 2) {
+          sound_rotatePortalRotating.play();
+        }
         rotatePortal.angle = rotatePortal.angle + 2;
         ShootEnemy.cooldown = 0;
         RushUpAndDownEnemy.cooldown = 0;
@@ -1348,6 +1353,9 @@ function PortalRotation() {
 
       if (rotatePortal.turning === true) {
         if (rotatePortal.angle > 0) {
+          if (rotatePortal.angle === 178) {
+            sound_rotatePortalRotating.play();
+          }
           jumpshoe.timer = 0;
           rotatePortal.angle = rotatePortal.angle - 2;
           ShootEnemy.cooldown = 0;
@@ -1458,8 +1466,8 @@ function itembar() {
     fill(jumpshoe.color);
     image(imageJetpack, 50, height / 2, jumpshoe.sizeX, jumpshoe.sizeY);
     fill(200);
-    textSize(25);
-    text(JumpshoeArray.length, 100, height - height / 2);
+    textSize(scale * 25);
+    text(JumpshoeArray.length, 100 * scale, height - height / 2);
 
     //Doubblejump
     if (
@@ -1468,18 +1476,24 @@ function itembar() {
       shield.choose == false
     ) {
       fill(200);
-      rect(50, height / 2 + 70, jumpshoe.sizeX * 1.2, jumpshoe.sizeY * 1.2, 5);
+      rect(
+        50,
+        height / 2 + scale * 70,
+        jumpshoe.sizeX * 1.2,
+        jumpshoe.sizeY * 1.2,
+        5
+      );
     }
     fill(doubblejump.color);
     image(
       imageDoubblejump,
       50,
-      height / 2 + 70,
+      height / 2 + scale * 70,
       jumpshoe.sizeX,
       jumpshoe.sizeY
     );
     fill(200);
-    text(DoubblejumpArray.length, 100, height / 2 + 70);
+    text(DoubblejumpArray.length, 100 * scale, height / 2 + 70 * scale);
 
     //Shield
     if (
@@ -1488,17 +1502,29 @@ function itembar() {
       jumpshoe.choose === false
     ) {
       fill(200);
-      rect(50, height / 2 + 140, shield.sizeX * 1.2, shield.sizeY * 1.2, 5);
+      rect(
+        50,
+        height / 2 + scale * 140,
+        shield.sizeX * 1.2,
+        shield.sizeY * 1.2,
+        5
+      );
     }
     fill(shield.color);
-    image(imageShield, 50, height / 2 + 140, shield.sizeX, shield.sizeY);
+    image(
+      imageShield,
+      50,
+      height / 2 + scale * 140,
+      shield.sizeX,
+      shield.sizeY
+    );
     fill(30);
     if (shield.while === true) {
       shieldshowtime = (shield.maxtime - shield.timer) / 30;
       text(int(shieldshowtime), 45, height / 2 + 148);
     }
     fill(200);
-    text(shieldArray.length, 100, height / 2 + 140);
+    text(shieldArray.length, 100 * scale, height / 2 + 140 * scale);
 
     // prescreen.show = false;
     // player.moving = false;
@@ -1506,15 +1532,33 @@ function itembar() {
     //Heart
     fill(Heart.color);
     if (HeartArray.length > 0) {
-      image(imageHeart, width - 75, height - 40, Heart.sizeX, Heart.sizeY);
+      image(
+        imageHeart,
+        width - scale * 75,
+        height - 40,
+        Heart.sizeX,
+        Heart.sizeY
+      );
       if (HeartArray.length > 1) {
-        image(imageHeart, width - 150, height - 40, Heart.sizeX, Heart.sizeY);
+        image(
+          imageHeart,
+          width - scale * 150,
+          height - 40,
+          Heart.sizeX,
+          Heart.sizeY
+        );
         if (HeartArray.length > 2) {
-          image(imageHeart, width - 225, height - 40, Heart.sizeX, Heart.sizeY);
+          image(
+            imageHeart,
+            width - scale * 225,
+            height - 40,
+            Heart.sizeX,
+            Heart.sizeY
+          );
           if (HeartArray.length > 3) {
             image(
               imageHeart,
-              width - 300,
+              width - scale * 300,
               height - 40,
               Heart.sizeX,
               Heart.sizeY
@@ -1522,7 +1566,7 @@ function itembar() {
             if (HeartArray.length > 4) {
               image(
                 imageHeart,
-                width - 375,
+                width - scale * 375,
                 height - 40,
                 Heart.sizeX,
                 Heart.sizeY
@@ -1763,54 +1807,55 @@ function items() {
         Heart.x = random(Heart.sizeX / 2, width - Heart.sizeX / 2);
         Heart.y = random(-10000, -2000);
       }
-
-      if (
-        //unten rechts
-        (player.x + player.sizeX / 2 >= Heart.x - Heart.sizeX / 2 &&
-          player.x + player.sizeX / 2 <= Heart.x + Heart.sizeX / 2 &&
-          player.y + player.sizeY / 2 <= Heart.y + Heart.sizeY / 2 &&
-          player.y + player.sizeY / 2 >= Heart.y - Heart.sizeY / 2 &&
-          Heart.cooldown > 60) ||
-        //oben rechts
-        (player.x + player.sizeX / 2 >= Heart.x - Heart.sizeX / 2 &&
-          player.x + player.sizeX / 2 <= Heart.x + Heart.sizeX / 2 &&
-          player.y - player.sizeY / 2 <= Heart.y + Heart.sizeY / 2 &&
-          player.y - player.sizeY / 2 >= Heart.y - Heart.sizeY / 2 &&
-          Heart.cooldown > 60) ||
-        //unten links
-        (player.x - player.sizeX / 2 >= Heart.x - Heart.sizeX / 2 &&
-          player.x - player.sizeX / 2 <= Heart.x + Heart.sizeX / 2 &&
-          player.y + player.sizeY / 2 <= Heart.y + Heart.sizeY / 2 &&
-          player.y + player.sizeY / 2 >= Heart.y - Heart.sizeY / 2 &&
-          Heart.cooldown > 60) ||
-        //oben links
-        (player.x - player.sizeX / 2 >= Heart.x - Heart.sizeX / 2 &&
-          player.x - player.sizeX / 2 <= Heart.x + Heart.sizeX / 2 &&
-          player.y - player.sizeY / 2 <= Heart.y + Heart.sizeY / 2 &&
-          player.y - player.sizeY / 2 >= Heart.y - Heart.sizeY / 2 &&
-          Heart.cooldown > 60) ||
-        //mitten drin
-        (player.x - player.sizeX / 2 >= Heart.x - Heart.sizeX / 2 &&
-          player.x + player.sizeX / 2 <= Heart.x + Heart.sizeX / 2 &&
-          player.y + player.sizeY / 2 <= Heart.y + Heart.sizeY / 2 &&
-          player.y - player.sizeY / 2 >= Heart.y - Heart.sizeY / 2 &&
-          Heart.cooldown > 60)
-      ) {
-        sounditem_heart.play();
-        if (HeartArray.length < HeartArrayWhile.length) {
-          Heart.show = false;
-          HeartArray.push(1);
-          Heart.cooldown = 0;
-          Heart.x = random(Heart.sizeX / 2, width - Heart.sizeX / 2);
-          Heart.y = random(-10000, -2000);
-          Heart.show = true;
-        } else {
+      if (prescreen.delay < 1) {
+        if (
+          //unten rechts
+          (player.x + player.sizeX / 2 >= Heart.x - Heart.sizeX / 2 &&
+            player.x + player.sizeX / 2 <= Heart.x + Heart.sizeX / 2 &&
+            player.y + player.sizeY / 2 <= Heart.y + Heart.sizeY / 2 &&
+            player.y + player.sizeY / 2 >= Heart.y - Heart.sizeY / 2 &&
+            Heart.cooldown > 60) ||
+          //oben rechts
+          (player.x + player.sizeX / 2 >= Heart.x - Heart.sizeX / 2 &&
+            player.x + player.sizeX / 2 <= Heart.x + Heart.sizeX / 2 &&
+            player.y - player.sizeY / 2 <= Heart.y + Heart.sizeY / 2 &&
+            player.y - player.sizeY / 2 >= Heart.y - Heart.sizeY / 2 &&
+            Heart.cooldown > 60) ||
+          //unten links
+          (player.x - player.sizeX / 2 >= Heart.x - Heart.sizeX / 2 &&
+            player.x - player.sizeX / 2 <= Heart.x + Heart.sizeX / 2 &&
+            player.y + player.sizeY / 2 <= Heart.y + Heart.sizeY / 2 &&
+            player.y + player.sizeY / 2 >= Heart.y - Heart.sizeY / 2 &&
+            Heart.cooldown > 60) ||
+          //oben links
+          (player.x - player.sizeX / 2 >= Heart.x - Heart.sizeX / 2 &&
+            player.x - player.sizeX / 2 <= Heart.x + Heart.sizeX / 2 &&
+            player.y - player.sizeY / 2 <= Heart.y + Heart.sizeY / 2 &&
+            player.y - player.sizeY / 2 >= Heart.y - Heart.sizeY / 2 &&
+            Heart.cooldown > 60) ||
+          //mitten drin
+          (player.x - player.sizeX / 2 >= Heart.x - Heart.sizeX / 2 &&
+            player.x + player.sizeX / 2 <= Heart.x + Heart.sizeX / 2 &&
+            player.y + player.sizeY / 2 <= Heart.y + Heart.sizeY / 2 &&
+            player.y - player.sizeY / 2 >= Heart.y - Heart.sizeY / 2 &&
+            Heart.cooldown > 60)
+        ) {
           sounditem_heart.play();
-          Heart.show = false;
-          Heart.cooldown = 0;
-          Heart.x = random(Heart.sizeX / 2, width - Heart.sizeX / 2);
-          Heart.y = random(-10000, -2000);
-          Heart.show = true;
+          if (HeartArray.length < HeartArrayWhile.length) {
+            Heart.show = false;
+            HeartArray.push(1);
+            Heart.cooldown = 0;
+            Heart.x = random(Heart.sizeX / 2, width - Heart.sizeX / 2);
+            Heart.y = random(-10000, -2000);
+            Heart.show = true;
+          } else {
+            sounditem_heart.play();
+            Heart.show = false;
+            Heart.cooldown = 0;
+            Heart.x = random(Heart.sizeX / 2, width - Heart.sizeX / 2);
+            Heart.y = random(-10000, -2000);
+            Heart.show = true;
+          }
         }
       }
     }
@@ -2016,42 +2061,44 @@ function items() {
         Coin.x = random(40, width - 80);
         Coin.y = random(-600, -100);
       }
-
-      if (
-        //unten rechts
-        (player.x + player.sizeX / 2 >= Coin.x - Coin.sizeX / 2 &&
-          player.x + player.sizeX / 2 <= Coin.x + Coin.sizeX / 2 &&
-          player.y + player.sizeY / 2 <= Coin.y + Coin.sizeY / 2 &&
-          player.y + player.sizeY / 2 >= Coin.y - Coin.sizeY / 2) ||
-        //oben rechts
-        (player.x + player.sizeX / 2 >= Coin.x - Coin.sizeX / 2 &&
-          player.x + player.sizeX / 2 <= Coin.x + Coin.sizeX / 2 &&
-          player.y - player.sizeY / 2 <= Coin.y + Coin.sizeY / 2 &&
-          player.y - player.sizeY / 2 >= Coin.y - Coin.sizeY / 2) ||
-        //unten links
-        (player.x - player.sizeX / 2 >= Coin.x - Coin.sizeX / 2 &&
-          player.x - player.sizeX / 2 <= Coin.x + Coin.sizeX / 2 &&
-          player.y + player.sizeY / 2 <= Coin.y + Coin.sizeY / 2 &&
-          player.y + player.sizeY / 2 >= Coin.y - Coin.sizeY / 2) ||
-        //oben links
-        (player.x - player.sizeX / 2 >= Coin.x - Coin.sizeX / 2 &&
-          player.x - player.sizeX / 2 <= Coin.x + Coin.sizeX / 2 &&
-          player.y - player.sizeY / 2 <= Coin.y + Coin.sizeY / 2 &&
-          player.y - player.sizeY / 2 >= Coin.y - Coin.sizeY / 2) ||
-        //Coin in Player
-        (player.x + player.sizeX / 2 >= Coin.x &&
-          player.x - player.sizeX / 2 <= Coin.x &&
-          player.y - player.sizeY <= Coin.y &&
-          player.y + player.sizeY / 2 >= Coin.y)
-      ) {
-        Coin.show = false;
-        soundgetCoin.play();
-        Coins = Coins + Coin.weight;
-        Coin.x = random(Coin.sizeX / 2, width - Coin.sizeX / 2);
-        Coin.y = random(-600, -100);
-        Coin.show = true;
+      if (prescreen.delay < 1) {
+        if (
+          //unten rechts
+          (player.x + player.sizeX / 2 >= Coin.x - Coin.sizeX / 2 &&
+            player.x + player.sizeX / 2 <= Coin.x + Coin.sizeX / 2 &&
+            player.y + player.sizeY / 2 <= Coin.y + Coin.sizeY / 2 &&
+            player.y + player.sizeY / 2 >= Coin.y - Coin.sizeY / 2) ||
+          //oben rechts
+          (player.x + player.sizeX / 2 >= Coin.x - Coin.sizeX / 2 &&
+            player.x + player.sizeX / 2 <= Coin.x + Coin.sizeX / 2 &&
+            player.y - player.sizeY / 2 <= Coin.y + Coin.sizeY / 2 &&
+            player.y - player.sizeY / 2 >= Coin.y - Coin.sizeY / 2) ||
+          //unten links
+          (player.x - player.sizeX / 2 >= Coin.x - Coin.sizeX / 2 &&
+            player.x - player.sizeX / 2 <= Coin.x + Coin.sizeX / 2 &&
+            player.y + player.sizeY / 2 <= Coin.y + Coin.sizeY / 2 &&
+            player.y + player.sizeY / 2 >= Coin.y - Coin.sizeY / 2) ||
+          //oben links
+          (player.x - player.sizeX / 2 >= Coin.x - Coin.sizeX / 2 &&
+            player.x - player.sizeX / 2 <= Coin.x + Coin.sizeX / 2 &&
+            player.y - player.sizeY / 2 <= Coin.y + Coin.sizeY / 2 &&
+            player.y - player.sizeY / 2 >= Coin.y - Coin.sizeY / 2) ||
+          //Coin in Player
+          (player.x + player.sizeX / 2 >= Coin.x &&
+            player.x - player.sizeX / 2 <= Coin.x &&
+            player.y - player.sizeY <= Coin.y &&
+            player.y + player.sizeY / 2 >= Coin.y)
+        ) {
+          Coin.show = false;
+          soundgetCoin.play();
+          Coins = Coins + Coin.weight;
+          Coin.x = random(Coin.sizeX / 2, width - Coin.sizeX / 2);
+          Coin.y = random(-600, -100);
+          Coin.show = true;
+        }
       }
     }
+
     //every half second coins = coins - 1
     if (Pong.while === false) {
       CoinTimer = CoinTimer + 1;
@@ -2482,8 +2529,8 @@ function changetiles() {
           mtilesNEW = {
             x: random(40, width - 80),
             y: 0 - random(10, 600),
-            sizeX: 80,
-            sizeY: 10,
+            sizeX: scale * 80,
+            sizeY: scale * 10,
             change: false,
             movingR: true,
             color: color(120, 120, 120)
@@ -2569,8 +2616,12 @@ function highscorefunction() {
   ) {
     if (Pong.starting === false) {
       fill(200);
-      textSize(35);
-      text("Lines Of Code: " + int(highscore.score), highscore.x, highscore.y);
+      textSize(35 * scale);
+      text(
+        "Lines Of Code: " + int(highscore.score),
+        highscore.x,
+        highscore.y + 20 * scale
+      );
 
       if (
         (player.affectTile === true &&
@@ -2607,9 +2658,9 @@ function highscorefunction() {
       fill(Coin.colortimer);
     }
     noStroke();
-    textSize(35);
-    text(Coins, width / 2 - 10, highscore.y + 20);
-    textSize(25);
+    textSize(35 * scale);
+    text(Coins, width / 2 - 10, highscore.y + 20 * scale);
+    textSize(25 * scale);
   }
 }
 
@@ -2635,7 +2686,6 @@ function gameOver() {
 
       if (
         player.falling === true &&
-        prescreen.delay > 0 &&
         player.y > height - 30 - player.sizeY / 2
       ) {
         gameOverFall = true;
@@ -2647,7 +2697,7 @@ function gameOver() {
         touchUpLeft = false;
         touchUpRight = false;
       }
-      if (prescreen.delay > 0 && Coins <= 0) {
+      if (Coins <= 0) {
         gameOverCoins = true;
         player.falling = false;
         player.touchL = false;
@@ -2658,7 +2708,7 @@ function gameOver() {
         touchUpLeft = false;
         touchUpRight = false;
       }
-      if (HeartArray.length < 1 && prescreen.delay > 0) {
+      if (HeartArray.length < 1) {
         gameOverLifes = true;
         player.falling = false;
         player.touchL = false;
@@ -2723,7 +2773,7 @@ function gameOver() {
       sounditem_shield_close.stop();
       rotatePortal.starting = false;
       prescreen.delay = prescreen.delay + 1;
-      player.y = player.y + 10;
+      player.y = player.y + 10 * scale * 0.75;
       if (highscore.adding === true) {
         highscore.total = highscore.total + highscore.score;
         highscore.adding = false;
@@ -2788,7 +2838,14 @@ function draw() {
   push();
   translate(widthWhile / 2, heightWhile / 2);
   rotate(rotatePortal.angle);
-  translate(-widthWhile / 2, -heightWhile / 2);
+  if (rotatePortal.angle > 0 && rotatePortal.angle < 180) {
+    translate(
+      random(rotatePortal.EeartquakeX1, rotatePortal.EeartquakeX2),
+      random(rotatePortal.EeartquakeY1, rotatePortal.EeartquakeY2)
+    );
+  } else {
+    translate(-widthWhile / 2, -heightWhile / 2);
+  }
 
   PortalRotation();
 

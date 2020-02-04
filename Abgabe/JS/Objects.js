@@ -1,12 +1,5 @@
 //Changable values:
-//Start value: anmount of platforms
-//normal tiles
-var ntilesanmount;
-if (windowWidth >= displayWidth - displayWidth / 5) {
-  ntilesanmount = 60;
-} else {
-  ntilesanmount = 35;
-}
+
 var ntilesanmounthalfwidth = 35;
 //moving tiles
 var mtilesanmount = 2;
@@ -16,6 +9,9 @@ var heightadded = 75;
 
 //value for the speed of the tiles
 var speed = 3;
+
+//For Mobile
+var scale;
 
 var prescreen = {
   reset: false,
@@ -89,8 +85,8 @@ for (i = 0; i < ntilesanmount; i++) {
 var ntilesNEW = {
   x: random(40, width - 80),
   y: random(-600, height - 10),
-  sizeX: random(20, 90),
-  sizeY: random(20, 90),
+  sizeX: 80,
+  sizeY: 10,
   change: false,
   color: color(70, 70, 70)
 };
@@ -362,7 +358,11 @@ var rotatePortal = {
   starting: true,
   rotated: false,
   turning: false,
-  soundtimer: 0
+  soundtimer: 0,
+  EeartquakeX1: 0,
+  EeartquakeY1: 0,
+  EeartquakeX2: 0,
+  EeartquakeY2: 0
 };
 
 //Loosing

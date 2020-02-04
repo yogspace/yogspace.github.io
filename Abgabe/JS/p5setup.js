@@ -1,3 +1,89 @@
+/***********************************************************************************
+ *
+ *
+ *                     This is ANTIVIRUS!
+ *            ___________________________________
+ *
+ *
+ *             _________________________________
+ *            ***********************************
+ *           *###################################*
+ *           *#|*******************************|#*
+ *           *#|*        programmed by:       *|#*
+ *           *#|*                             *|#*
+ *           *#|*          yogspace           *|#*
+ *           *#|*                             *|#*
+ *           *#|*                             *|#*
+ *           *#|*                             *|#*
+ *           *#|*        Version: 1.0         *|#*
+ *           *#|*******************************|#*
+ *           *###################################*
+ *           *************************************
+ *           |-----------------------------------|
+ *          / 1  2  3  4  5  6  7  8  9  0  ?  / |
+ *         / q w e r t z u i o  p  ü +  [ ]   / /
+ *        / a  s  d  f  g  h  j  k  l    []  / /
+ *       / <  y  x  c  v  b  n  m  ,  .  -  / /
+ *      / STR  ALT [///////////]  < // >   / /
+ *     /_________________________________ / /
+ *    /__________________________________/_/
+ *
+ *
+ *
+ *
+ *
+ * If you jump into an enemy, you will loose a life. If you
+ * jump from the top, he will despawn and you will get Coins.
+ *
+ *                   instructions:
+ *              shift:          choose item
+ *              space:          use item
+ *              right arrow:    go right
+ *              left arrow:     go left
+ *              0:              developer stats
+ *
+ *
+ * Sounds:
+ * https://www.zapsplat.com/sound-effect-categories/
+ *
+ * Prescreen-backroundmusic:
+ * https://freemusicarchive.org/genre/Electronic
+ *
+ *
+ * folgende Bugs müssen noch gefixt werden:
+ *
+ * - Tiles können nicht auf gleicher Position spawnen
+ * - Spieler sammelt manchmal ein Item nicht auf
+ * - ab und zu bewegen sich feste tiles um ein paar Pixel
+ * - height wird hinzugefügt, obwohl der Spieler nicht weiter kommt
+ *
+ *
+ *
+ * - Dinge, die noch hinzugefügt werden:
+ * - Item: Torch und Darkness
+ * - Variablen Namen anpassen
+ *
+ *
+ *
+ *
+ *
+ *
+ * thanks!
+ *
+ *
+ */
+
+/*
+ *
+ *
+ * MOBILE MODE
+ *
+ *
+ */
+
+var PlayOnMobile = false;
+var ntilesanmount;
+
 /*
  *
  *
@@ -35,6 +121,7 @@ var sounditem_shield_close; //good
 var sounditem_shield_open; //good
 var sounditem_heart; // good
 var sound_rotatePortal; // good
+var sound_rotatePortalRotating; // good
 
 //Enemies
 var soundkillEnemy; //good
@@ -162,6 +249,7 @@ function preload() {
   soundPongOverflow.setVolume(0.6);
   sounditem_jumpshoe = loadSound("Sound/item_jumpshoe.mp3");
   sound_rotatePortal = loadSound("Sound/rotatePortal.mp3");
+  sound_rotatePortalRotating = loadSound("Sound/rotatePortal_rotating.mp3");
 }
 
 function setup() {
@@ -178,7 +266,35 @@ function setup() {
   textStyle(BOLD);
   angleMode(DEGREES);
 
-  // sound_jumping.setVolume(0.1);
+  /*
+  Wenn der Spieler ein Handy benutzt, gibt es
+  weniger Tiles. 
+  Außerdem ändert sich der scale.
+
+  Wenn der Spieler auf einem Computer im Vollbildmodus spielt,
+  gibt es ebenfalls mehr tiles, als wenn er in einem kleinen Fenster spielt.
+  */
+  console.log(displayHeight);
+  console.log(displayWidth);
+  if (displayHeight > displayWidth) {
+    PlayOnMobile = true;
+    console.log("You are playing on a mobile device.");
+  } else {
+    PlayOnMobile = false;
+    console.log("You are playing on a computer system.");
+  }
+
+  //Start value: anmount of platforms
+  //normal tiles
+  if (PlayOnMobile === false) {
+    if (windowWidth >= displayWidth - displayWidth / 5) {
+      ntilesanmount = 60;
+    } else {
+      ntilesanmount = 35;
+    }
+  } else {
+    ntilesanmount = 30;
+  }
 }
 
 window.addEventListener("resize", function() {
