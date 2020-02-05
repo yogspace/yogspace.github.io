@@ -159,11 +159,11 @@ var environment = {
 item stuff
 */
 
-//Jumpshoe
-var JumpshoeArray = [];
-var jumpshoewhile = 150;
+//Jetpack
+var JetpackArray = [];
+var Jetpackwhile = 150;
 
-var jumpshoe = {
+var Jetpack = {
   x: random(50, width - 50),
   y: random(-600, -10),
   sizeX: 50,

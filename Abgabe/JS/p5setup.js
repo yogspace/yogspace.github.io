@@ -61,7 +61,6 @@
  *
  * - Dinge, die noch hinzugefügt werden:
  * - Item: Torch und Darkness
- * - Variablen Namen anpassen
  *
  *
  *
@@ -116,7 +115,7 @@ var soundgetCoin; // good
 var soundgetItem; // good
 var soundchangeItem; //good
 var sounditem_doubblejump; //good
-var sounditem_jumpshoe; //good
+var sounditem_Jetpack; //good
 var sounditem_shield_close; //good
 var sounditem_shield_open; //good
 var sounditem_heart; // good
@@ -247,7 +246,7 @@ function preload() {
   soundPongCollusion.setVolume(0.6);
   soundPongOverflow = loadSound("Sound/Pong_flow.mp3");
   soundPongOverflow.setVolume(0.6);
-  sounditem_jumpshoe = loadSound("Sound/item_jumpshoe.mp3");
+  sounditem_Jetpack = loadSound("Sound/item_Jetpack.mp3");
   sound_rotatePortal = loadSound("Sound/rotatePortal.mp3");
   sound_rotatePortalRotating = loadSound("Sound/rotatePortal_rotating.mp3");
 }

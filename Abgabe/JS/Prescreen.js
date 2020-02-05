@@ -58,14 +58,39 @@ function PrescreenFunction() {
     }
   }
   if (prescreen.show === true) {
-    //if there are less tiles than at the beginning
+    //Scale
+    scale = 1;
+    RushUpAndDownEnemy.sizeX = scale * 0.75 * 90;
+    RushUpAndDownEnemy.sizeY = scale * 0.75 * 100;
+    RushEnemy.sizeX = scale * 0.75 * 90;
+    RushEnemy.sizeY = scale * 0.75 * 75;
+    ShootEnemy.sizeX = scale * 0.75 * ShootESizeX;
+    ShootEnemy.sizeY = scale * 0.75 * ShootESizeY;
+    shoottiles.size = scale * 10;
+    player.sizeX = scale * 70;
+    player.sizeY = scale * 90;
+    changeKeys.sizeX = scale * 50;
+    changeKeys.sizeY = scale * 50;
+    Jetpack.sizeX = scale * 50;
+    Jetpack.sizeY = scale * 50;
+    shield.sizeX = scale * 50;
+    shield.sizeY = scale * 50;
+    doubblejump.sizeX = scale * 50;
+    doubblejump.sizeY = scale * 50;
+    Coin.sizeX = scale * 20;
+    Coin.sizeY = scale * 40;
+    Heart.sizeX = scale * 50;
+    Heart.sizeY = scale * 50;
+    Pong.sizeX = scale * 50;
+    Pong.sizeY = scale * 50;
 
+    //if there are less tiles than at the beginning
     while (ntiles.length < ntilesanmount) {
       ntilesNEW = {
         x: random(40, width - 80),
         y: random(-600, height - 10),
-        sizeX: 80,
-        sizeY: 10,
+        sizeX: 80 * scale,
+        sizeY: 10 * scale,
         change: false,
         color: color(70, 70, 70)
       };
@@ -76,8 +101,8 @@ function PrescreenFunction() {
       mtiles.pop();
     }
 
-    while (JumpshoeArray.length > 0) {
-      JumpshoeArray.pop();
+    while (JetpackArray.length > 0) {
+      JetpackArray.pop();
     }
     while (DoubblejumpArray.length > 0) {
       DoubblejumpArray.pop();
@@ -303,7 +328,31 @@ function reset() {
     } else {
       scale = 1;
     }
-    console.log(ntilesanmount);
+
+    //scale reset
+    RushUpAndDownEnemy.sizeX = scale * 0.75 * 90;
+    RushUpAndDownEnemy.sizeY = scale * 0.75 * 100;
+    RushEnemy.sizeX = scale * 0.75 * 90;
+    RushEnemy.sizeY = scale * 0.75 * 75;
+    ShootEnemy.sizeX = scale * 0.75 * ShootESizeX;
+    ShootEnemy.sizeY = scale * 0.75 * ShootESizeY;
+    shoottiles.size = scale * 10;
+    player.sizeX = scale * 70;
+    player.sizeY = scale * 90;
+    changeKeys.sizeX = scale * 50;
+    changeKeys.sizeY = scale * 50;
+    Jetpack.sizeX = scale * 50;
+    Jetpack.sizeY = scale * 50;
+    shield.sizeX = scale * 50;
+    shield.sizeY = scale * 50;
+    doubblejump.sizeX = scale * 50;
+    doubblejump.sizeY = scale * 50;
+    Coin.sizeX = scale * 20;
+    Coin.sizeY = scale * 40;
+    Heart.sizeX = scale * 50;
+    Heart.sizeY = scale * 50;
+    Pong.sizeX = scale * 50;
+    Pong.sizeY = scale * 50;
 
     //tiles are new sorted
     for (i = 0; i < ntiles.length; i = i + 1) {
@@ -328,39 +377,27 @@ function reset() {
     //Items
     Pong.y = 0 - random(4000, 10000);
     Pong.x = random(Pong.sizeX / 2, width - Pong.sizeX / 2);
-    Pong.sizeX = scale * 50;
-    Pong.sizeY = scale * 50;
     Pong.while = false;
     Pong.startingTimer = 0;
     Heart.x = random(Heart.sizeX / 2, width - Heart.sizeX / 2);
     Heart.y = 0 - random(5000, 1000);
-    Heart.sizeX = scale * 50;
-    Heart.sizeY = scale * 50;
     Coins = 100;
     Coins = Coins + newCoins;
-    Coin.sizeX = scale * 20;
-    Coin.sizeY = scale * 40;
     doubblejump.y = 0 - random(600, 10);
     doubblejump.x = random(
       doubblejump.sizeX / 2,
       width - doubblejump.sizeX / 2
     );
-    doubblejump.sizeX = scale * 50;
-    doubblejump.sizeY = scale * 50;
     doubblejump.while = false;
     doubblejump.activated = false;
     shield.x = random(shield.sizeX / 2, width - shield.sizeX / 2);
     shield.y = 0 - random(600, 10);
-    shield.sizeX = scale * 50;
-    shield.sizeY = scale * 50;
     shield.while = false;
     shield.timer = 0;
-    jumpshoe.y = 0 - random(600, 10);
-    jumpshoe.x = random(jumpshoe.sizeX / 2, width - jumpshoe.sizeX / 2);
-    jumpshoe.sizeX = scale * 50;
-    jumpshoe.sizeY = scale * 50;
-    jumpshoe.while = false;
-    jumpshoe.timer = 0;
+    Jetpack.y = 0 - random(600, 10);
+    Jetpack.x = random(Jetpack.sizeX / 2, width - Jetpack.sizeX / 2);
+    Jetpack.while = false;
+    Jetpack.timer = 0;
     changeKeys.timer = 0;
     changeKeys.timercolor = 0;
     changeKeys.choosecolor = false;
@@ -368,8 +405,6 @@ function reset() {
     changeKeys.show = true;
     changeKeys.x = random(changeKeys.sizeX / 2, width - changeKeys.sizeX / 2);
     changeKeys.y = 0 - random(1500, 7000);
-    changeKeys.sizeX = scale * 50;
-    changeKeys.sizeY = scale * 50;
     rotatePortal.while = false;
     rotatePortal.rotated = false;
     rotatePortal.turning = false;
@@ -385,8 +420,6 @@ function reset() {
     //Player
     player.x = width / 2;
     player.y = height - height * (1 / 6);
-    player.sizeX = scale * 70;
-    player.sizeY = scale * 90;
     player.moving = true;
     player.jump = true;
     player.jumpEnd = 0;
@@ -405,21 +438,13 @@ function reset() {
     ShootEnemy.y = 0 - random(3000, 500);
     ShootEnemy.x = random(ShootESizeX, width - ShootESizeX);
     shoottiles.x = ShootEnemy.y;
-    ShootEnemy.sizeX = scale * 0.75 * ShootESizeX;
-    ShootEnemy.sizeY = scale * 0.75 * ShootESizeY;
-    shoottiles.size = scale * 10;
-    // soundEnemy
 
     RushEnemy.y = 0 - random(4000, 1000);
     RushEnemy.x = random(RushEnemy.sizeX, width - RushEnemy.sizeX);
-    RushEnemy.sizeX = scale * 0.75 * 90;
-    RushEnemy.sizeY = scale * 0.75 * 75;
 
     RushUpAndDownEnemy.y = 0 - random(7000, 3000);
     RushUpAndDownEnemy.x = random(RushEnemy.sizeX, width - RushEnemy.sizeX);
     RushUpAndDownEnemy.movingUp = false;
-    RushUpAndDownEnemy.sizeX = scale * 0.75 * 90;
-    RushUpAndDownEnemy.sizeY = scale * 0.75 * 100;
 
     //Highscore
     highscore.score = 0;

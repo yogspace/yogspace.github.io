@@ -28,14 +28,14 @@ function PlayerFunction() {
     //Gravitation and boost of player
     if (player.jump === true && player.moving === true) {
       player.gravity = 3 * scale;
-      player.boost = player.boost - jumpshoe.using;
+      player.boost = player.boost - Jetpack.using;
       player.y = player.y - scale * player.boost;
       if (player.boost <= 0 || player.y <= player.jumpEnd) {
         player.jump = false;
       }
     }
     if (player.jump === false && player.moving === true) {
-      player.boost = jumpshoe.usingafter;
+      player.boost = Jetpack.usingafter;
       player.gravity = player.gravity + (1 / 2) * scale;
       player.yPos1 = player.y;
       player.y = player.y + player.gravity;
@@ -93,7 +93,7 @@ function PlayerFunction() {
     //Appearance of the player
     if (player.moveR === true) {
       image(imagePlayerRight, player.x, player.y, player.sizeX, player.sizeY);
-      if (jumpshoe.while === true) {
+      if (Jetpack.while === true) {
         player.jetpackR = true;
         player.jetpackL = false;
       } else {
@@ -112,7 +112,7 @@ function PlayerFunction() {
       }
     } else {
       image(imagePlayerLeft, player.x, player.y, player.sizeX, player.sizeY);
-      if (jumpshoe.while === true) {
+      if (Jetpack.while === true) {
         player.jetpackL = true;
         player.jetpackR = false;
       } else {
@@ -232,23 +232,23 @@ function touchStarted() {
     //Use Item
     if (mouseX >= 0 && mouseX <= 100) {
       if (
-        mouseY > height / 2 - jumpshoe.sizeY / 2 &&
-        mouseY < height / 2 + jumpshoe.sizeY / 2 &&
-        JumpshoeArray.length > 0 &&
+        mouseY > height / 2 - Jetpack.sizeY / 2 &&
+        mouseY < height / 2 + Jetpack.sizeY / 2 &&
+        JetpackArray.length > 0 &&
         prescreen.buttontimer >= 15 &&
-        jumpshoe.while === false &&
+        Jetpack.while === false &&
         doubblejump.while === false &&
         Pong.while === false
       ) {
-        jumpshoe.while = true;
-        JumpshoeArray.pop();
+        Jetpack.while = true;
+        JetpackArray.pop();
       }
       if (
         mouseY > height / 2 + 70 * scale - doubblejump.sizeY / 2 &&
         mouseY < height / 2 + 70 * scale + doubblejump.sizeY / 2 &&
         DoubblejumpArray.length > 0 &&
         prescreen.buttontimer >= 15 &&
-        jumpshoe.while === false &&
+        Jetpack.while === false &&
         doubblejump.while === false &&
         Pong.while === false
       ) {
@@ -883,7 +883,7 @@ function ShootEnemyFunction() {
           soundkillEnemy.play();
           ShootEnemy.cooldown = 0;
           soundShootEnemy.stop();
-          if (doubblejump.while === false && jumpshoe.while === false) {
+          if (doubblejump.while === false && Jetpack.while === false) {
             player.jump = true;
             player.jumpEnd = 0;
             player.gravity = 3;
@@ -1021,7 +1021,7 @@ function RushEnemyFunction() {
         ) {
           soundkillEnemy.play();
           RushEnemy.cooldown = 0;
-          if (doubblejump.while === false && jumpshoe.while === false) {
+          if (doubblejump.while === false && Jetpack.while === false) {
             player.jump = true;
             player.jumpEnd = 0;
             player.gravity = 3;
@@ -1238,7 +1238,7 @@ function RushEnemyUpAndDownFunction() {
         ) {
           soundkillEnemy.play();
           RushUpAndDownEnemy.cooldown = 0;
-          if (doubblejump.while === false && jumpshoe.while === false) {
+          if (doubblejump.while === false && Jetpack.while === false) {
             player.jump = true;
             player.jumpEnd = 0;
             player.gravity = 3;
@@ -1338,7 +1338,7 @@ function PortalRotation() {
         ShootEnemy.cooldown = 0;
         RushUpAndDownEnemy.cooldown = 0;
         RushEnemy.cooldown = 0;
-        jumpshoe.timer = 0;
+        Jetpack.timer = 0;
         player.moving = false;
       }
       if (rotatePortal.angle === 180 && rotatePortal.starting === true) {
@@ -1356,7 +1356,7 @@ function PortalRotation() {
           if (rotatePortal.angle === 178) {
             sound_rotatePortalRotating.play();
           }
-          jumpshoe.timer = 0;
+          Jetpack.timer = 0;
           rotatePortal.angle = rotatePortal.angle - 2;
           ShootEnemy.cooldown = 0;
           RushUpAndDownEnemy.cooldown = 0;
@@ -1431,16 +1431,16 @@ function itembar() {
     if (keyIsDown(keysMovement[2])) {
       if (doubblejump.choose === true && prescreen.buttontimer >= 5) {
         soundchangeItem.play();
-        // console.log("jumpshoe");
+        // console.log("Jetpack");
         doubblejump.choose = false;
         shield.choose = false;
-        jumpshoe.choose = true;
+        Jetpack.choose = true;
         prescreen.buttontimer = 0;
       }
-      if (jumpshoe.choose === true && prescreen.buttontimer >= 5) {
+      if (Jetpack.choose === true && prescreen.buttontimer >= 5) {
         soundchangeItem.play();
         // console.log("doubblejump");
-        jumpshoe.choose = false;
+        Jetpack.choose = false;
         doubblejump.choose = false;
         shield.choose = true;
         prescreen.buttontimer = 0;
@@ -1448,40 +1448,40 @@ function itembar() {
       if (shield.choose === true && prescreen.buttontimer >= 5) {
         soundchangeItem.play();
         // console.log("doubblejump");
-        jumpshoe.choose = false;
+        Jetpack.choose = false;
         shield.choose = false;
         doubblejump.choose = true;
         prescreen.buttontimer = 0;
       }
     }
 
-    //Jumpshoe
+    //Jetpack
     if (
-      jumpshoe.choose === true &&
+      Jetpack.choose === true &&
       doubblejump.choose === false &&
       shield.choose === false
     ) {
       fill(200);
-      rect(50, height / 2, jumpshoe.sizeX * 1.2, jumpshoe.sizeY * 1.2, 5);
+      rect(50, height / 2, Jetpack.sizeX * 1.2, Jetpack.sizeY * 1.2, 5);
     }
-    fill(jumpshoe.color);
-    image(imageJetpack, 50, height / 2, jumpshoe.sizeX, jumpshoe.sizeY);
+    fill(Jetpack.color);
+    image(imageJetpack, 50, height / 2, Jetpack.sizeX, Jetpack.sizeY);
     fill(200);
     textSize(scale * 25);
-    text(JumpshoeArray.length, 100 * scale, height - height / 2);
+    text(JetpackArray.length, 100 * scale, height - height / 2);
 
     //Doubblejump
     if (
       doubblejump.choose === true &&
-      jumpshoe.choose === false &&
+      Jetpack.choose === false &&
       shield.choose == false
     ) {
       fill(200);
       rect(
         50,
         height / 2 + scale * 70,
-        jumpshoe.sizeX * 1.2,
-        jumpshoe.sizeY * 1.2,
+        Jetpack.sizeX * 1.2,
+        Jetpack.sizeY * 1.2,
         5
       );
     }
@@ -1490,8 +1490,8 @@ function itembar() {
       imageDoubblejump,
       50,
       height / 2 + scale * 70,
-      jumpshoe.sizeX,
-      jumpshoe.sizeY
+      Jetpack.sizeX,
+      Jetpack.sizeY
     );
     fill(200);
     text(DoubblejumpArray.length, 100 * scale, height / 2 + 70 * scale);
@@ -1500,7 +1500,7 @@ function itembar() {
     if (
       shield.choose === true &&
       doubblejump.choose === false &&
-      jumpshoe.choose === false
+      Jetpack.choose === false
     ) {
       fill(200);
       rect(
@@ -1591,14 +1591,14 @@ function items() {
     gameOverFall === false &&
     gameOverLifes === false
   ) {
-    //Jumpshoe
-    if (jumpshoe.show === true) {
+    //Jetpack
+    if (Jetpack.show === true) {
       image(
         imageJetpack,
-        jumpshoe.x,
-        jumpshoe.y,
-        jumpshoe.sizeX,
-        jumpshoe.sizeY
+        Jetpack.x,
+        Jetpack.y,
+        Jetpack.sizeX,
+        Jetpack.sizeY
       );
 
       if (
@@ -1606,49 +1606,49 @@ function items() {
         player.y <= height - height / 3 &&
         player.moving === true
       ) {
-        jumpshoe.y = jumpshoe.y + player.gravity;
+        Jetpack.y = Jetpack.y + player.gravity;
       }
       if (player.affectTileTooClose === true && player.moving === true) {
-        jumpshoe.y = jumpshoe.y + player.boost;
+        Jetpack.y = Jetpack.y + player.boost;
       }
-      if (jumpshoe.y >= height + jumpshoe.sizeY) {
-        jumpshoe.x = random(jumpshoe.sizeX / 2, width - jumpshoe.sizeX / 2);
-        jumpshoe.y = random(-10000, -2000);
+      if (Jetpack.y >= height + Jetpack.sizeY) {
+        Jetpack.x = random(Jetpack.sizeX / 2, width - Jetpack.sizeX / 2);
+        Jetpack.y = random(-10000, -2000);
       }
 
       if (
         //unten rechts
-        (player.x + player.sizeX / 2 >= jumpshoe.x - jumpshoe.sizeX / 2 &&
-          player.x + player.sizeX / 2 <= jumpshoe.x + jumpshoe.sizeX / 2 &&
-          player.y + player.sizeY / 2 <= jumpshoe.y + jumpshoe.sizeY / 2 &&
-          player.y + player.sizeY / 2 >= jumpshoe.y - jumpshoe.sizeY / 2) ||
+        (player.x + player.sizeX / 2 >= Jetpack.x - Jetpack.sizeX / 2 &&
+          player.x + player.sizeX / 2 <= Jetpack.x + Jetpack.sizeX / 2 &&
+          player.y + player.sizeY / 2 <= Jetpack.y + Jetpack.sizeY / 2 &&
+          player.y + player.sizeY / 2 >= Jetpack.y - Jetpack.sizeY / 2) ||
         //oben rechts
-        (player.x + player.sizeX / 2 >= jumpshoe.x - jumpshoe.sizeX / 2 &&
-          player.x + player.sizeX / 2 <= jumpshoe.x + jumpshoe.sizeX / 2 &&
-          player.y - player.sizeY / 2 <= jumpshoe.y + jumpshoe.sizeY / 2 &&
-          player.y - player.sizeY / 2 >= jumpshoe.y - jumpshoe.sizeY / 2) ||
+        (player.x + player.sizeX / 2 >= Jetpack.x - Jetpack.sizeX / 2 &&
+          player.x + player.sizeX / 2 <= Jetpack.x + Jetpack.sizeX / 2 &&
+          player.y - player.sizeY / 2 <= Jetpack.y + Jetpack.sizeY / 2 &&
+          player.y - player.sizeY / 2 >= Jetpack.y - Jetpack.sizeY / 2) ||
         //unten links
-        (player.x - player.sizeX / 2 >= jumpshoe.x - jumpshoe.sizeX / 2 &&
-          player.x - player.sizeX / 2 <= jumpshoe.x + jumpshoe.sizeX / 2 &&
-          player.y + player.sizeY / 2 <= jumpshoe.y + jumpshoe.sizeY / 2 &&
-          player.y + player.sizeY / 2 >= jumpshoe.y - jumpshoe.sizeY / 2) ||
+        (player.x - player.sizeX / 2 >= Jetpack.x - Jetpack.sizeX / 2 &&
+          player.x - player.sizeX / 2 <= Jetpack.x + Jetpack.sizeX / 2 &&
+          player.y + player.sizeY / 2 <= Jetpack.y + Jetpack.sizeY / 2 &&
+          player.y + player.sizeY / 2 >= Jetpack.y - Jetpack.sizeY / 2) ||
         //oben links
-        (player.x - player.sizeX / 2 >= jumpshoe.x - jumpshoe.sizeX / 2 &&
-          player.x - player.sizeX / 2 <= jumpshoe.x + jumpshoe.sizeX / 2 &&
-          player.y - player.sizeY / 2 <= jumpshoe.y + jumpshoe.sizeY / 2 &&
-          player.y - player.sizeY / 2 >= jumpshoe.y - jumpshoe.sizeY / 2) ||
+        (player.x - player.sizeX / 2 >= Jetpack.x - Jetpack.sizeX / 2 &&
+          player.x - player.sizeX / 2 <= Jetpack.x + Jetpack.sizeX / 2 &&
+          player.y - player.sizeY / 2 <= Jetpack.y + Jetpack.sizeY / 2 &&
+          player.y - player.sizeY / 2 >= Jetpack.y - Jetpack.sizeY / 2) ||
         //mitten drin
-        (player.x - player.sizeX / 2 >= jumpshoe.x - jumpshoe.sizeX / 2 &&
-          player.x + player.sizeX / 2 <= jumpshoe.x + jumpshoe.sizeX / 2 &&
-          player.y + player.sizeY / 2 <= jumpshoe.y + jumpshoe.sizeY / 2 &&
-          player.y - player.sizeY / 2 >= jumpshoe.y - jumpshoe.sizeY / 2)
+        (player.x - player.sizeX / 2 >= Jetpack.x - Jetpack.sizeX / 2 &&
+          player.x + player.sizeX / 2 <= Jetpack.x + Jetpack.sizeX / 2 &&
+          player.y + player.sizeY / 2 <= Jetpack.y + Jetpack.sizeY / 2 &&
+          player.y - player.sizeY / 2 >= Jetpack.y - Jetpack.sizeY / 2)
       ) {
         soundgetItem.play();
-        JumpshoeArray.push(1);
-        jumpshoe.show = false;
-        jumpshoe.x = random(jumpshoe.sizeX / 2, width - jumpshoe.sizeX / 2);
-        jumpshoe.y = random(-10000, -2000);
-        jumpshoe.show = true;
+        JetpackArray.push(1);
+        Jetpack.show = false;
+        Jetpack.x = random(Jetpack.sizeX / 2, width - Jetpack.sizeX / 2);
+        Jetpack.y = random(-10000, -2000);
+        Jetpack.show = true;
       }
     }
 
@@ -2124,11 +2124,11 @@ function items() {
       }
       if (godmodetimer < 99) {
         DoubblejumpArray.push(1);
-        JumpshoeArray.push(1);
+        JetpackArray.push(1);
         shieldArray.push(1);
         if (
           DoubblejumpArray.length > 99 &&
-          JumpshoeArray.length > 99 &&
+          JetpackArray.length > 99 &&
           shieldArray.length > 99
         ) {
           godmodetimer = 99;
@@ -2233,7 +2233,7 @@ function itemfunction() {
       doubblejump.choose === true &&
       DoubblejumpArray.length > 0 &&
       prescreen.buttontimer >= 15 &&
-      jumpshoe.while === false &&
+      Jetpack.while === false &&
       doubblejump.while === false &&
       Pong.while === false &&
       doubblejump.activated === false
@@ -2255,49 +2255,49 @@ function itemfunction() {
     doubblejump.while = false;
   }
 
-  //Jumpshoe use
+  //Jetpack use
   if (keyIsDown(keysMovement[3])) {
     if (
-      jumpshoe.choose === true &&
-      JumpshoeArray.length > 0 &&
+      Jetpack.choose === true &&
+      JetpackArray.length > 0 &&
       prescreen.buttontimer >= 15 &&
-      jumpshoe.while === false &&
+      Jetpack.while === false &&
       doubblejump.while === false &&
       Pong.while === false
     ) {
-      // console.log("jumpshoe yeah");
+      // console.log("Jetpack yeah");
       prescreen.buttontimer = 0;
-      jumpshoe.while = true;
-      JumpshoeArray.pop();
+      Jetpack.while = true;
+      JetpackArray.pop();
     }
   }
 
-  if (jumpshoe.while === true) {
-    jumpshoe.timer = jumpshoe.timer + 1;
+  if (Jetpack.while === true) {
+    Jetpack.timer = Jetpack.timer + 1;
     if (
       player.jump === true &&
       player.boost >= 46 &&
-      player.boost <= jumpshoe.usingafter
+      player.boost <= Jetpack.usingafter
     ) {
-      sounditem_jumpshoe.play();
+      sounditem_Jetpack.play();
     }
     if (player.boost >= 20 && player.jump === true) {
       player.affectTileTooClose = true;
     } else {
       player.affectTileTooClose = false;
     }
-    // console.log(jumpshoe.timer);
-    jumpshoe.using = 3;
-    jumpshoe.usingafter = 50;
+    // console.log(Jetpack.timer);
+    Jetpack.using = 3;
+    Jetpack.usingafter = 50;
     player.jumpEnd = -100;
-    if (jumpshoe.timer > jumpshoewhile) {
-      jumpshoe.while = false;
-      jumpshoe.timer = 0;
+    if (Jetpack.timer > Jetpackwhile) {
+      Jetpack.while = false;
+      Jetpack.timer = 0;
     }
   } else {
-    jumpshoe.timerusing = 0;
-    jumpshoe.using = 3 / 2;
-    jumpshoe.usingafter = 30;
+    Jetpack.timerusing = 0;
+    Jetpack.using = 3 / 2;
+    Jetpack.usingafter = 30;
     player.jumpEnd = 0;
   }
 
@@ -2595,7 +2595,7 @@ function environmentfunction() {
       //   RushEnemy.y = RushEnemy.y + 5;
       //   RushUpAndDownEnemy.y = RushUpAndDownEnemy.y;
       //   Pong.y = Pong.y + 5;
-      //   jumpshoe.y = jumpshoe.y + 5;
+      //   Jetpack.y = Jetpack.y + 5;
       //   doubblejump.y = doubblejump.y + 5;
       //   Coin.y = Coin.y + 5;
       //   shield.y = shield.y + 5;
@@ -2781,6 +2781,7 @@ function gameOver() {
       }
       rounds.push(int(highscore.score));
       if (prescreen.delay > 100) {
+        scale = 1;
         widthWhile = width;
         heightWhile = height;
         prescreen.show = true;

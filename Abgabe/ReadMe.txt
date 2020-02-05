@@ -60,13 +60,11 @@
  *										                             *
  *										                             *
  * - Dinge, die noch hinzugefügt werden:					         *
- * - Item: Torch und Darkness							             *		
- * - Portal rotation								                 *
- * - Variablen Namen anpassen							             *
+ * - Item: Torch und Darkness							             *						             *
  *										                             *
  *										                             *
  *										                             *
- *			WICHTIG: DIE STARTSEITE IST DIE INDEX.HTML	             *
+ *		WICHTIG: DIE STARTSEITE IST DIE INDEX.HTML	             *
  *										                             *
  * thanks!								                             *
  *										                             *
