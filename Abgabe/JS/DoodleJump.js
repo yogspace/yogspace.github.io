@@ -1338,7 +1338,8 @@ function PortalRotation() {
         ShootEnemy.cooldown = 0;
         RushUpAndDownEnemy.cooldown = 0;
         RushEnemy.cooldown = 0;
-        Jetpack.timer = 0;
+        // Jetpack.timer = 0;
+        // Jetpack.while = false;
         player.moving = false;
       }
       if (rotatePortal.angle === 180 && rotatePortal.starting === true) {
@@ -1356,7 +1357,8 @@ function PortalRotation() {
           if (rotatePortal.angle === 178) {
             sound_rotatePortalRotating.play();
           }
-          Jetpack.timer = 0;
+          // Jetpack.timer = 0;
+          // Jetpack.while = false;
           rotatePortal.angle = rotatePortal.angle - 2;
           ShootEnemy.cooldown = 0;
           RushUpAndDownEnemy.cooldown = 0;
@@ -1365,7 +1367,7 @@ function PortalRotation() {
         }
         if (rotatePortal.angle <= 0) {
           rotatePortal.while = false;
-          rotatePortal.turning = true;
+          rotatePortal.turning = false;
           rotatePortal.rotated = false;
           player.moving = true;
           rotatePortal.starting = true;
@@ -1593,13 +1595,7 @@ function items() {
   ) {
     //Jetpack
     if (Jetpack.show === true) {
-      image(
-        imageJetpack,
-        Jetpack.x,
-        Jetpack.y,
-        Jetpack.sizeX,
-        Jetpack.sizeY
-      );
+      image(imageJetpack, Jetpack.x, Jetpack.y, Jetpack.sizeX, Jetpack.sizeY);
 
       if (
         player.affectTile === true &&
