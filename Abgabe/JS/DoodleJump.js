@@ -1352,34 +1352,58 @@ function PortalRotation() {
         rotatePortal.starting = false;
       }
 
-      if (rotatePortal.turning === true) {
-        if (rotatePortal.angle > 0) {
-          if (rotatePortal.angle === 178) {
-            sound_rotatePortalRotating.play();
-          }
-          // Jetpack.timer = 0;
-          // Jetpack.while = false;
-          rotatePortal.angle = rotatePortal.angle - 2;
-          ShootEnemy.cooldown = 0;
-          RushUpAndDownEnemy.cooldown = 0;
-          RushEnemy.cooldown = 0;
-          player.moving = false;
+      if (rotatePortal.angle > 0 && rotatePortal.turning === true) {
+        if (rotatePortal.angle === 178) {
+          sound_rotatePortalRotating.play();
         }
-        if (rotatePortal.angle <= 0) {
-          rotatePortal.while = false;
-          rotatePortal.turning = false;
-          rotatePortal.rotated = false;
-          player.moving = true;
-          rotatePortal.starting = true;
-        }
-        if (rotatePortal.angle === 0) {
-          player.moving = true;
-          player.jump = true;
-          player.jumpEnd = 0;
-          player.gravity = 3;
-          player.boost = 25;
-        }
+        rotatePortal.angle = rotatePortal.angle - 2;
+        ShootEnemy.cooldown = 0;
+        RushUpAndDownEnemy.cooldown = 0;
+        RushEnemy.cooldown = 0;
+        // Jetpack.timer = 0;
+        // Jetpack.while = false;
+        player.moving = false;
       }
+      if (rotatePortal.angle === 0 && rotatePortal.turning === true) {
+        player.moving = true;
+        player.jump = true;
+        player.jumpEnd = 0;
+        player.gravity = 3;
+        player.boost = 25;
+        rotatePortal.starting = true;
+        rotatePortal.rotated = false;
+        rotatePortal.turning = false;
+        rotatePortal.while = false;
+      }
+
+      // if (rotatePortal.turning === true) {
+      //   if (rotatePortal.angle > 0) {
+      //     if (rotatePortal.angle === 178) {
+      //       sound_rotatePortalRotating.play();
+      //     }
+      //     // Jetpack.timer = 0;
+      //     // Jetpack.while = false;
+      //     rotatePortal.angle = rotatePortal.angle - 2;
+      //     ShootEnemy.cooldown = 0;
+      //     RushUpAndDownEnemy.cooldown = 0;
+      //     RushEnemy.cooldown = 0;
+      //     player.moving = false;
+      //   }
+      //   if (rotatePortal.angle <= 0) {
+      //     rotatePortal.while = false;
+      //     rotatePortal.turning = false;
+      //     rotatePortal.rotated = false;
+      //     player.moving = true;
+      //     rotatePortal.starting = true;
+      //   }
+      //   if (rotatePortal.angle === 0) {
+      //     player.moving = true;
+      //     player.jump = true;
+      //     player.jumpEnd = 0;
+      //     player.gravity = 3;
+      //     player.boost = 25;
+      //   }
+      // }
     }
   }
 }
@@ -2179,11 +2203,11 @@ function itemfunction() {
       if (Pong.startingTimer === 1) {
         soundPongOverflow.play();
       }
-      rotatePortal.while = false;
       rotatePortal.starting = true;
-      rotatePortal.angle = 0;
       rotatePortal.rotated = false;
       rotatePortal.turning = false;
+      rotatePortal.while = false;
+      rotatePortal.angle = 0;
       Pong.slideX = Pong.slideX + 15;
       if (Pong.slideX > width + width / 2) {
         Pong.slidingR = false;
@@ -2226,13 +2250,22 @@ function itemfunction() {
   //Doubblejump use
   if (keyIsDown(keysMovement[3])) {
     if (
-      doubblejump.choose === true &&
-      DoubblejumpArray.length > 0 &&
-      prescreen.buttontimer >= 15 &&
-      Jetpack.while === false &&
-      doubblejump.while === false &&
-      Pong.while === false &&
-      doubblejump.activated === false
+      (doubblejump.choose === true &&
+        DoubblejumpArray.length > 0 &&
+        prescreen.buttontimer >= 15 &&
+        Jetpack.while === false &&
+        doubblejump.while === false &&
+        Pong.while === false &&
+        doubblejump.activated === false &&
+        rotatePortal.angle === 0) ||
+      (doubblejump.choose === true &&
+        DoubblejumpArray.length > 0 &&
+        prescreen.buttontimer >= 15 &&
+        Jetpack.while === false &&
+        doubblejump.while === false &&
+        Pong.while === false &&
+        doubblejump.activated === false &&
+        rotatePortal.angle === 180)
     ) {
       // console.log("doubblejump yeah");
       sounditem_doubblejump.play();
@@ -2254,12 +2287,20 @@ function itemfunction() {
   //Jetpack use
   if (keyIsDown(keysMovement[3])) {
     if (
-      Jetpack.choose === true &&
-      JetpackArray.length > 0 &&
-      prescreen.buttontimer >= 15 &&
-      Jetpack.while === false &&
-      doubblejump.while === false &&
-      Pong.while === false
+      (Jetpack.choose === true &&
+        JetpackArray.length > 0 &&
+        prescreen.buttontimer >= 15 &&
+        Jetpack.while === false &&
+        doubblejump.while === false &&
+        Pong.while === false &&
+        rotatePortal.angle === 0) ||
+      (Jetpack.choose === true &&
+        JetpackArray.length > 0 &&
+        prescreen.buttontimer >= 15 &&
+        Jetpack.while === false &&
+        doubblejump.while === false &&
+        Pong.while === false &&
+        rotatePortal.angle === 180)
     ) {
       // console.log("Jetpack yeah");
       prescreen.buttontimer = 0;
@@ -2300,11 +2341,18 @@ function itemfunction() {
   //Shield use
   if (keyIsDown(keysMovement[3])) {
     if (
-      shield.choose === true &&
-      shieldArray.length > 0 &&
-      prescreen.buttontimer >= 15 &&
-      shield.while === false &&
-      Pong.while === false
+      (shield.choose === true &&
+        shieldArray.length > 0 &&
+        prescreen.buttontimer >= 15 &&
+        shield.while === false &&
+        Pong.while === false &&
+        rotatePortal.angle === 0) ||
+      (shield.choose === true &&
+        shieldArray.length > 0 &&
+        prescreen.buttontimer >= 15 &&
+        shield.while === false &&
+        Pong.while === false &&
+        rotatePortal.angle === 180)
     ) {
       prescreen.buttontimer = 0;
       shield.while = true;

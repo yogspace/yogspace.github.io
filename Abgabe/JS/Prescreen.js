@@ -405,10 +405,10 @@ function reset() {
     changeKeys.show = true;
     changeKeys.x = random(changeKeys.sizeX / 2, width - changeKeys.sizeX / 2);
     changeKeys.y = 0 - random(1500, 7000);
-    rotatePortal.while = false;
+    rotatePortal.starting = true;
     rotatePortal.rotated = false;
     rotatePortal.turning = false;
-    rotatePortal.starting = true;
+    rotatePortal.while = false;
     rotatePortal.angle = 0;
     rotatePortal.y = 0 - random(1500, 4000);
     rotatePortal.rotated = false;
