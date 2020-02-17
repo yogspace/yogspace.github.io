@@ -1,6 +1,10 @@
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  frameRate(30);
+  if (displayWidth >= displayHeight) {
+    frameRate(30);
+  } else {
+    frameRate(60);
+  }
 
   textAlign(LEFT);
   angleMode(DEGREES);
