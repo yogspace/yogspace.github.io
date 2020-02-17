@@ -2,8 +2,10 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   if (displayWidth >= displayHeight) {
     frameRate(30);
+    console.log("desktop");
   } else {
     frameRate(60);
+    console.log("mobile");
   }
 
   textAlign(LEFT);
