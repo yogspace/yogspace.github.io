@@ -7,6 +7,10 @@ body {
   font-family: "Consolas" !important;
   src: url("/src/fonts/consola.ttf");
 }
+.wrapper {
+  overflow: hidden;
+  position: relative;
+}
 
 header {
   width: 90vw;
