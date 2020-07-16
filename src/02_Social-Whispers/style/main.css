@@ -1,0 +1,18 @@
+body{
+    margin: 0px;
+    padding: 0px;
+    overflow: hidden;
+
+    background: #1e1814;
+}
+
+.loading-screen {
+  display: flex;
+  justify-content: center;
+
+  font-size: 8vw;
+  font-family: rockwell;
+  src: url("/fonts/Rockwell.TTF");
+
+  color: orange;
+}

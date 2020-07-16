@@ -1,0 +1,141 @@
+body {
+  margin: 0px;
+  padding: 0px;
+  /* background-color: rgb(255, 0, 0); */
+  /* transform: rotate(-90deg); */
+}
+
+.wrapper {
+  scroll-behavior: smooth;
+  transform: rotate(90deg);
+  transform-origin: bottom left;
+
+  position: absolute;
+  top: -100vw;
+  left: 0;
+
+  height: 100vw;
+  width: 100vh;
+
+  color: #fff;
+  background-color: rgb(253, 245, 230);
+
+  overflow-x: hidden;
+}
+
+/*Nav bar*/
+.stickyNav {
+  background-color: rgb(8, 0, 30, 0.5);
+  z-index: +1;
+  /* position: -webkit-sticky; */
+  position: sticky;
+  top: 0;
+  padding: 40px;
+  font-size: 20px;
+  /* opacity: 0.5; */
+}
+.NavBarHeadline {
+  /*position*/
+  transform: rotate(-90deg);
+  left: -10px;
+  top: 25px;
+  position: absolute;
+  text-align: center;
+  font-family: bebas neue;
+  font-size: 4em;
+}
+.NavBarSub {
+  /*position*/
+  transform: rotate(-90deg);
+  left: 80px;
+  position: relative;
+  text-align: right;
+  font-family: bebas neue;
+  font-size: 1.5em;
+}
+
+/*LINKS*/
+a:link,
+a:visited {
+  color: rgb(210, 210, 210);
+  padding: 14px 25px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+}
+a:hover,
+a:active {
+  color: rgb(255, 255, 255);
+  text-decoration: underline;
+}
+
+header {
+  text-align: CENTER;
+  position: relative;
+  font-family: Bebas Neue;
+  src: "Font/BebasNeue-Regular.otf";
+}
+main {
+  text-align: CENTER;
+  position: relative;
+  font-family: Bebas Neue;
+  src: "Font/BebasNeue-Regular.otf";
+}
+footer {
+  text-align: CENTER;
+  position: relative;
+  font-family: Bebas Neue;
+  src: "Font/BebasNeue-Regular.otf";
+}
+
+/*last side*/
+.firstPage {
+  color: rgb(220, 220, 220);
+  font-size: 10em;
+  margin-top: 35vw;
+  transform: rotate(-90deg);
+  margin-left: 0vh;
+}
+
+.secondPage {
+  color: rgb(220, 220, 220);
+  font-size: 10em;
+  margin-top: 50vw;
+  transform: rotate(-90deg);
+  margin-left: 0vh;
+}
+
+.thirdPage {
+  color: rgb(220, 220, 220);
+  font-size: 10em;
+  margin-top: 75vw;
+  margin-bottom: 35vw;
+  transform: rotate(-90deg);
+}
+
+/*first side*/
+.fourthPage {
+  color: rgb(220, 220, 220);
+  position: fixed;
+  font-size: 10em;
+  margin-top: 30vw;
+  transform: rotate(-90deg);
+  margin-left: 10vh;
+  text-shadow: 5px 5px rgb(255, 127, 80, 0.5);
+}
+
+.container {
+  position: relative;
+  text-align: center;
+  color: white;
+}
+
+.mobileImg {
+  transform: rotate(-90deg);
+}
+
+h3 {
+  font-size: 30px;
+  font-family: bebas neue;
+  color: rgb(20, 20, 20);
+}
