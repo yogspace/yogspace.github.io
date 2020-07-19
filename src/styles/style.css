@@ -4,8 +4,7 @@ body {
   justify-content: center;
   overflow: hidden;
   font-size: 1.5em;
-  font-family: "Consolas" !important;
-  src: url("/src/fonts/consola.ttf");
+  font-family: ff-typestar-ocr-web-pro, sans-serif !important;
 }
 .wrapper {
   overflow: hidden;
