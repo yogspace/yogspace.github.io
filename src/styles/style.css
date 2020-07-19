@@ -22,7 +22,7 @@ header {
 }
 
 h1 {
-  font-size: 5em;
+  font-size: 7em;
   font-family: presicav, sans-serif !important;
   font-style: normal;
   color: rgb(230, 200, 200);
@@ -109,7 +109,7 @@ h2 {
 }
 .object-button:hover {
   /* background-color: rgb(0, 205, 205); */
-  color: rgb(155, 155, 155);
+  color: rgb(180, 30, 30);
 }
 
 /* .object:hover {
