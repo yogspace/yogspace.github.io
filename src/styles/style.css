@@ -186,7 +186,7 @@ h2 {
     font-size: 3em;
   }
   p {
-    font-size: 16px;
+    font-size: 1em;
   }
 
   .object-content2 {
@@ -237,7 +237,7 @@ h2 {
     font-size: 1.5em;
   }
   p {
-    font-size: 16px;
+    font-size: 1em;
   }
   .object-content2 {
     grid-row: 2/4;
