@@ -57,7 +57,6 @@ h2 {
   border-style: solid;
   border-color: rgb(230, 200, 200);
   border-width: 1vw;
-
   padding: 10px;
 }
 
@@ -187,7 +186,7 @@ h2 {
     font-size: 3em;
   }
   p {
-    font-size: 1em;
+    font-size: 16px;
   }
 
   .object-content2 {
@@ -238,7 +237,7 @@ h2 {
     font-size: 1.5em;
   }
   p {
-    font-size: 1em;
+    font-size: 16px;
   }
   .object-content2 {
     grid-row: 2/4;
