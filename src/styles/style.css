@@ -24,12 +24,12 @@ header {
 
 h1 {
   font-size: 5em;
-  font-family: presicav, sans-serif;
+  font-family: presicav, sans-serif !important;
   font-style: normal;
   color: rgb(230, 200, 200);
 }
 h2 {
-  font-family: presicav, sans-serif;
+  font-family: presicav, sans-serif !important;
   font-style: normal;
   color: rgb(230, 200, 200);
 }
