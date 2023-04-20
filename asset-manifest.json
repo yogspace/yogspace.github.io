@@ -1,0 +1,35 @@
+{
+  "files": {
+    "main.css": "/static/css/main.2aa6935f.css",
+    "main.js": "/static/js/main.caf4efd6.js",
+    "static/js/368.48bb272f.chunk.js": "/static/js/368.48bb272f.chunk.js",
+    "static/js/787.5a18389d.chunk.js": "/static/js/787.5a18389d.chunk.js",
+    "static/js/227.f8c57b73.chunk.js": "/static/js/227.f8c57b73.chunk.js",
+    "static/js/526.79ab6699.chunk.js": "/static/js/526.79ab6699.chunk.js",
+    "static/js/232.6b00ac80.chunk.js": "/static/js/232.6b00ac80.chunk.js",
+    "static/js/237.542eedb0.chunk.js": "/static/js/237.542eedb0.chunk.js",
+    "static/media/GT-Sectra-Regular.woff": "/static/media/GT-Sectra-Regular.a19ca026cff63ca6214b.woff",
+    "static/media/gt-walsheim-medium.woff": "/static/media/gt-walsheim-medium.c1c2a1c59a85db121dd6.woff",
+    "static/media/info.svg": "/static/media/info.e93471d16d17227da1ee51e8b445b7e0.svg",
+    "static/media/nav-open.svg": "/static/media/nav-open.4b0fd4d149a95e404ff84ac9c805a1f2.svg",
+    "static/media/close.svg": "/static/media/close.faadc957b70887bf3a42c432af66349e.svg",
+    "static/media/nav-close.svg": "/static/media/nav-close.faadc957b70887bf3a42c432af66349e.svg",
+    "static/media/volume.svg": "/static/media/volume.6b1e2554f50a0533ef7a5dac27b5a4d5.svg",
+    "index.html": "/index.html",
+    "static/media/arrow-right.svg": "/static/media/arrow-right.7d4ec19287b90e10e727d168e73fec7b.svg",
+    "static/media/arrow-left.svg": "/static/media/arrow-left.dd7284a024d7cff51fe9f157a43ca5f3.svg",
+    "static/media/pause.svg": "/static/media/pause.7a8efe40b0c45c80f4617a94c27bcd5e.svg",
+    "main.2aa6935f.css.map": "/static/css/main.2aa6935f.css.map",
+    "main.caf4efd6.js.map": "/static/js/main.caf4efd6.js.map",
+    "368.48bb272f.chunk.js.map": "/static/js/368.48bb272f.chunk.js.map",
+    "787.5a18389d.chunk.js.map": "/static/js/787.5a18389d.chunk.js.map",
+    "227.f8c57b73.chunk.js.map": "/static/js/227.f8c57b73.chunk.js.map",
+    "526.79ab6699.chunk.js.map": "/static/js/526.79ab6699.chunk.js.map",
+    "232.6b00ac80.chunk.js.map": "/static/js/232.6b00ac80.chunk.js.map",
+    "237.542eedb0.chunk.js.map": "/static/js/237.542eedb0.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.2aa6935f.css",
+    "static/js/main.caf4efd6.js"
+  ]
+}
